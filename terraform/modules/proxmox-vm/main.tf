@@ -1,63 +1,3 @@
-variable "name" {
-  type = string
-}
-
-variable "vm_id" {
-  type = number
-}
-
-variable "node_name" {
-  type    = string
-  default = "pve1"
-}
-
-variable "clone_vm_id" {
-  type = number
-  default = null
-  nullable = true
-}
-
-variable "disk" {
-  type = object({
-    datastore_id = string
-    size = number
-  })
-}
-
-variable "additional_disks" {
-  type = list(object({
-    datastore_id = string
-    size = number
-  }))
-  default = []
-}
-
-variable "cpu" {
-  type = number
-}
-
-variable "memory" {
-  type    = number
-  default = -1
-}
-
-variable "cdrom_file_id" {
-  type = string
-  default = null
-
-  nullable = true
-}
-
-variable "tags" {
-  type = list(string)
-  default = []
-}
-
-variable "on_boot" {
-  type = bool
-  default = true
-}
-
 locals {
   # default to 1:2 ratio
   memory = var.memory == -1 ? var.cpu * 1024 * 2 : var.memory
@@ -95,7 +35,7 @@ resource "proxmox_virtual_environment_vm" "main" {
     bridge = "vmbr0"
   }
 
-  boot_order    = ["scsi0"]
+  boot_order    = [var.boot_disk]
   scsi_hardware = "virtio-scsi-single"
 
   disk {
@@ -121,9 +61,19 @@ resource "proxmox_virtual_environment_vm" "main" {
     for_each = var.cdrom_file_id != null ? [var.cdrom_file_id] : []
 
     content {
-      enabled = true
       file_id = var.cdrom_file_id
+      interface = "ide0"
+    }
+  }
+
+  dynamic "initialization" {
+    for_each = var.cloudinit ? [true] : []
+
+    content {
       interface = "ide2"
+      network_data_file_id = proxmox_virtual_environment_file.network_data_cloud_config.id
+      user_data_file_id = proxmox_virtual_environment_file.user_data_cloud_config.id
+      meta_data_file_id = proxmox_virtual_environment_file.meta_data_cloud_config.id
     }
   }
 
@@ -133,6 +83,6 @@ resource "proxmox_virtual_environment_vm" "main" {
   tags = var.tags
 
   lifecycle {
-    ignore_changes = ["network_device", "started"]
+    ignore_changes = [network_device, started]
   }
 }
