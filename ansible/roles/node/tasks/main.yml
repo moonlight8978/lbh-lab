@@ -4,7 +4,6 @@
     upgrade: "{{ node_pkg_upgrade }}"
     state: "{{ node_pkg_state }}"
 
-
 - name: Install packages
   ansible.builtin.apt:
     pkg:
@@ -21,5 +20,7 @@
     state: started
 
 - name: Set hostname
-  ansible.builtin.shell:
-    
+  ansible.builtin.hostname:
+    name: "{{ node_name }}"
+
+

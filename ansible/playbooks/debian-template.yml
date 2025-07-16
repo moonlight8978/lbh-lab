@@ -1,5 +1,7 @@
 - name: Setup debian machines
   hosts: debian-template
+  vars:
+    node_name: debian-template
   roles:
     - ../roles/node
     - ../roles/interactive
