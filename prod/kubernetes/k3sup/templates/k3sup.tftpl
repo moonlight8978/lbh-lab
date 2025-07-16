@@ -9,14 +9,16 @@
   value: root
 
 - name: --ssh-key
-  value: "/Users/moonlight/.ssh/moonlight"
-
+  value: $HOME/.ssh/moonlight
 
 %{ if install ~}
 - --cluster
 
 - name: --token
   value: ${k3s_server_token}
+
+- name: --local-path
+  value: $HOME/.kube/lbhlab.yaml
 %{~ else ~}
 - --server
 
@@ -30,18 +32,18 @@
 - name: --k3s-extra-args
   value: >-
     --node-name=${name}
-    --cluster-cidr=10.42.0.0/16
-    --service-cidr=10.43.0.0/16
+    --cluster-cidr=${kube_cluster_cidr}
+    --service-cidr=${kube_service_cidr}
     --disable=traefik,servicelb,metrics-server
     --flannel-backend=none
     --secrets-encryption
     --etcd-expose-metrics=true
     --disable-network-policy
     --disable-kube-proxy
-    --tls-san=192.168.0.40,10.242.20.142,10.242.20.143,10.242.20.144
+    --tls-san=${join(",", tls_san)}
 
 - name: --k3s-version
-  value: v1.33.1+k3s1
+  value: ${k3s_version}
 
 - name: --k3s-channel
   value: stable
