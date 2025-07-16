@@ -1,0 +1,47 @@
+# yaml-language-server
+---
+- ${install ? "install" : "join"}
+
+- name: --ip
+  value: ${ip4}
+
+- name: --user
+  value: root
+
+- name: --ssh-key
+  value: "/Users/moonlight/.ssh/moonlight"
+
+
+%{ if install ~}
+- --cluster
+
+- name: --token
+  value: ${k3s_server_token}
+%{~ else ~}
+- --server
+
+- name: --server-user
+  value: root
+
+- name: --server-ip
+  value: ${join_ip4}
+%{ endif ~}
+
+- name: --k3s-extra-args
+  value: >-
+    --node-name=${name}
+    --cluster-cidr=10.42.0.0/16
+    --service-cidr=10.43.0.0/16
+    --disable=traefik,servicelb,metrics-server
+    --flannel-backend=none
+    --secrets-encryption
+    --etcd-expose-metrics=true
+    --disable-network-policy
+    --disable-kube-proxy
+    --tls-san=192.168.0.40,10.242.20.142,10.242.20.143,10.242.20.144
+
+- name: --k3s-version
+  value: v1.33.1+k3s1
+
+- name: --k3s-channel
+  value: stable
