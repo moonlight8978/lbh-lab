@@ -18,3 +18,19 @@
     - [ ] Proxmox installation on bare metals
     - [ ] Template machine installation
 
+## Development
+
+### Terraform
+
+- Terragrunt
+- Terraform
+- SOPS (w/ Age)
+
+- To run terragrunt commands
+
+```bash
+just terragrunt <cmd> <dir> <-flags>
+
+just terragrunt apply prod/debian-template --all
+just terragrunt init prod/debian-template --all
+```
