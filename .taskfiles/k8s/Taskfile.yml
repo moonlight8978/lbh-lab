@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  provision:
+    cmds:
+      - just terragrunt apply prod/kubernetes --all --non-interactive
+    env:
+      TF_VAR_kube_bootstrap: "true"
+
+  bootstrap-apps:
+    dir: charts
+    cmds:
+      - helmfile apply --skip-diff-on-install
+    env:
+      KUBECONFIG: $HOME/.kube/lbhlab.yaml
