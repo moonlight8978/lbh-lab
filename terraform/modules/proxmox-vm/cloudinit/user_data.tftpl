@@ -11,3 +11,5 @@ users:
       - ${key}
       %{~ endfor ~}
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
+runcmd:
+  - sed -i 's/debian-template/${name}/g' /etc/hosts
