@@ -3,6 +3,5 @@
   vars:
     node_name: debian-template
   roles:
-    - ../roles/node
-    - ../roles/interactive
-
+    - ../../../ansible/roles/node
+    - ../../../ansible/roles/interactive

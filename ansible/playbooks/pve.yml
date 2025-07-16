@@ -1,5 +1,0 @@
-- name: PVE nodes
-  hosts: pve
-  roles:
-    - ../roles/interactive
-    - ../roles/wake-on-lan

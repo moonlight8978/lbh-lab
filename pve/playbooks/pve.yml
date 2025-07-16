@@ -1,0 +1,5 @@
+- name: PVE nodes
+  hosts: pve
+  roles:
+    - ../../ansible/roles/interactive
+    - ../../ansible/roles/wake-on-lan

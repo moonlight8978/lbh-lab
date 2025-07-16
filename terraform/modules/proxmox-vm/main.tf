@@ -83,6 +83,6 @@ resource "proxmox_virtual_environment_vm" "main" {
   tags = var.tags
 
   lifecycle {
-    ignore_changes = [network_device, started]
+    ignore_changes = [network_device, started, boot_order]
   }
 }

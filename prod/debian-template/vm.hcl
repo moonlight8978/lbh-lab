@@ -1,5 +1,4 @@
 locals {
-  vm_id = 1000
   name = "debian-template"
   node_name = "pve1"
   tags = ["template", "debian"]
