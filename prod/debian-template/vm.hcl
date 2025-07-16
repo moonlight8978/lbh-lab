@@ -8,7 +8,7 @@ locals {
 
   on_boot = false
 
-  ip4 = "10.242.20.136/24"
+  ip4 = "10.242.20.138/24"
   gateway4 = "10.242.20.1"
 
   cloudinit = false

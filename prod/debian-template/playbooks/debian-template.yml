@@ -2,6 +2,32 @@
   hosts: debian-template
   vars:
     node_name: debian-template
+    ip4: 10.242.20.138/24
+    gateway4: 10.242.20.1
+    dns_ns: 10.241.90.21
+    dns_search: lbhlab.local
   roles:
     - ../../../ansible/roles/node
     - ../../../ansible/roles/interactive
+  tasks:
+    - name: Disable DHCP
+      ansible.builtin.shell: update-rc.d -f dhcpcd remove
+
+    - name: Source all interfaces in entrypoint
+      ansible.builtin.copy:
+        dest: /etc/network/interfaces
+        content: |
+          source /etc/network/interfaces.d/*
+
+    - name: Setup static ip
+      ansible.builtin.copy:
+        dest: /etc/network/interfaces.d/50-cloud-init
+        content: |
+          allow-hotplug ens18
+          iface ens18 inet static
+            address {{ ip4 }}
+            gateway {{ gateway4 }}
+            # dns-* options are implemented by the resolvconf package
+            dns-nameservers {{ dns_ns }}
+            dns-search {{ dns_search }}
+

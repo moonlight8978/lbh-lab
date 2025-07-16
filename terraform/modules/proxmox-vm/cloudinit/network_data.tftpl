@@ -7,8 +7,8 @@ network:
       addresses:
         - ${ip4}
       routes:
-        - to: default
+        - to: 0.0.0.0/0
           via: ${gateway4}
       nameservers:
-        search: [icetea.local]
+        search: [lbhlab.local]
         addresses: [10.241.90.21]

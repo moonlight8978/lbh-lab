@@ -1,10 +1,9 @@
 locals {
-  secret_vars = yamldecode(sops_decrypt_file(find_in_parent_folders("secrets.yml")))
-  global_vars = read_terragrunt_config(find_in_parent_folders("global.hcl"))
-  local_env_vars    = try(read_terragrunt_config("${get_terragrunt_dir()}/env.hcl"), { locals : {} })
-  env_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-
-  values = merge(local.secret_vars, local.global_vars.locals, local.local_env_vars.locals, local.env_vars.locals)
+  secret_vars    = yamldecode(sops_decrypt_file(find_in_parent_folders("secrets.yml")))
+  global_vars    = read_terragrunt_config(find_in_parent_folders("global.hcl"))
+  local_env_vars = try(read_terragrunt_config("${get_terragrunt_dir()}/env.hcl"), { locals : {} })
+  env_vars       = try(read_terragrunt_config(find_in_parent_folders("env.hcl")), { locals : {} })
+  values         = merge(local.secret_vars, local.global_vars.locals, local.local_env_vars.locals, local.env_vars.locals)
 }
 
 remote_state {
