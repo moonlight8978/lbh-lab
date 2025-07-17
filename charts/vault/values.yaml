@@ -1,0 +1,125 @@
+global:
+  enabled: true
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 256Mi
+      cpu: 250m
+
+injector:
+  enabled: false
+  # replicas: 2
+
+  # agentDefaults:
+  #   cpuLimit: 500m
+  #   cpuRequest: 250m
+  #   memLimit: 128m
+  #   memRequest: 64m
+
+  # metrics:
+  #   enabled: true
+
+  # logFormat: json
+
+  # revokeOnShutdown: false
+
+  # resources:
+  #   requests:
+  #     memory: 256Mi
+  #     cpu: 250m
+  #   limits:
+  #     memory: 512Mi
+  #     cpu: 500m
+
+  # webhook:
+  #   objectSelector:
+  #     matchLabels:
+  #       vault/sidecar: "true"
+
+  # affinity: |
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #     - labelSelector:
+  #         matchLabels:
+  #           app.kubernetes.io/name: {{ template "vault.name" . }}-agent-injector
+  #           app.kubernetes.io/instance: "{{ .Release.Name }}"
+  #           component: webhook
+  #       topologyKey: kubernetes.io/hostname
+
+server:
+  enabled: true
+
+  standalone:
+    enabled: false
+
+  ha:
+    enabled: true
+    replicas: 2
+    raft:
+      enabled: true
+      setNodeId: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+        }
+
+        service_registration "kubernetes" {}
+
+  logFormat: json
+
+  resources:
+    limits:
+      memory: 4Gi
+      cpu: "2"
+    requests:
+      memory: 2Gi
+      cpu: "1"
+
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+
+  auditStorage:
+    enabled: true
+    size: 5Gi
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+
+  ingress:
+    enabled: true
+    hosts:
+      - host: vault.10.242.20.145.sslip.io
+
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ template "vault.name" . }}
+            app.kubernetes.io/instance: "{{ .Release.Name }}"
+            component: server
+        topologyKey: kubernetes.io/hostname
+
+ui:
+  enabled: true

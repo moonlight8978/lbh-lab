@@ -1,6 +1,9 @@
 variable "controllers" {
   type = list(string)
+}
 
+variable "workers" {
+  type = list(string)
 }
 
 variable "root_dir" {
@@ -38,7 +41,7 @@ locals {
 }
 
 resource "local_file" "install_config" {
-  content = templatefile("${path.module}/templates/k3sup.tftpl", {
+  content = templatefile("${path.module}/templates/server.tftpl", {
     install           = true
     ip4               = local.install
     name              = "control-${index(var.controllers, local.install) + 1}"
@@ -50,14 +53,14 @@ resource "local_file" "install_config" {
     k3s_version       = var.k3s_version
   })
 
-  filename = "${var.root_dir}/tmp/k3sup-${index(var.controllers, local.install) + 1}.yml"
+  filename = "${var.root_dir}/tmp/server-${index(var.controllers, local.install) + 1}.yml"
 }
 
 resource "null_resource" "install" {
   count = var.kube_bootstrap ? 1 : 0
 
   provisioner "local-exec" {
-    command     = "c7r k3sup --config tmp/k3sup-${index(var.controllers, local.install) + 1}.yml"
+    command     = "c7r k3sup --config tmp/server-${index(var.controllers, local.install) + 1}.yml"
     working_dir = var.root_dir
   }
 }
@@ -65,7 +68,7 @@ resource "null_resource" "install" {
 resource "local_file" "join_config" {
   for_each = toset(local.joins)
 
-  content = templatefile("${path.module}/templates/k3sup.tftpl", {
+  content = templatefile("${path.module}/templates/server.tftpl", {
     install           = false
     ip4               = each.value
     name              = "control-${index(var.controllers, each.value) + 1}"
@@ -77,7 +80,7 @@ resource "local_file" "join_config" {
     k3s_version       = var.k3s_version
   })
 
-  filename = "${var.root_dir}/tmp/k3sup-${index(var.controllers, each.value) + 1}.yml"
+  filename = "${var.root_dir}/tmp/server-${index(var.controllers, each.value) + 1}.yml"
 }
 
 resource "null_resource" "join" {
@@ -86,7 +89,30 @@ resource "null_resource" "join" {
   depends_on = [null_resource.install]
 
   provisioner "local-exec" {
-    command     = "c7r k3sup --config tmp/k3sup-${index(var.controllers, each.value) + 1}.yml"
+    command     = "c7r k3sup --config tmp/server-${index(var.controllers, each.value) + 1}.yml"
+    working_dir = var.root_dir
+  }
+}
+
+resource "local_file" "worker_config" {
+  for_each = toset(var.workers)
+
+  filename = "${var.root_dir}/tmp/agent-${index(var.workers, each.value) + 1}.yml"
+  content = templatefile("${path.module}/templates/agent.tftpl", {
+    ip4               = each.value
+    join_ip4          = local.install
+    name              = "worker-${index(var.workers, each.value) + 1}"
+    k3s_version = var.k3s_version
+  })
+}
+
+resource "null_resource" "agent" {
+  for_each = var.kube_bootstrap ? toset(var.workers) : []
+
+  depends_on = [null_resource.install]
+
+  provisioner "local-exec" {
+    command     = "c7r k3sup --config tmp/agent-${index(var.workers, each.value) + 1}.yml"
     working_dir = var.root_dir
   }
 }

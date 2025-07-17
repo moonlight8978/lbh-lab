@@ -48,8 +48,9 @@ resource "proxmox_virtual_environment_vm" "main" {
 
   dynamic "disk" {
     for_each = var.additional_disks
+
     content {
-      interface = "scsi${index(var.additional_disks, disk) + 1}"
+      interface = "scsi${disk.key + 1}"
       iothread = true
       datastore_id = disk.value.datastore_id
       size = disk.value.size

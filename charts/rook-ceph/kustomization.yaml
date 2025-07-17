@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: rook-ceph-cluster
+    repo: https://charts.rook.io/release
+    namespace: rook-ceph
+    releaseName: rook-ceph-cluster
+    version: 0.30.0
+    valuesFile: values.yaml

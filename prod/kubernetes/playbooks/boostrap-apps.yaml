@@ -1,0 +1,16 @@
+- name: Boostrap apps for k8s cluster
+  hosts: localhost
+  tasks:
+    - name: Deploy Cilium chart
+      kubernetes.core.k8s:
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='charts/cilium', enable_helm=True) }}"
+        kubeconfig: /Users/moonlight/.kube/lbhlab.yaml
+
+    - name: Deploy Vault chart
+      kubernetes.core.k8s:
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='charts/vault', enable_helm=True) }}"
+        kubeconfig: /Users/moonlight/.kube/lbhlab.yaml
+
+    # - name: Deploy ArgoCD chart
+    #   kubernetes.core.k8s:
+    #     definition: "{{ lookup('kubernetes.core.kustomize', dir='charts/argocd', enable_helm=True) }}"

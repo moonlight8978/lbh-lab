@@ -9,8 +9,7 @@ tasks:
       TF_VAR_kube_bootstrap: "true"
 
   bootstrap-apps:
-    dir: charts
     cmds:
-      - helmfile apply --skip-diff-on-install
+      - ansible-playbook prod/kubernetes/playbooks/boostrap-apps.yaml
     env:
       KUBECONFIG: $HOME/.kube/lbhlab.yaml

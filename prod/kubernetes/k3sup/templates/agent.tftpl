@@ -1,0 +1,28 @@
+# yaml-language-server
+---
+- join
+
+- name: --ip
+  value: ${ip4}
+
+- name: --user
+  value: root
+
+- name: --ssh-key
+  value: $HOME/.ssh/moonlight
+
+- name: --server-user
+  value: root
+
+- name: --server-ip
+  value: ${join_ip4}
+
+- name: --k3s-version
+  value: ${k3s_version}
+
+- name: --k3s-channel
+  value: stable
+
+- name: --k3s-extra-args
+  value: >-
+    --node-name=${name}
