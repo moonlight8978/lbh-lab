@@ -9,7 +9,9 @@ tasks:
       TF_VAR_kube_bootstrap: "true"
 
   bootstrap-apps:
+    dir: charts
     cmds:
-      - ansible-playbook prod/kubernetes/playbooks/boostrap-apps.yaml
+      - until kubectl wait nodes --for=condition=Ready --all --timeout=10m; do sleep 5; done
+      - helmfile apply --skip-diff-on-install --suppress-diff
     env:
       KUBECONFIG: $HOME/.kube/lbhlab.yaml
