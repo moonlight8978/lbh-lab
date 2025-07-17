@@ -17,6 +17,6 @@ dependency "disk" {
 }
 
 inputs = merge(include.root.locals.values, include.vm.locals, {
-  vm_id = include.root.locals.values.debian_template_vm_id
+  vm_id         = include.root.locals.values.debian_template_vm_id
   cdrom_file_id = dependency.disk.outputs.file_id
 })

@@ -17,6 +17,7 @@ ipv6:
 loadBalancer:
   mode: dsr
   dsrDispatch: opt
+  algorithm: maglev
 
 hubble:
   enabled: true
