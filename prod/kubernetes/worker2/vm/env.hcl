@@ -7,7 +7,8 @@ locals {
   node_name   = "pve1"
   tags        = ["debian", "k8s", "worker"]
 
-  cpu = 4
+  cpu = 6
+  memory = 12288
 
   on_boot = true
 
@@ -25,6 +26,10 @@ locals {
     {
       datastore_id = "slow-lvm"
       size = 100
+    },
+    {
+      datastore_id = "local-lvm"
+      size = 30
     }
   ]
 }
