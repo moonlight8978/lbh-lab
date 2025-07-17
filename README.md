@@ -18,6 +18,10 @@
     - [ ] Proxmox installation on bare metals
     - [ ] Template machine installation
 
+- Security
+  - [ ] Egress Management
+  - [ ] Access Control: OPA, Kyverno
+
 ## Development
 
 ### Terraform

@@ -5,6 +5,12 @@ repositories:
   - name: cilium
     url: https://helm.cilium.io
 
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+
+  - name: rook-release
+    url: https://charts.rook.io/release
+
 helmDefaults:
   wait: true
   waitForJobs: true
@@ -24,3 +30,21 @@ releases:
       - ./cilium/values.yaml
     needs:
       - monitoring/prometheus-operator-crds
+
+  - name: external-secrets
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    version: 0.18.2
+    values:
+      - ./external-secrets/values.yaml
+    needs:
+      - kube-system/cilium
+
+  - name: rook-ceph
+    namespace: rook-ceph
+    chart: rook-release/rook-ceph
+    version: 1.17.6
+    values:
+      - ./rook-ceph/values.yaml
+    needs:
+      - external-secrets/external-secrets
