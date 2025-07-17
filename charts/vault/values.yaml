@@ -94,13 +94,9 @@ server:
     path: "/v1/sys/health?standbyok=true"
     initialDelaySeconds: 60
 
-  auditStorage:
-    enabled: true
-    size: 5Gi
-
   dataStorage:
     enabled: true
-    size: 10Gi
+    size: 5Gi
 
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
