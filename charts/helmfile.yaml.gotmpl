@@ -14,6 +14,9 @@ repositories:
   - name: piraeus-charts
     url: https://piraeus.io/helm-charts/
 
+  - name: hashicorp
+    url: https://helm.releases.hashicorp.com
+
 helmDefaults:
   wait: true
   waitForJobs: true
@@ -67,3 +70,12 @@ releases:
       - ./rook-ceph/cluster/values.yaml
     needs:
       - kube-system/snapshot-controller
+
+  - name: vault
+    namespace: vault
+    chart: hashicorp/vault
+    version: 0.30.0
+    values:
+      - ./vault/values.yaml
+    needs:
+      - rook-ceph/rook-ceph-cluster

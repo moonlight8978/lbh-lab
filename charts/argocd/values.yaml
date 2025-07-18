@@ -1,0 +1,13 @@
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+server:
+  replicas: 1
+  ingress:
+    enabled: true
+
+repoServer:
+  replicas: 1
