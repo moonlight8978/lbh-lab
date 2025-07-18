@@ -8,10 +8,10 @@ cephClusterSpec:
     useAllNodes: true
     useAllDevices: false
     devices:
-      - name: sdb
+      - name: /dev/disk/by-path/pci-0000:01:02.0-scsi-0:0:0:1
         config:
           deviceClass: hdd
-      - name: sdc
+      - name: /dev/disk/by-path/pci-0000:01:03.0-scsi-0:0:0:2
         config:
           deviceClass: nvme
 
