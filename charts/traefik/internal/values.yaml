@@ -1,0 +1,56 @@
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    ingressClass: traefik-internal
+  kubernetesIngress:
+    enabled: true
+    ingressClass: traefik-internal
+  kubernetesGateway:
+    enabled: false
+
+ingressClass:
+  enabled: true
+  name: traefik-internal
+  isDefaultClass: true
+
+metrics:
+  prometheus:
+    serviceMonitor:
+      enabled: true
+    prometheusRule:
+      enabled: true
+      rules:
+        - alert: TraefikDown
+          expr: up{job="traefik"} == 0
+          for: 5m
+          labels:
+            context: traefik
+            severity: warning
+          annotations:
+            summary: "Traefik Down"
+            description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
+
+deployment:
+  replicas: 3
+
+service:
+  annotations:
+    metallb.io/loadBalancerIPs: 10.242.20.150
+
+ports:
+  web:
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ include "traefik.namespace" . }}'
+        topologyKey: kubernetes.io/hostname

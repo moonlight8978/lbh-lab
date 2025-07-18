@@ -46,6 +46,11 @@ terraform {
       source = "bpg/proxmox"
       version = "0.78.1"
     }
+
+    vault = {
+      source = "hashicorp/vault"
+      version = "5.1.0"
+    }
   }
 }
 
@@ -54,6 +59,11 @@ provider "proxmox" {
   insecure = true
   username = "${local.values.proxmox_username}"
   password = "${local.values.proxmox_password}"
+}
+
+provider "vault" {
+  address = "https://vault.10.242.20.115.sslip.io"
+  token = "${local.values.vault.root_token}"
 }
 EOF
 }

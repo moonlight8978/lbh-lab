@@ -110,8 +110,9 @@ server:
 
   ingress:
     enabled: true
+    ingressClassName: traefik-internal
     hosts:
-      - host: vault.10.242.20.145.sslip.io
+      - host: vault.10.242.20.150.sslip.io
 
   # affinity: |
   #   podAntiAffinity:

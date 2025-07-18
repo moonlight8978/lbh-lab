@@ -43,6 +43,23 @@ releases:
       - ./metallb/values.yaml
     needs:
       - kube-system/cilium
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./metallb/manifests
+
+  - name: traefik-internal
+    namespace: kube-system
+    chart: oci://ghcr.io/traefik/helm/traefik
+    version: 36.3.0
+    values:
+      - ./traefik/internal/values.yaml
+    needs:
+      - metallb-system/metallb
 
   - name: external-secrets
     namespace: external-secrets
@@ -51,7 +68,7 @@ releases:
     values:
       - ./external-secrets/values.yaml
     needs:
-      - metallb-system/metallb
+      - kube-system/traefik-internal
 
   - name: rook-ceph
     namespace: rook-ceph
