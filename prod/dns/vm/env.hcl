@@ -8,7 +8,7 @@ locals {
   tags        = ["core", "debian"]
 
   cpu    = 1
-  memory = 1024
+  memory = 1
 
   on_boot = true
 

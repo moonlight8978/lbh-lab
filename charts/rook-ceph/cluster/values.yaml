@@ -15,25 +15,26 @@ cephClusterSpec:
         config:
           deviceClass: nvme
 
+  # Down size requests resources because the VM has only 10GB of memory
   resources:
     mgr:
       limits:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "512Mi"
+        memory: "256Mi"
     mon:
       limits:
         memory: "2Gi"
       requests:
         cpu: "50m"
-        memory: "1Gi"
+        memory: "256Mi"
     osd:
       limits:
         memory: "4Gi"
       requests:
         cpu: "500m"
-        memory: "2Gi"
+        memory: "512Mi"
 
 cephBlockPools:
   - name: ceph-blockpool-fast

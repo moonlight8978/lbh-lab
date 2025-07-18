@@ -1,9 +1,9 @@
 locals {
-  workspace = "prod/kubernetes/worker1/vm"
+  workspace = "prod/kubernetes/worker3/vm"
 
   clone_vm_id = 1000
-  vm_id       = 8101
-  name        = "k8s-worker1"
+  vm_id       = 8103
+  name        = "k8s-worker3"
   node_name   = "pve1"
   tags        = ["debian", "k8s", "worker"]
 
@@ -12,7 +12,7 @@ locals {
 
   on_boot = true
 
-  ip4      = "10.242.20.145/24"
+  ip4      = "10.242.20.147/24"
   gateway4 = "10.242.20.1"
 
   cloudinit = true

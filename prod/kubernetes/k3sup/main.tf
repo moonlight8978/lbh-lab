@@ -109,7 +109,7 @@ resource "local_file" "worker_config" {
 resource "null_resource" "agent" {
   for_each = var.kube_bootstrap ? toset(var.workers) : []
 
-  depends_on = [null_resource.install]
+  depends_on = [null_resource.join]
 
   provisioner "local-exec" {
     command     = "c7r k3sup --config tmp/agent-${index(var.workers, each.value) + 1}.yml"

@@ -1,0 +1,7 @@
+prometheus:
+  serviceAccount: prometheus
+  namespace: metallb-system
+  serviceMonitor:
+    enabled: true
+  prometheusRules:
+    enabled: true

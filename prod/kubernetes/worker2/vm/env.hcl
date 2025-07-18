@@ -7,8 +7,8 @@ locals {
   node_name   = "pve1"
   tags        = ["debian", "k8s", "worker"]
 
-  cpu = 6
-  memory = 12288
+  cpu = 4
+  memory = 10
 
   on_boot = true
 

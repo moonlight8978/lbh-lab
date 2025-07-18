@@ -37,10 +37,13 @@
     --disable=traefik,servicelb,metrics-server
     --flannel-backend=none
     --secrets-encryption
-    --etcd-expose-metrics=true
+    --etcd-expose-metrics
     --disable-network-policy
     --disable-kube-proxy
-    --tls-san=${join(",", tls_san)}
+    --node-taint=node-role.kubernetes.io/control-plane=true:NoSchedule
+
+- name: --tls-san
+  value: ${join(",", tls_san)}
 
 - name: --k3s-version
   value: ${k3s_version}

@@ -11,7 +11,6 @@ tasks:
   bootstrap-apps:
     dir: charts
     cmds:
-      - until kubectl wait nodes --for=condition=Ready --all --timeout=10m; do sleep 5; done
       - helmfile apply --skip-diff-on-install --suppress-diff
     env:
       KUBECONFIG: $HOME/.kube/lbhlab.yaml

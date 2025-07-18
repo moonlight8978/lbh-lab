@@ -1,6 +1,6 @@
 locals {
   # default to 1:2 ratio
-  memory = var.memory == -1 ? var.cpu * 1024 * 2 : var.memory
+  memory = var.memory == -1 ? var.cpu * 1024 * 2 : var.memory * 1024
 }
 
 resource "proxmox_virtual_environment_vm" "main" {

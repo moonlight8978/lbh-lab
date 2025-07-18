@@ -27,6 +27,10 @@ dependency "worker2" {
   config_path = "../worker2/vm"
 }
 
+dependency "worker3" {
+  config_path = "../worker3/vm"
+}
+
 inputs = merge(include.root.locals.values, {
   controllers = [
     dependency.control1.outputs.ip4,
@@ -37,6 +41,7 @@ inputs = merge(include.root.locals.values, {
   workers = [
     dependency.worker1.outputs.ip4,
     dependency.worker2.outputs.ip4,
+    dependency.worker3.outputs.ip4,
   ]
 
   root_dir = get_repo_root()
