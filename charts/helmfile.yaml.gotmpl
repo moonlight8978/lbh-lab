@@ -110,3 +110,26 @@ releases:
       - ./vault/values.yaml
     needs:
       - rook-ceph/rook-ceph-cluster
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: task
+        args:
+          - k8s:init-vault
+
+  - name: argocd
+    namespace: argocd
+    chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
+    version: 8.1.3
+    values:
+      - ./argocd/values.yaml
+    needs:
+      - vault/vault
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./argocd/manifests

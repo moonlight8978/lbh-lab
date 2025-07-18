@@ -62,8 +62,9 @@ provider "proxmox" {
 }
 
 provider "vault" {
-  address = "https://vault.10.242.20.115.sslip.io"
+  address = "https://vault.10.242.20.150.sslip.io"
   token = "${local.values.vault.root_token}"
+  skip_tls_verify = true
 }
 EOF
 }

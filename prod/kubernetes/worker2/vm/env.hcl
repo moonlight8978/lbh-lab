@@ -7,7 +7,7 @@ locals {
   node_name   = "pve1"
   tags        = ["debian", "k8s", "worker"]
 
-  cpu = 4
+  cpu    = 4
   memory = 10
 
   on_boot = true
@@ -25,11 +25,11 @@ locals {
   additional_disks = [
     {
       datastore_id = "slow-lvm"
-      size = 100
+      size         = 100
     },
     {
       datastore_id = "local-lvm"
-      size = 30
+      size         = 30
     }
   ]
 }

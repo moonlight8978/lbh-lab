@@ -1,13 +1,105 @@
 redis-ha:
   enabled: true
 
+  redis:
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 10m
+      limits:
+        memory: 500Mi
+
+  haproxy:
+    resources:
+      requests:
+        memory: 32Mi
+        cpu: 10m
+      limits:
+        memory: 128Mi
+
 controller:
   replicas: 1
+
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 256Mi
 
 server:
   replicas: 1
   ingress:
     enabled: true
+    ingressClassName: traefik-internal
+    hostname: argocd.10.242.20.150.sslip.io
+
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
 
 repoServer:
   replicas: 1
+
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+dex:
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+configs:
+  cm:
+    admin.enabled: true
+    application.instanceLabelKey: argocd.argoproj.io/instance
+  # rbac:
+  #   policy.csv: |
+  #     g, Admin, role:admin
+
+notifications:
+  enabled: true
+  secret:
+    create: false
+  notifiers:
+    service.github: |
+      appID: $githubAppId
+      installationID: $githubInstallationId
+      privateKey: $githubPrivateKey
+    service.telegram: |
+      token: $telegramToken
+  triggers:
+    trigger.on-deployed: |
+      - description: Application is synced and healthy. Triggered once per commit.
+        oncePer: app.status.sync.revision
+        send:
+        - app-deployed
+        when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
+  templates:
+    template.app-deployed: |
+      message: |
+        Application {{.app.metadata.name}} is now running new version of deployments manifests.
+      github:
+        repoURLPath: "{{(index .app.spec.sources 0).repoURL}}"
+        revisionPath: "{{index .app.status.sync.revisions 0}}"
+        status:
+          state: success
+          label: "continuous-delivery/{{.app.metadata.name}}"
+          targetURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+        deployment:
+          state: success
+          environment: production
+          logURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+          requiredContexts: []
+          autoMerge: true
+          transientEnvironment: false

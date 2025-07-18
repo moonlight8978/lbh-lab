@@ -23,8 +23,6 @@ tasks:
         set -eu
         until kubectl wait pod vault-0 -n vault --timeout=10m --for=condition=Ready; do sleep 5; done
         INITIALIZED=$(kubectl -n vault exec --quiet -it vault-0 -- vault status | grep Initialized | awk '{print $2}' | tr -d '\n\r')
-        echo "Initialized: '$INITIALIZED'"
-        echo "Length: ${#INITIALIZED}"
         if [ "$INITIALIZED" = "false" ]; then
           kubectl -n vault exec --quiet -it vault-0 -- vault operator init -format=yaml > tmp/vault-keys.yml
 
@@ -32,19 +30,32 @@ tasks:
             kubectl -n vault exec --quiet -it vault-0 -- vault operator unseal $(yq -r ".unseal_keys_b64[$i]" tmp/vault-keys.yml | tr -d '\n\r')
           done
         else
-          echo "Vault is already initialized"
+          echo "Vault is already initialized for vault-0"
         fi
 
       - for: ["vault-1", "vault-2"]
         cmd: |
           set -eu
           until kubectl wait pod {{.ITEM}} -n vault --timeout=10m --for=condition=Ready; do sleep 5; done
-          kubectl -n vault exec --quiet -it {{.ITEM}} -- vault operator raft join http://vault-0.vault-internal:8200
-          for i in {0..2}; do
-            kubectl -n vault exec --quiet -it {{.ITEM}} -- vault operator unseal $(yq -r ".unseal_keys_b64[$i]" tmp/vault-keys.yml | tr -d '\n\r')
-          done
+          INITIALIZED=$(kubectl -n vault exec --quiet -it {{.ITEM}} -- vault status | grep Initialized | awk '{print $2}' | tr -d '\n\r')
+          if [ "$INITIALIZED" = "false" ]; then
+            kubectl -n vault exec --quiet -it {{.ITEM}} -- vault operator raft join http://vault-0.vault-internal:8200
+            for i in {0..2}; do
+              kubectl -n vault exec --quiet -it {{.ITEM}} -- vault operator unseal $(yq -r ".unseal_keys_b64[$i]" tmp/vault-keys.yml | tr -d '\n\r')
+            done
+          else
+            echo "Vault is already initialized for {{.ITEM}}"
+          fi
 
       # Merge current secrets with vault keys
       - |
+        #! /bin/bash
+        set -eu
         yq eval '{ "vault": . }' tmp/vault-keys.yml > tmp/secrets-vault.yml
+        sops decrypt secrets.yml > tmp/secrets.yml
         yq eval-all '. as $item ireduce ({}; . * $item )' tmp/secrets.yml tmp/secrets-vault.yml | sops encrypt --input-type yaml --output-type yaml --filename-override secrets.dec.yml > secrets.yml
+        rm tmp/secrets.yml tmp/secrets-vault.yml
+
+      - just terragrunt apply prod/vault --all --non-interactive
+
+
