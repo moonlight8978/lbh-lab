@@ -99,9 +99,9 @@ resource "local_file" "worker_config" {
 
   filename = "${var.root_dir}/tmp/agent-${index(var.workers, each.value) + 1}.yml"
   content = templatefile("${path.module}/templates/agent.tftpl", {
-    ip4               = each.value
-    join_ip4          = local.install
-    name              = "worker-${index(var.workers, each.value) + 1}"
+    ip4         = each.value
+    join_ip4    = local.install
+    name        = "worker-${index(var.workers, each.value) + 1}"
     k3s_version = var.k3s_version
   })
 }

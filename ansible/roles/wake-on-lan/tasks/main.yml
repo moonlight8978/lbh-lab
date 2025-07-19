@@ -1,25 +1,22 @@
+---
 - name: Get WOL supported flags
   ansible.builtin.shell: |
     ethtool {{ wol_inf }} | grep Wake-on | awk '{print $3}' | xargs
   register: wol_supported_flags
-
 - name: Get current WOL flags
   ansible.builtin.shell: |
     ethtool {{ wol_inf }} | grep Wake-on | grep -v Supports | awk '{print $2}' | xargs
   register: wol_flag
   notify: Debug WOL
-
 - name: Enable WOL
   when: wol_flag.stdout != 'g'
   ansible.builtin.shell: |
     ethtool -s {{ wol_inf }} wol g
-
 - name: Persist WOL flag between reboot
   ansible.builtin.lineinfile:
     path: /etc/network/interfaces
     search_string: 'post-up /usr/sbin/ethtool -s {{ wol_inf }} wol g'
     insertafter: '^iface {{ wol_inf }} inet manual'
     line: "    post-up /usr/sbin/ethtool -s {{ wol_inf }} wol g"
-
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

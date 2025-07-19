@@ -1,9 +1,9 @@
+---
 - name: Update repository
   ansible.builtin.apt:
     update_cache: true
     upgrade: "{{ node_pkg_upgrade }}"
     state: "{{ node_pkg_state }}"
-
 - name: Install packages
   ansible.builtin.apt:
     pkg:
@@ -13,13 +13,11 @@
       - net-tools
       - sudo
       - iptables
-
 - name: Ensure qemu agent is started
   ansible.builtin.systemd_service:
     name: qemu-guest-agent
     enabled: true
     state: started
-
 - name: Set hostname
   ansible.builtin.hostname:
     name: "{{ node_name }}"

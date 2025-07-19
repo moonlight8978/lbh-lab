@@ -1,10 +1,9 @@
+---
 - name: Update repository
   ansible.builtin.apt:
     update_cache: true
     upgrade: "{{ interactive_pkg_upgrade }}"
     state: "{{ interactive_pkg_state }}"
-
-
 - name: Install human-friendly packages
   ansible.builtin.apt:
     pkg:

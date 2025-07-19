@@ -12,22 +12,22 @@ variable "node_name" {
 }
 
 variable "clone_vm_id" {
-  type = number
-  default = null
+  type     = number
+  default  = null
   nullable = true
 }
 
 variable "disk" {
   type = object({
     datastore_id = string
-    size = number
+    size         = number
   })
 }
 
 variable "additional_disks" {
   type = list(object({
     datastore_id = string
-    size = number
+    size         = number
   }))
   default = []
 }
@@ -42,33 +42,33 @@ variable "memory" {
 }
 
 variable "cdrom_file_id" {
-  type = string
-  default = null
+  type     = string
+  default  = null
   nullable = true
 }
 
 variable "tags" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "on_boot" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "boot_disk" {
-  type = string
+  type    = string
   default = "scsi0"
 }
 
 variable "cloudinit" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "ssh_keys" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 

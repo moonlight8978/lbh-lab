@@ -1,3 +1,4 @@
+---
 - name: Debug WOL
   ansible.builtin.debug:
     msg: "Supported: {{ wol_supported_flags.stdout }}, current: {{ wol_flag.stdout }}"

@@ -1,3 +1,4 @@
+---
 prometheus:
   serviceAccount: prometheus
   namespace: metallb-system
