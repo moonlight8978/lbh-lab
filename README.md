@@ -21,6 +21,7 @@
 - Security
   - [ ] Egress Management
   - [ ] Access Control: OPA, Kyverno
+  - [ ] Internal Network Encryption in transit (TLS)
 
 ## Development
 
