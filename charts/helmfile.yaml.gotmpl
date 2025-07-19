@@ -115,7 +115,12 @@ releases:
         showlogs: true
         command: task
         args:
-          - k8s:init-vault
+          - vault:init
+      - events: ["postsync"]
+        showlogs: true
+        command: task
+        args:
+          - vault:provision
 
   - name: argocd
     namespace: argocd

@@ -16,5 +16,6 @@ tasks:
     deps:
       - k8s:provision
       - k8s:bootstrap-apps
-      - vault:init
-      - vault:provision
+      # These vault tasks are already included in the helmfile sync hook
+      # - vault:init
+      # - vault:provision
