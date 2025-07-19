@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  setup:
+    cmds:
+      - ansible-playbook -i inventory.ini pve/playbooks/pve.yml
+
+  debian:
+    cmds:
+      - just terragrunt apply prod/debian-template --all --non-interactive

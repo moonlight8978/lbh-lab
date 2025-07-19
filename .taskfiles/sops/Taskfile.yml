@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  decrypt:
+    cmds:
+      - sops decrypt secrets.yml > secrets.dec.yml
+
+  encrypt:
+    cmds:
+      - sops encrypt secrets.dec.yml > secrets.yml

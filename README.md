@@ -32,6 +32,34 @@
 - Services
   - [ ] DNS for local network
 
+## How to provision the cluster
+
+- Install Proxmox, setup disks, ...
+
+- Setup the PVE node
+```bash
+ansible-playbook -i inventory.ini pve/playbooks/pve.yml
+```
+
+- Provision the template
+```bash
+just terragrunt apply prod/debian-template --all --non-interactive
+```
+
+- Setup the template machine
+
+- Provision the k8s cluster
+
+```bash
+task k8s:provision
+```
+
+- Installs the boostrapping apps
+
+```bash
+task k8s:boostrap-apps
+```
+
 ## Development
 
 ### Terraform

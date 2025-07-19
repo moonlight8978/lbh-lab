@@ -2,3 +2,19 @@ version: "3"
 
 includes:
   k8s: .taskfiles/k8s/Taskfile.yml
+  pve: .taskfiles/pve/Taskfile.yml
+  sops: .taskfiles/sops/Taskfile.yml
+  vault: .taskfiles/vault/Taskfile.yml
+
+tasks:
+  setup:
+    deps:
+      - pve:setup
+      - pve:debian # Need manual installation of Debian template
+
+  k8s:
+    deps:
+      - k8s:provision
+      - k8s:bootstrap-apps
+      - vault:init
+      - vault:provision
