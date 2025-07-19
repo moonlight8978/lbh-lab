@@ -43,5 +43,4 @@ resource "vault_kubernetes_auth_backend_role" "main" {
   bound_service_account_namespaces = each.value.bound_service_account_namespaces
   token_ttl                        = 3600
   token_policies                   = [vault_policy.main[each.key].name]
-  audience                         = "vault"
 }
