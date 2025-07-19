@@ -1,12 +1,22 @@
-# LBH Lab Infrastructure
+# LBH Lab (Le Bich Home Lab) Infrastructure
 
 ## The system includes
 
 - Proxmox for VM provisioning
 
-- DNS
-
 - Kubernetes for workloads: internal services, hosting, ...
+
+- Terraform (Terragrunt) to provision almost everything automatically
+
+- Just, Taskfile for local task runner, and Ansible for remote task runner
+
+## Manual operations
+
+- Proxmox installation on bare metals
+
+- Template machine installation
+
+  -> Use qm CLI to import the cloud image?
 
 ## Goals
 
@@ -14,14 +24,13 @@
   - [x] Proxmox machines post installation
   - [x] K3s cluster
 
-  - The following must be done manually:
-    - [ ] Proxmox installation on bare metals
-    - [ ] Template machine installation
-
 - Security
   - [ ] Egress Management
   - [ ] Access Control: OPA, Kyverno
   - [ ] Internal Network Encryption in transit (TLS)
+
+- Services
+  - [ ] DNS for local network
 
 ## Development
 
