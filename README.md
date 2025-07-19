@@ -89,3 +89,11 @@ just terragrunt <cmd> <dir> <-flags>
 just terragrunt apply prod/debian-template --all
 just terragrunt init prod/debian-template --all
 ```
+
+## Credits
+
+The project is heavily inspired of those awesome projects
+
+- https://github.com/bjw-s-labs/home-ops
+
+- https://github.com/M0NsTeRRR/homelabv3-infra
