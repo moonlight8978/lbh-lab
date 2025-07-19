@@ -1,5 +1,17 @@
 # LBH Lab (Le Bich Home Lab) Infrastructure
 
+## Status
+
+- The project is currently in-development
+
+- Focus on automated provisioning, operating the home system
+
+- Hardware: It's running on a single gaming desktop machine (i7-10700 CPU, 32GB RAM, 512GB SSD, 1TB HDD)
+
+  I'm planning to migrate to 3 machines pi (or mini pc) cluster once my finances are in better shape. Why pi? Because of those electricity bills hit hard!
+
+- Networking: DHCP from a single ISP router. My networking knowledge is pretty basic, so I'll keep things as simple as possible
+
 ## The system includes
 
 - Proxmox for VM provisioning
@@ -31,6 +43,7 @@
 
 - Services
   - [ ] DNS for local network
+  - [ ] VPN
 
 ## How to provision the cluster
 
