@@ -30,10 +30,24 @@ controller:
 
 server:
   replicas: 1
+
   ingress:
     enabled: true
     ingressClassName: traefik-internal
-    hostname: argocd.10.242.20.150.sslip.io
+    annotations:
+      cert-manager.io/cluster-issuer: intermediate-ca
+      cert-manager.io/common-name: &cn argocd.10.242.20.150.sslip.io
+      cert-manager.io/subject-organizations: LBH Lab
+      cert-manager.io/subject-organizationalunits: ArgoCD
+      cert-manager.io/subject-countries: VN
+      cert-manager.io/duration: 720h
+      cert-manager.io/renew-before: 72h
+    hostname: *cn
+    tls: false
+    extraTls:
+      - secretName: argocd.sslip.io
+        hosts:
+          - *cn
 
   resources:
     limits:

@@ -51,6 +51,11 @@ releases:
           - apply
           - -f
           - ./cert-manager/manifests
+      - events: ["postsync"]
+        showlogs: true
+        command: task
+        args:
+          - pki:download-internal
 
   - name: metallb
     namespace: metallb-system
@@ -84,7 +89,7 @@ releases:
         args:
           - apply
           - -f
-          - ./traefik/internal/manifests
+          - ./traefik/internal/manifests/certificate.yaml
 
   - name: external-secrets
     namespace: external-secrets

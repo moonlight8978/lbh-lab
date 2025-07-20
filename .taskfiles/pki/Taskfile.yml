@@ -6,4 +6,5 @@ tasks:
     env:
       KUBECONFIG: $HOME/.kube/lbhlab.yaml
     cmds:
+      - until kubectl wait --for=create -n cert-manager secret root-ca; do sleep 5; done
       - kubectl get secret root-ca -n cert-manager -o jsonpath='{.data.tls\.crt}' | base64 -d > pki/internal/ca.crt

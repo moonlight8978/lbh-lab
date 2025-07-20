@@ -1,4 +1,5 @@
 ---
+
 global:
   enabled: true
   resources:
@@ -111,9 +112,21 @@ server:
 
   ingress:
     enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: intermediate-ca
+      cert-manager.io/common-name: &cn vault.10.242.20.150.sslip.io
+      cert-manager.io/subject-organizations: LBH Lab
+      cert-manager.io/subject-organizationalunits: Vault
+      cert-manager.io/subject-countries: VN
+      cert-manager.io/duration: 720h
+      cert-manager.io/renew-before: 72h
     ingressClassName: traefik-internal
     hosts:
-      - host: vault.10.242.20.150.sslip.io
+      - host: *cn
+    tls:
+      - secretName: vault.sslip.io
+        hosts:
+          - *cn
 
   # affinity: |
   #   podAntiAffinity:
