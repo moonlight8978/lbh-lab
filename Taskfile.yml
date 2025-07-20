@@ -21,8 +21,3 @@ tasks:
         # These vault tasks are already included in the helmfile sync hook
         # - task: vault:init
         # - task: vault:provision
-
-  ca:
-    cmds:
-      - task: pki:ca
-      - task: pki:inter

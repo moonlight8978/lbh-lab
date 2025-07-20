@@ -2,27 +2,8 @@
 version: "3"
 
 tasks:
-  ca:
+  download-internal:
+    env:
+      KUBECONFIG: $HOME/.kube/lbhlab.yaml
     cmds:
-      - cfssl gencert -initca pki/ca/csr.json | cfssljson -bare pki/ca/ca
-
-  inter:
-    cmds:
-      - cfssl gencert -initca pki/intermediate/csr.json | cfssljson -bare pki/intermediate/ca
-      - rm pki/intermediate/ca.pem
-      - |
-        cfssl sign \
-          -ca pki/ca/ca.pem \
-          -ca-key pki/ca/ca-key.pem \
-          -config pki/config.json \
-          -profile intermediate \
-          pki/intermediate/ca.csr | cfssljson -bare pki/intermediate/ca
-
-  save-keys:
-    cmds:
-      - |
-        sops decrypt secrets.yml > tmp/secrets.yml
-        yq '{ "root_ca_key": . }' pki/ca/ca-key.pem > tmp/secrets-ca-key.yml
-        yq '{ "intermediate_ca_key": . }' pki/intermediate/ca-key.pem > tmp/secrets-intermediate-ca-key.yml
-        yq eval-all '. as $item ireduce ({}; . * $item )' tmp/secrets.yml tmp/secrets-ca-key.yml tmp/secrets-intermediate-ca-key.yml | sops encrypt --input-type yaml --output-type yaml --filename-override secrets.dec.yml > secrets.yml
-        rm tmp/secrets.yml tmp/secrets-ca-key.yml tmp/secrets-intermediate-ca-key.yml
+      - kubectl get secret root-ca -n cert-manager -o jsonpath='{.data.tls\.crt}' | base64 -d > pki/internal/ca.crt
