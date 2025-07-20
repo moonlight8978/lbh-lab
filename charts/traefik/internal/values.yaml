@@ -47,11 +47,14 @@ service:
 
 ports:
   web:
+    asDefault: true
     redirections:
       entryPoint:
         to: websecure
         scheme: https
         permanent: true
+  websecure:
+    asDefault: true
 
 affinity:
   podAntiAffinity:
@@ -71,6 +74,7 @@ ingressRoute:
       kubernetes.io/ingress.class: traefik-internal
     matchRule: Host(`traefik.10.242.20.150.sslip.io`)
     entryPoints:
+      - web
       - websecure
     tls:
       secretName: traefik.sslip.io
