@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: &name traefik.sslip.io
+  namespace: kube-system
+spec:
+  commonName: &cn traefik.10.242.20.150.sslip.io
+  subject:
+    organizations:
+      - "LBH Lab"
+  dnsNames:
+    - *cn
+  issuerRef:
+    name: intermediate-ca
+    kind: ClusterIssuer
+  secretName: *name
+  duration: 720h
+  renewBefore: 72h

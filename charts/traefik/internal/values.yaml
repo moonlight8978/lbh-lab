@@ -70,3 +70,7 @@ ingressRoute:
     annotations:
       kubernetes.io/ingress.class: traefik-internal
     matchRule: Host(`traefik.10.242.20.150.sslip.io`)
+    entryPoints:
+      - websecure
+    tls:
+      secretName: traefik.sslip.io

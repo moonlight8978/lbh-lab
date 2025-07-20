@@ -15,3 +15,9 @@ tasks:
       - helmfile apply --skip-diff-on-install --suppress-diff
     env:
       KUBECONFIG: $HOME/.kube/lbhlab.yaml
+
+  download-crt:
+    env:
+      KUBECONFIG: $HOME/.kube/lbhlab.yaml
+    cmds:
+      - kubectl get secret root-ca -n cert-manager -o jsonpath='{.data.tls\.crt}' | base64 -d > pki/internal/ca.crt

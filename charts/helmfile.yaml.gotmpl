@@ -35,6 +35,23 @@ releases:
           - -c
           - until kubectl wait pod -l k8s-app=cilium --for=condition=Ready -n kube-system --timeout=10m; do sleep 10; done
 
+  - name: cert-manager
+    namespace: cert-manager
+    chart: oci://quay.io/jetstack/charts/cert-manager
+    version: v1.18.2
+    values:
+      - ./cert-manager/values.yaml
+    needs:
+      - kube-system/cilium
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./cert-manager/manifests
+
   - name: metallb
     namespace: metallb-system
     chart: oci://quay.io/metallb/chart/metallb
@@ -42,7 +59,7 @@ releases:
     values:
       - ./metallb/values.yaml
     needs:
-      - kube-system/cilium
+      - cert-manager/cert-manager
     hooks:
       - events: ["postsync"]
         showlogs: true
@@ -60,6 +77,14 @@ releases:
       - ./traefik/internal/values.yaml
     needs:
       - metallb-system/metallb
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./traefik/internal/manifests
 
   - name: external-secrets
     namespace: external-secrets

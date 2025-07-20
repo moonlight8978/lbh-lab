@@ -1,0 +1,26 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: intermediate-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: LBH Lab Intermediate CA
+  secretName: intermediate-ca
+  privateKey:
+    algorithm: RSA
+    size: 4096
+  duration: 43800h # 5 years
+  renewBefore: 720h # Renew 30 days before expiry
+  issuerRef:
+    name: root-ca
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: intermediate-ca
+spec:
+  ca:
+    secretName: intermediate-ca

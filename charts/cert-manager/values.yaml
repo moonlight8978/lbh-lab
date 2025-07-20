@@ -1,0 +1,14 @@
+---
+crds:
+  enabled: true
+  keep: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 100Mi
+
+prometheus:
+  enabled: true
+  servicemonitor:
+    enabled: true
