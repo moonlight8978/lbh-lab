@@ -6,17 +6,23 @@ includes:
   pve: .taskfiles/pve/Taskfile.yml
   sops: .taskfiles/sops/Taskfile.yml
   vault: .taskfiles/vault/Taskfile.yml
+  pki: .taskfiles/pki/Taskfile.yml
 
 tasks:
   setup:
-    deps:
-      - pve:setup
-      - pve:debian # Need manual installation of Debian template
+    cmds:
+      - task: pve:setup
+      - task: pve:debian # Need manual installation of Debian template
 
   k8s:
-    deps:
-      - k8s:provision
-      - k8s:bootstrap-apps
-      # These vault tasks are already included in the helmfile sync hook
-      # - vault:init
-      # - vault:provision
+    cmds:
+      - task: k8s:provision
+      - task: k8s:bootstrap-apps
+        # These vault tasks are already included in the helmfile sync hook
+        # - task: vault:init
+        # - task: vault:provision
+
+  ca:
+    cmds:
+      - task: pki:ca
+      - task: pki:inter
