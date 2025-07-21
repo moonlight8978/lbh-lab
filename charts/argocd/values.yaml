@@ -31,8 +31,6 @@ controller:
   replicas: 1
 
   resources:
-    limits:
-      memory: 512Mi
     requests:
       cpu: 10m
       memory: 64Mi
@@ -59,8 +57,6 @@ server:
           - *cn
 
   resources:
-    limits:
-      memory: 128Mi
     requests:
       cpu: 10m
       memory: 64Mi
@@ -69,16 +65,12 @@ repoServer:
   replicas: 1
 
   resources:
-    limits:
-      memory: 128Mi
     requests:
       cpu: 10m
       memory: 64Mi
 
 dex:
   resources:
-    limits:
-      memory: 64Mi
     requests:
       cpu: 10m
       memory: 32Mi
