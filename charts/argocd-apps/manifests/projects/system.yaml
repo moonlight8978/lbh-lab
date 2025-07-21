@@ -19,6 +19,8 @@ spec:
       name: in-cluster
     - namespace: external-secrets
       name: in-cluster
+    - namespace: metallb-system
+      name: in-cluster
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
