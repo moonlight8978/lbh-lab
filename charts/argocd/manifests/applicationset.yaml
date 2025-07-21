@@ -15,6 +15,12 @@ spec:
           - name: cert-manager
             project: system
             namespace: cert-manager
+          - name: external-secrets
+            project: system
+            namespace: external-secrets
+          - name: argocd
+            project: cicd
+            namespace: argocd-system
   template:
     metadata:
       name: "{{.name}}"
