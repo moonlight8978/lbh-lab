@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: prod
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - name: cilium
+            project: system
+            namespace: kube-system
+  template:
+    metadata:
+      name: '{{.name}}'
+    spec:
+      project: '{{.project}}'
+      source:
+        repoURL: https://github.com/moonlight8978/lbh-lab.git
+        targetRevision: main
+        path: 'charts/{{.path | default .name}}'
+      destination:
+        name: in-cluster
+        namespace: '{{.namespace}}'
