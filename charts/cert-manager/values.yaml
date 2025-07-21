@@ -3,6 +3,8 @@ crds:
   enabled: true
   keep: true
 
+enableCertificateOwnerRef: true
+
 resources:
   requests:
     cpu: 50m
