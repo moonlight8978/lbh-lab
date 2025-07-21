@@ -95,6 +95,10 @@ configs:
       jqPathExpressions:
       - '.spec.endpoints[].relabelings[].action'
 
+  params:
+    create: true
+    controller.diff.server.side: true
+
   # rbac:
   #   policy.csv: |
   #     g, Admin, role:admin

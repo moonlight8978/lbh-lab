@@ -33,6 +33,7 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+          - ServerSideDiff=true
       source:
         repoURL: https://github.com/moonlight8978/lbh-lab.git
         targetRevision: main
