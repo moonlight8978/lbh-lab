@@ -12,7 +12,4 @@ helmCharts:
     valuesFile: values.yaml
 
 resources:
-  - manifests/applicationset.yaml
   - manifests/externalsecret.yaml
-  - manifests/projects/system.yaml
-  - manifests/projects/cicd.yaml

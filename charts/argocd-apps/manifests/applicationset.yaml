@@ -30,6 +30,9 @@ spec:
           - name: argocd
             project: cicd
             namespace: argocd
+          - name: argocd-apps
+            project: cicd
+            namespace: argocd
   template:
     metadata:
       name: "{{.name}}"
@@ -43,6 +46,7 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - ServerSideDiff=true
+          - RespectIgnoreDifferences=true
       source:
         repoURL: https://github.com/moonlight8978/lbh-lab.git
         targetRevision: main
