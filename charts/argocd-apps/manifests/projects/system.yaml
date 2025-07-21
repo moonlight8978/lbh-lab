@@ -21,6 +21,12 @@ spec:
       name: in-cluster
     - namespace: metallb-system
       name: in-cluster
+    - namespace: rook-ceph
+      name: in-cluster
+    - namespace: monitoring
+      name: in-cluster
+    - namespace: vault
+      name: in-cluster
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
