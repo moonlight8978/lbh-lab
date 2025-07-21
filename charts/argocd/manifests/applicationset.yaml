@@ -18,6 +18,9 @@ spec:
           - name: external-secrets
             project: system
             namespace: external-secrets
+          - name: metallb
+            project: system
+            namespace: metallb-system
           - name: argocd
             project: cicd
             namespace: argocd
