@@ -12,6 +12,12 @@ spec:
           - name: cilium
             project: system
             namespace: kube-system
+            ignoreDifferences:
+              - kind: Secret
+                jsonPointers:
+                  - /data/ca.crt
+                  - /data/tls.crt
+                  - /data/tls.key
           - name: cert-manager
             project: system
             namespace: cert-manager
@@ -44,3 +50,8 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{.namespace}}"
+  templatePatch: |
+    spec:
+      {{- with .ignoreDifferences }}
+      ignoreDifferences: {{. | toYaml}}
+      {{- end }}
