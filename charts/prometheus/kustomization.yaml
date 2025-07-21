@@ -9,4 +9,3 @@ helmCharts:
     repo: oci://ghcr.io/prometheus-community/charts/
     name: prometheus-operator-crds
     version: 22.0.1
-    valuesFile: crds/values.yaml
