@@ -12,6 +12,9 @@ spec:
           - name: cilium
             project: system
             namespace: kube-system
+          - name: cert-manager
+            project: system
+            namespace: cert-manager
   template:
     metadata:
       name: "{{.name}}"
