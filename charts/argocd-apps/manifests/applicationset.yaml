@@ -12,6 +12,7 @@ spec:
           - name: cilium
             project: system
             namespace: kube-system
+            noServerSideDiff: true
             ignoreDifferences:
               - kind: Secret
                 jsonPointers:
@@ -48,6 +49,7 @@ spec:
           - ServerSideApply=true
           - ServerSideDiff=true
           - RespectIgnoreDifferences=true
+          - ApplyOutOfSyncOnly=true
       source:
         repoURL: https://github.com/moonlight8978/lbh-lab.git
         targetRevision: main
@@ -56,6 +58,12 @@ spec:
         name: in-cluster
         namespace: "{{.namespace}}"
   templatePatch: |
+    {{- with .noServerSideDiff }}
+    metadata:
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=false
+    {{- end }}
+
     spec:
       project: "{{.project}}"
       {{- with .ignoreDifferences }}
