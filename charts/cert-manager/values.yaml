@@ -6,7 +6,7 @@ crds:
 resources:
   requests:
     cpu: 50m
-    memory: 100Mi
+    memory: 64Mi
 
 prometheus:
   enabled: true

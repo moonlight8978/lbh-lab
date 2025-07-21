@@ -33,21 +33,43 @@ hubble:
   relay:
     enabled: true
     rollOutPods: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
     prometheus:
       serviceMonitor:
         enabled: true
   ui:
     enabled: true
     rollOutPods: true
+    backend:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+    frontend:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
 
 envoy:
-  enabled: true
+  enabled: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
   prometheus:
     enabled: true
     serviceMonitor:
       enabled: true
 
 operator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
   prometheus:
     enabled: true
     serviceMonitor:

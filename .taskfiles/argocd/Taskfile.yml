@@ -1,0 +1,6 @@
+version: "3"
+
+tasks:
+  login:
+    cmds:
+      - argocd login argocd.10.242.20.150.sslip.io --grpc-web

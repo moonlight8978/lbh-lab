@@ -2,9 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: prod
+  namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  goTemplateOptions: ["missingkey=default"]
   generators:
     - list:
         elements:
@@ -13,13 +14,21 @@ spec:
             namespace: kube-system
   template:
     metadata:
-      name: '{{.name}}'
+      name: "{{.name}}"
     spec:
-      project: '{{.project}}'
+      project: "{{.project}}"
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
       source:
         repoURL: https://github.com/moonlight8978/lbh-lab.git
         targetRevision: main
-        path: 'charts/{{.path | default .name}}'
+        path: "charts/{{.path | default .name}}"
+        kustomize: {}
       destination:
         name: in-cluster
-        namespace: '{{.namespace}}'
+        namespace: "{{.namespace}}"

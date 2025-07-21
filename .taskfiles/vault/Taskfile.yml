@@ -46,3 +46,21 @@ tasks:
   provision:
     cmds:
       - just terragrunt apply prod/vault --all --non-interactive
+
+  unseal:
+    cmds:
+      - for: ["vault-0", "vault-1", "vault-2"]
+        cmd: |
+          #! /bin/bash
+
+          set -eu
+
+          until kubectl wait pod {{.ITEM}} -n vault --timeout=10m --for=condition=Ready; do sleep 5; done
+          SEALED=$(kubectl -n vault exec --quiet -it {{.ITEM}} -- vault status | grep Sealed | awk '{print $2}' | tr -d '\n\r')
+          if [ "$SEALED" = "true" ]; then
+            for i in {0..2}; do
+              kubectl -n vault exec --quiet -it {{.ITEM}} -- vault operator unseal $(sops decrypt secrets.yml | yq -r ".vault.unseal_keys_b64[$i]" | tr -d '\n\r')
+            done
+          else
+            echo "Vault is already unsealed for {{.ITEM}}"
+          fi

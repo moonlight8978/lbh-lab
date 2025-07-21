@@ -23,19 +23,19 @@ cephClusterSpec:
         memory: "1Gi"
       requests:
         cpu: "50m"
-        memory: "256Mi"
+        memory: "64Mi"
     mon:
       limits:
         memory: "2Gi"
       requests:
         cpu: "50m"
-        memory: "256Mi"
+        memory: "64Mi"
     osd:
       limits:
         memory: "4Gi"
       requests:
         cpu: "50m"
-        memory: "512Mi"
+        memory: "64Mi"
     prepareosd:
       requests:
         cpu: "50m"
@@ -51,15 +51,15 @@ cephClusterSpec:
     logcollector:
       requests:
         cpu: "50m"
-        memory: "100Mi"
+        memory: "64Mi"
     cleanup:
       requests:
         cpu: "50m"
-        memory: "100Mi"
+        memory: "64Mi"
     exporter:
       requests:
         cpu: "50m"
-        memory: "50Mi"
+        memory: "64Mi"
 
 cephBlockPools:
   - name: ceph-blockpool-fast

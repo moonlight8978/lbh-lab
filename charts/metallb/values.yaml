@@ -1,4 +1,16 @@
 ---
+speaker:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+controller:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
 prometheus:
   serviceAccount: prometheus
   namespace: metallb-system

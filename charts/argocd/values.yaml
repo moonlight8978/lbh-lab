@@ -5,7 +5,7 @@ redis-ha:
   redis:
     resources:
       requests:
-        memory: 128Mi
+        memory: 64Mi
         cpu: 10m
       limits:
         memory: 500Mi
@@ -16,7 +16,18 @@ redis-ha:
         memory: 32Mi
         cpu: 10m
       limits:
-        memory: 128Mi
+        memory: 64Mi
+
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ template "redis-ha.name" . }}-haproxy
+                release: {{ .Release.Name }}
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
 
 controller:
   replicas: 1
@@ -26,7 +37,7 @@ controller:
       memory: 512Mi
     requests:
       cpu: 10m
-      memory: 256Mi
+      memory: 64Mi
 
 server:
   replicas: 1
@@ -78,6 +89,13 @@ configs:
   cm:
     admin.enabled: true
     application.instanceLabelKey: argocd.argoproj.io/instance
+    kustomize.enabled: true
+    kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
+
+    resource.customizations.ignoreDifferences.servicemonitor.monitoring.coreos.com_ServiceMonitor:
+      |
+      jqPathExpressions:
+      - '.spec.endpoints[].relabelings[].action'
 
   # rbac:
   #   policy.csv: |

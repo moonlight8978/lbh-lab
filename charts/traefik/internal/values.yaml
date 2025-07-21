@@ -41,6 +41,11 @@ metrics:
 deployment:
   replicas: 3
 
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
 service:
   annotations:
     metallb.io/loadBalancerIPs: 10.242.20.150
