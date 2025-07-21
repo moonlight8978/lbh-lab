@@ -29,6 +29,23 @@ spec:
           - name: metallb
             project: system
             namespace: metallb-system
+          - name: snapshot-controller
+            project: system
+            namespace: kube-system
+          - name: rook-ceph
+            project: system
+            namespace: rook-ceph
+          - name: traefik-internal
+            project: system
+            namespace: kube-system
+            path: traefik/internal
+          - name: prometheus
+            project: system
+            namespace: monitoring
+          - name: vault
+            project: system
+            namespace: vault
+
           - name: argocd
             project: cicd
             namespace: argocd
