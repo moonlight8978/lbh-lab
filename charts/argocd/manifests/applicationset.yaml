@@ -31,7 +31,6 @@ spec:
         repoURL: https://github.com/moonlight8978/lbh-lab.git
         targetRevision: main
         path: "charts/{{.path | default .name}}"
-        kustomize: {}
       destination:
         name: in-cluster
         namespace: "{{.namespace}}"
