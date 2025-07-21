@@ -81,7 +81,6 @@ configs:
     application.instanceLabelKey: argocd.argoproj.io/instance
     kustomize.enabled: true
     kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
-
     resource.customizations.ignoreDifferences.monitoring.coreos.com_ServiceMonitor:
       |
       jqPathExpressions:
@@ -89,6 +88,7 @@ configs:
     resource.customizations.ignoreDifferences.v1_Secret: |
       jqPathExpressions:
       - '.metadata.annotations."argocd.argoproj.io/tracking-id"'
+
   params:
     create: true
     controller.diff.server.side: true

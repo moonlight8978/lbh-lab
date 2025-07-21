@@ -10,8 +10,8 @@ spec:
     - list:
         elements:
           - name: cilium
-            project: system
             namespace: kube-system
+            project: system
             noServerSideDiff: true
             ignoreDifferences:
               - kind: Secret
@@ -21,37 +21,37 @@ spec:
                   - /data/tls.crt
                   - /data/tls.key
           - name: cert-manager
-            project: system
             namespace: cert-manager
+            project: system
           - name: external-secrets
-            project: system
             namespace: external-secrets
+            project: system
           - name: metallb
-            project: system
             namespace: metallb-system
+            project: system
           - name: snapshot-controller
-            project: system
             namespace: kube-system
+            project: system
           - name: rook-ceph
-            project: system
             namespace: rook-ceph
-          - name: traefik-internal
             project: system
+          - name: traefik-internal
             namespace: kube-system
+            project: system
             path: traefik/internal
           - name: prometheus
-            project: system
             namespace: monitoring
-          - name: vault
             project: system
+          - name: vault
             namespace: vault
+            project: system
 
           - name: argocd
-            project: cicd
             namespace: argocd
+            project: cicd
           - name: argocd-apps
-            project: cicd
             namespace: argocd
+            project: cicd
   template:
     metadata:
       name: "{{.name}}"
