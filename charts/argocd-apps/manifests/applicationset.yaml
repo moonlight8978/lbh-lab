@@ -16,6 +16,7 @@ spec:
               - kind: Secret
                 jsonPointers:
                   - /data/ca.crt
+                  - /data/ca.key
                   - /data/tls.crt
                   - /data/tls.key
           - name: cert-manager
