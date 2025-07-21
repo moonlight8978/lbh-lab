@@ -6,10 +6,10 @@ kind: Kustomization
 helmCharts:
   - releaseName: argocd
     namespace: argocd
-    name: argocd
-    repo: oci://ghcr.io/home-operations/charts-mirror/
-    valuesFile: values.yaml
+    repo: oci://ghcr.io/argoproj/argo-helm/
+    name: argo-cd
     version: 8.1.3
+    valuesFile: values.yaml
 
 resources:
   - manifests/applicationset.yaml

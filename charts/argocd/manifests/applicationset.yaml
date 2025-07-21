@@ -20,7 +20,7 @@ spec:
             namespace: external-secrets
           - name: argocd
             project: cicd
-            namespace: argocd-system
+            namespace: argocd
   template:
     metadata:
       name: "{{.name}}"

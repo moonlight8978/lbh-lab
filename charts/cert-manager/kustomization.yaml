@@ -6,8 +6,8 @@ kind: Kustomization
 helmCharts:
   - name: cert-manager
     namespace: cert-manager
-    releaseName: cert-manager
     repo: oci://quay.io/jetstack/charts/
+    releaseName: cert-manager
     valuesFile: values.yaml
     version: v1.18.2
 

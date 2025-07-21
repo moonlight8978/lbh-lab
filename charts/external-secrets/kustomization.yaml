@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: external-secrets
     namespace: external-secrets
-    name: external-secrets
     repo: oci://ghcr.io/external-secrets/charts/
+    name: external-secrets
     version: 0.18.2
     valuesFile: values.yaml
