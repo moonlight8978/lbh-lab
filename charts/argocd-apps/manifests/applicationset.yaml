@@ -56,10 +56,12 @@ spec:
         namespace: "{{.namespace}}"
   templatePatch: |
     spec:
-      {{- with .ignoreDifferences }}
       ignoreDifferences:
+      {{- if .ignoreDifferences }}
         {{- range . }}
         -
           {{. | toYaml | nindent 6}}
         {{- end }}
+      {{- else }}
+        []
       {{- end }}
