@@ -165,3 +165,11 @@ releases:
           - apply
           - -f
           - ./argocd/manifests
+      - events: ["postsync"]
+        showlogs: true
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - --recursive
+          - ./argocd-apps/manifests
