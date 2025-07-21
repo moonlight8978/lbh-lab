@@ -6,17 +6,15 @@ redis-ha:
     resources:
       requests:
         memory: 64Mi
-        cpu: 10m
+        cpu: 50m
       limits:
         memory: 500Mi
 
   haproxy:
     resources:
       requests:
-        memory: 32Mi
-        cpu: 10m
-      limits:
         memory: 64Mi
+        cpu: 50m
 
     affinity: |
       podAntiAffinity:
@@ -92,7 +90,7 @@ configs:
     kustomize.enabled: true
     kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
 
-    resource.customizations.ignoreDifferences.servicemonitor.monitoring.coreos.com_ServiceMonitor:
+    resource.customizations.ignoreDifferences.monitoring.coreos.com_ServiceMonitor:
       |
       jqPathExpressions:
       - '.spec.endpoints[].relabelings[].action'
