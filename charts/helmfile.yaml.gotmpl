@@ -30,7 +30,7 @@ releases:
         command: bash
         args:
           - -c
-          - until kubectl wait pod -l k8s-app=cilium --for=condition=Ready -n kube-system --timeout=10m; do sleep 10; done
+          - until kubectl wait --for=condition=Ready node --all --timeout=10m; do sleep 10; done
 
   - name: cert-manager
     namespace: cert-manager
