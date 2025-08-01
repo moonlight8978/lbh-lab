@@ -9,7 +9,7 @@ helmCharts:
     namespace: rook-ceph
     repo: oci://ghcr.io/rook/
     name: rook-ceph-cluster
-    version: v1.17.6
+    version: v1.17.7
     valuesFile: cluster/values.yaml
 
   - releaseName: rook-ceph
