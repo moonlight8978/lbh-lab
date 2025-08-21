@@ -16,5 +16,5 @@ helmCharts:
     namespace: rook-ceph
     repo: oci://ghcr.io/rook/
     name: rook-ceph
-    version: v1.17.7
+    version: v1.17.8
     valuesFile: operator/values.yaml
