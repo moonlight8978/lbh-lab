@@ -17,19 +17,11 @@ variable "clone_vm_id" {
   nullable = true
 }
 
-variable "disk" {
-  type = object({
-    datastore_id = string
-    size         = number
-  })
-}
-
-variable "additional_disks" {
+variable "disks" {
   type = list(object({
     datastore_id = string
     size         = number
   }))
-  default = []
 }
 
 variable "cpu" {
@@ -41,12 +33,6 @@ variable "memory" {
   default = -1
 }
 
-variable "cdrom_file_id" {
-  type     = string
-  default  = null
-  nullable = true
-}
-
 variable "tags" {
   type    = list(string)
   default = []
@@ -55,11 +41,6 @@ variable "tags" {
 variable "on_boot" {
   type    = bool
   default = true
-}
-
-variable "boot_disk" {
-  type    = string
-  default = "scsi0"
 }
 
 variable "cloudinit" {
@@ -78,4 +59,14 @@ variable "ip4" {
 
 variable "gateway4" {
   type = string
+}
+
+variable "agent" {
+  type    = bool
+  default = true
+}
+
+variable "started" {
+  type    = bool
+  default = true
 }

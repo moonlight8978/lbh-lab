@@ -28,45 +28,27 @@ resource "proxmox_virtual_environment_vm" "main" {
   }
 
   agent {
-    enabled = true
+    enabled = var.agent
   }
 
   network_device {
     bridge = "vmbr0"
   }
 
-  boot_order    = [var.boot_disk]
+  boot_order    = ["scsi0"]
   scsi_hardware = "virtio-scsi-single"
 
-  disk {
-    interface    = "scsi0"
-    iothread     = true
-    datastore_id = var.disk.datastore_id
-    size         = var.disk.size
-    file_format  = "raw"
-  }
-
   dynamic "disk" {
-    for_each = var.additional_disks
+    for_each = var.disks
 
     content {
-      interface    = "scsi${disk.key + 1}"
+      interface    = "scsi${disk.key}"
       iothread     = true
       datastore_id = disk.value.datastore_id
       size         = disk.value.size
       file_format  = "raw"
     }
   }
-
-  dynamic "cdrom" {
-    for_each = var.cdrom_file_id != null ? [var.cdrom_file_id] : []
-
-    content {
-      file_id   = var.cdrom_file_id
-      interface = "ide0"
-    }
-  }
-
   dynamic "initialization" {
     for_each = var.cloudinit ? [true] : []
 
@@ -78,7 +60,7 @@ resource "proxmox_virtual_environment_vm" "main" {
     }
   }
 
-  started = true
+  started = var.started
   on_boot = var.on_boot
 
   tags = var.tags
@@ -86,6 +68,10 @@ resource "proxmox_virtual_environment_vm" "main" {
   lifecycle {
     ignore_changes = [network_device, started, boot_order]
   }
+}
+
+output "vm_id" {
+  value = proxmox_virtual_environment_vm.main.vm_id
 }
 
 output "ip4" {
