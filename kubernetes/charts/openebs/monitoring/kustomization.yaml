@@ -9,5 +9,5 @@ helmCharts:
     namespace: openebs
     repo: https://openebs.github.io/monitoring
     name: monitoring
-    version: 4.1.0
+    version: 4.1.1
     valuesFile: values.yaml
