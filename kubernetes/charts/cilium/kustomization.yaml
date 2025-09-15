@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: cilium
+    namespace: kube-system
+    repo: oci://ghcr.io/home-operations/charts-mirror/
+    name: cilium
+    version: 1.18.1
+    valuesFile: values.yaml
+
+resources:
+  - manifests/loadbalancerippool.yaml
+  - manifests/service-kubernetes.yaml
