@@ -1,0 +1,71 @@
+---
+# https://github.com/kubernetes-sigs/descheduler/blob/master/charts/descheduler/values.yaml
+
+deschedulerPolicy:
+  profiles:
+    - name: default
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            evictLocalStoragePods: true
+            evictFailedBarePods: true
+            evictSystemCriticalPods: true
+            nodeFit: true
+        - name: RemovePodsHavingTooManyRestarts
+          args:
+            podRestartThreshold: 100
+            includingInitContainers: true
+        - name: RemovePodsViolatingInterPodAntiAffinity
+        - name: RemovePodsViolatingNodeAffinity
+          args:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
+        - name: RemovePodsViolatingNodeTaints
+        - name: RemovePodsViolatingTopologySpreadConstraint
+          args:
+            constraints:
+              - DoNotSchedule
+              - ScheduleAnyway
+      plugins:
+        balance:
+          enabled:
+            - RemovePodsViolatingTopologySpreadConstraint
+        deschedule:
+          enabled:
+            - RemovePodsHavingTooManyRestarts
+            - RemovePodsViolatingNodeTaints
+            - RemovePodsViolatingNodeAffinity
+            - RemovePodsViolatingInterPodAntiAffinity
+
+kind: Deployment
+
+deschedulingInterval: 2m
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64M
+
+replicas: 2
+
+leaderElection:
+  enabled: true
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - descheduler
+        topologyKey: "kubernetes.io/hostname"
+        matchLabelKeys:
+          - pod-template-hash
+
+service:
+  enabled: true
+
+serviceMonitor:
+  enabled: true

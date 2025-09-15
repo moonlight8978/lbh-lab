@@ -5,6 +5,9 @@ crds:
 
 enableCertificateOwnerRef: true
 
+dns01RecursiveNameserversOnly: true
+dns01RecursiveNameservers: 8.8.8.8:53
+
 resources:
   requests:
     cpu: 50m

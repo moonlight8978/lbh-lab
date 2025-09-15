@@ -29,6 +29,15 @@ applicationsets:
             - name: coredns
               namespace: kube-system
               project: system
+            - name: external-secrets
+              namespace: external-secrets
+              project: system
+            - name: descheduler
+              namespace: kube-system
+              project: system
+            - name: cert-manager
+              namespace: cert-manager
+              project: system
     template:
       metadata:
         name: "{{.name}}"
@@ -81,7 +90,10 @@ projects:
         namespace: kube-system
       - name: *cluster
         namespace: cilium-secrets
-        
+      - name: *cluster
+        namespace: external-secrets
+      - name: *cluster
+        namespace: cert-manager
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"

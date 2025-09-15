@@ -102,6 +102,10 @@ tasks:
         PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
         argocd login 10.242.20.181 --username admin --password $PASSWORD --insecure
 
+  argocd:bootstrap:
+    cmds:
+      - argocd app sync argocd-apps
+
   bootstrap:
     cmds:
       - task: tf:unit

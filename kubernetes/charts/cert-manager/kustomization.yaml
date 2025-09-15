@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -6,12 +7,7 @@ kind: Kustomization
 helmCharts:
   - name: cert-manager
     namespace: cert-manager
-    repo: oci://quay.io/jetstack/charts/
     releaseName: cert-manager
+    repo: oci://quay.io/jetstack/charts/
     valuesFile: values.yaml
     version: v1.18.2
-
-resources:
-  - manifests/intermediateca.yaml
-  - manifests/rootca.yaml
-  - manifests/selfsigned.yaml
