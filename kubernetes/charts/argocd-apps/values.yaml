@@ -16,7 +16,17 @@ applicationsets:
     generators:
       - list:
           elements:
+            - name: argocd-apps
+              namespace: argocd
+              project: cicd
+            - name: argocd
+              namespace: argocd
+              project: cicd
+
             - name: cilium
+              namespace: kube-system
+              project: system
+            - name: coredns
               namespace: kube-system
               project: system
     template:
@@ -71,6 +81,7 @@ projects:
         namespace: kube-system
       - name: *cluster
         namespace: cilium-secrets
+        
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
@@ -92,3 +103,16 @@ projects:
           - "*"
         duration: 1h
         manualSync: true
+
+  cicd:
+    namespace: argocd
+    description: CICD
+    finalizers: []
+    sourceRepos:
+      - *repo
+    destinations:
+      - name: *cluster
+        namespace: argocd
+    clusterResourceWhitelist: *clusterResourceWhitelist
+    namespaceResourceWhitelist: *namespaceResourceWhitelist
+    syncWindows: *syncWindows
