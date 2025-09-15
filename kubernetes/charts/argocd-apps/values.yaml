@@ -102,6 +102,8 @@ projects:
         namespace: cert-manager
       - name: *cluster
         namespace: openebs
+      - name: *cluster
+        namespace: csi-addons-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
