@@ -1,6 +1,11 @@
 ---
 # https://github.com/argoproj/argo-helm/blob/main/charts/argocd-apps/values.yaml
 
+x-data:
+  repo: &repo https://github.com/moonlight8978/lbh-lab.git
+  branch: &branch main
+  cluster: &cluster in-cluster
+
 applicationsets:
   prod:
     namespace: argocd
@@ -14,6 +19,45 @@ applicationsets:
             - name: cilium
               namespace: kube-system
               project: system
+    template:
+      metadata:
+        name: "{{.name}}"
+        finalizers: []
+      spec:
+        project: "{{.project}}"
+        syncPolicy:
+          automated:
+            selfHeal: true
+            prune: true
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+            - ServerSideDiff=true
+            - RespectIgnoreDifferences=true
+            - ApplyOutOfSyncOnly=true
+        source:
+          repoURL: *repo
+          targetRevision: *branch
+          path: "kubernetes/charts/{{.path | default .name}}"
+        destination:
+          name: *cluster
+          namespace: "{{.namespace}}"
+    templatePatch: |
+      {{- with .noServerSideDiff }}
+      metadata:
+        annotations:
+          argocd.argoproj.io/compare-options: ServerSideDiff=false
+      {{- end }}
+
+      spec:
+        project: "{{.project}}"
+        {{- with .ignoreDifferences }}
+        ignoreDifferences:
+          {{- range . }}
+          -
+            {{. | toYaml | nindent 6}}
+          {{- end }}
+        {{- end }}
 
 projects:
   system:
@@ -21,9 +65,9 @@ projects:
     description: System Components
     finalizers: []
     sourceRepos:
-      - https://github.com/moonlight8978/lbh-lab.git
+      - *repo
     destinations:
-      - name: &cluster in-cluster
+      - name: *cluster
         namespace: kube-system
       - name: *cluster
         namespace: cilium-secrets
