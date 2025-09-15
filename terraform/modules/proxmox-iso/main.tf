@@ -28,6 +28,10 @@ resource "proxmox_virtual_environment_download_file" "main" {
   upload_timeout = 900
 }
 
+output "file_name" {
+  value = var.file_name
+}
+
 output "location" {
   value = "${var.location}/${var.file_name}"
 }

@@ -1,9 +1,52 @@
 locals {
-  debian_template_vm_id = 1000
-  kube_vip_ip4          = "192.168.0.40"
-  kube_cluster_cidr     = "10.42.0.0/16"
-  kube_service_cidr     = "10.43.0.0/16"
-  k3s_version           = "v1.33.1+k3s1"
-  # Set this to true to bootstrap the cluster
-  kube_bootstrap = false
+  talos_template_id = 10010
+
+  controller1 = {
+    name = "control-1"
+    vm_id = 10101
+    cpu = 2
+    memory = 4
+    ip4 = "10.242.20.161/24"
+    gateway4 = "10.242.20.1"
+    disks = [{
+      size = 30
+      datastore_id = "local-lvm"
+    }]
+  }
+
+  worker1 = {
+    name = "worker-1"
+    vm_id = 10121
+    cpu = 8
+    memory = 16
+    ip4 = "10.242.20.171/24"
+    gateway4 = "10.242.20.1"
+    disks = [{
+      size = 50
+      datastore_id = "local-lvm"
+    }]
+  }
+
+  worker2 = {
+    name = "worker-2"
+    vm_id = 10122
+    cpu = 8
+    memory = 16
+    ip4 = "10.242.20.172/24"
+    gateway4 = "10.242.20.1"
+    disks = [
+      {
+        size = 50
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 50,
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 100,
+        datastore_id = "slow"
+      }
+    ]
+  }
 }

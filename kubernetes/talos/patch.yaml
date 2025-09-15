@@ -1,0 +1,32 @@
+machine:
+  install:
+    disk: /dev/sda
+  sysctls:
+    fs.inotify.max_user_instances: "8192"
+    fs.inotify.max_user_watches: "1048576"
+    net.ipv6.conf.all.disable_ipv6: "1"
+    net.ipv6.conf.default.disable_ipv6: "1"
+    net.ipv6.conf.lo.disable_ipv6: "1"
+    vm.nr_hugepages: "1024"
+  features:
+    hostDNS:
+      forwardKubeDNSToHost: false
+  certSANs:
+    - 10.242.20.160
+
+cluster:
+  clusterName: lbhlab
+  controlPlane:
+    endpoint: https://10.242.20.160:6443
+  network:
+    cni:
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - 10.42.0.0/16
+    serviceSubnets:
+      - 10.43.0.0/16
+  proxy:
+    disabled: true
+  coreDNS:
+    disabled: true

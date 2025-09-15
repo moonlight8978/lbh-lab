@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/helmfile.json
+
+helmDefaults:
+  cleanupOnFail: true
+  wait: true
+  waitForJobs: true
+
+releases:
+  - name: prometheus-operator-crds
+    namespace: monitoring
+    chart: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
+    version: 23.0.0
+
+  - name: cilium
+    namespace: kube-system
+    chart: oci://ghcr.io/home-operations/charts-mirror/cilium
+    version: 1.18.1
+    values:
+      - ./cilium/values.yaml
+    needs:
+      - monitoring/prometheus-operator-crds
+    hooks:
+      - events: ["postsync"]
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd ciliumloadbalancerippools.cilium.io ciliuml2announcementpolicies.cilium.io &>/dev/null; do sleep 5; done
+      - events: ["postsync"]
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./cilium/manifests
+
+  - name: coredns
+    namespace: kube-system
+    chart: oci://ghcr.io/coredns/charts/coredns
+    version: 1.43.3
+    values:
+      - ./coredns/values.yaml
+    needs:
+      - kube-system/cilium
+
+  - name: argocd
+    namespace: argocd
+    chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
+    version: 8.3.7
+    values:
+      - ./argocd/values.yaml
+    needs:
+      - kube-system/coredns
+
+  - name: argocd-apps
+    namespace: argocd
+    chart: oci://ghcr.io/argoproj/argo-helm/argo-cd-apps
+    version: 2.0.2
+    values:
+      - ./argocd-apps/values.yaml
+    needs:
+      - argocd/argocd

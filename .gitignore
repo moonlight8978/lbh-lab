@@ -50,5 +50,6 @@ tmp/*
 **/.DS_Store
 
 # Secrets
-**/secrets.dec.yml
+**/*.dec.yml
 **/secrets.yml
+.env*

@@ -1,0 +1,50 @@
+---
+# https://github.com/argoproj/argo-helm/blob/main/charts/argocd-apps/values.yaml
+
+applicationsets:
+  prod:
+    namespace: argocd
+    finalizers: []
+    #   - resources-finalizer.argocd.argoproj.io
+    goTemplate: true
+    goTemplateOptions: ["missingkey=default"]
+    generators:
+      - list:
+          elements:
+            - name: cilium
+              namespace: kube-system
+              project: system
+
+projects:
+  system:
+    namespace: argocd
+    description: System Components
+    finalizers: []
+    sourceRepos:
+      - https://github.com/moonlight8978/lbh-lab.git
+    destinations:
+      - name: &cluster in-cluster
+        namespace: kube-system
+      - name: *cluster
+        namespace: cilium-secrets
+    clusterResourceWhitelist: &clusterResourceWhitelist
+      - group: "*"
+        kind: "*"
+    namespaceResourceWhitelist: &namespaceResourceWhitelist
+      - group: "*"
+        kind: "*"
+    syncWindows: &syncWindows
+      - kind: allow
+        schedule: "0 3-7 * * *"
+        timeZone: "Asia/Bangkok"
+        applications:
+          - "*"
+        duration: 1h
+        manualSync: false
+      - kind: deny
+        schedule: "0 0-3,8-23 * * *"
+        timeZone: "Asia/Bangkok"
+        applications:
+          - "*"
+        duration: 1h
+        manualSync: true

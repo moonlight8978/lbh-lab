@@ -1,0 +1,135 @@
+---
+# https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+
+redis-ha:
+  enabled: true
+
+  replicas: 2
+
+  redis:
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+
+  haproxy:
+    IPv6:
+      enabled: false
+
+    replicas: 2
+
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 50m
+
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ template "redis-ha.name" . }}-haproxy
+                release: {{ .Release.Name }}
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+
+    metrics:
+      serviceMonitor:
+        enabled: true
+
+controller:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+server:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  service:
+    type: LoadBalancer
+    annotations:
+      lbipam.cilium.io/ips: 10.242.20.181
+
+repoServer:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+dex:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+configs:
+  cm:
+    admin.enabled: true
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    kustomize.enabled: true
+    kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
+    resource.customizations.ignoreDifferences.monitoring.coreos.com_ServiceMonitor:
+      |
+      jqPathExpressions:
+      - '.spec.endpoints[].relabelings[].action'
+    resource.customizations.ignoreDifferences.v1_Secret: |
+      jqPathExpressions:
+      - '.metadata.annotations."argocd.argoproj.io/tracking-id"'
+
+  params:
+    create: true
+    controller.diff.server.side: true
+
+  # rbac:
+  #   policy.csv: |
+  #     g, Admin, role:admin
+
+notifications:
+  enabled: true
+  secret:
+    create: false
+  notifiers:
+    service.github: |
+      appID: $githubAppId
+      installationID: $githubInstallationId
+      privateKey: $githubPrivateKey
+    service.telegram: |
+      token: $telegramToken
+  triggers:
+    trigger.on-deployed: |
+      - description: Application is synced and healthy. Triggered once per commit.
+        oncePer: app.status.sync.revision
+        send:
+        - app-deployed
+        when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
+  templates:
+    template.app-deployed: |
+      message: |
+        Application {{.app.metadata.name}} is now running new version of deployments manifests.
+      github:
+        repoURLPath: "{{(index .app.spec.sources 0).repoURL}}"
+        revisionPath: "{{index .app.status.sync.revisions 0}}"
+        status:
+          state: success
+          label: "continuous-delivery/{{.app.metadata.name}}"
+          targetURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+        deployment:
+          state: success
+          environment: production
+          logURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+          requiredContexts: []
+          autoMerge: true
+          transientEnvironment: false

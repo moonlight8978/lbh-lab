@@ -1,5 +1,14 @@
-variable "vm_id" {
-  type = number
+variable "vm" {
+  type = object({
+    vm_id = number
+  })
+}
+
+variable "cloudimg" {
+  type = object({
+    location = string
+    file_name = string
+  })
 }
 
 variable "proxmox_node_ip" {
@@ -14,12 +23,8 @@ variable "proxmox_password" {
   type = string
 }
 
-variable "file_name" {
-  type = string
-}
-
 variable "compression" {
-  type = "string"
+  type = string
   default = "none"
 }
 
@@ -27,15 +32,24 @@ variable "datastore_id" {
   type = string
 }
 
+resource "random_string" "temp_file" {
+  length  = 16
+  special = false
+}
+
 locals {
   decompress = {
-    "xz" = ""
+    "xz" = <<EOF
+cp ${var.cloudimg.location} /tmp/${trimsuffix(var.cloudimg.file_name, ".iso")}
+xz -d /tmp/${trimsuffix(var.cloudimg.file_name, ".iso")}
+mv /tmp/${trimsuffix(var.cloudimg.file_name, ".xz.iso")} /tmp/${random_string.temp_file.result}
+EOF
   }
 }
 
 resource "null_resource" "diskimport" {
   triggers = {
-    vm_id = var.vm_id
+    manual = "1"
   }
 
   connection {
@@ -48,15 +62,15 @@ resource "null_resource" "diskimport" {
   provisioner "remote-exec" {
     inline = compact([
       # Delete existing disk
-      "qm set ${var.vm_id} --delete scsi0",
-      "qm unlink ${var.vm_id} --idlist unused0",
+      "qm set ${var.vm.vm_id} --delete scsi0",
+      "qm unlink ${var.vm.vm_id} --idlist unused0",
 
-      var.compression == "none" ? null "",
+      # Decompress image
+      var.compression == "none" ? null : local.decompress[var.compression],
 
       # Import cloudimg disk, replace the current one
-      "qm importdisk ${var.vm_id} /var/lib/vz/template/iso/${var.file_name} ${var.datastore_id}",
-      "qm set ${var.vm_id} --scsihw virtio-scsi-single --scsi0 ${var.datastore_id}:vm-${var.vm_id}-disk-0",
-      "qm start ${var.vm_id}",
+      "qm importdisk ${var.vm.vm_id} /tmp/${random_string.temp_file.result} ${var.datastore_id}",
+      "qm set ${var.vm.vm_id} --scsihw virtio-scsi-single --scsi0 ${var.datastore_id}:vm-${var.vm.vm_id}-disk-0",
     ])
   }
 }

@@ -8,7 +8,12 @@ terraform {
 }
 
 inputs = {
-  url = "https://factory.talos.dev/image/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba/v1.11.1/nocloud-amd64.raw.xz"
+  # nocloud
+  # amd64
+  # pkgs:
+  # - nvme-cli
+  # - qemu-guest-agent
+  url = "https://factory.talos.dev/image/4dbfff09111d77e81e05a35969a4bea8eed7658afd27a35d779d770f6863bb14/v1.11.1/nocloud-amd64.raw.xz"
   node_name = "pve1"
   datastore_id = "local"
   file_name = "talos-amd64.raw.xz.iso"

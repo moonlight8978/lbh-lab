@@ -16,7 +16,9 @@ terraform {
 }
 
 inputs = merge(include.root.locals.values, {
-  location = dependency.cloudimg.outputs.location
-  vm_id = dependency.vm.outputs.vm_id
+  cloudimg = dependency.cloudimg.outputs
+  vm = dependency.vm.outputs
   proxmox_node_ip = include.root.locals.values.proxmox_node1_ip
+  compression = "xz"
+  datastore_id = "local-lvm"
 })
