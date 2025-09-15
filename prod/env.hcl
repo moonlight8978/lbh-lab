@@ -27,6 +27,19 @@ locals {
     }]
   }
 
+  controller3 = {
+    name = "control-3"
+    vm_id = 10103
+    cpu = 2
+    memory = 4
+    ip4 = "10.242.20.163/24"
+    gateway4 = "10.242.20.1"
+    disks = [{
+      size = 30
+      datastore_id = "local-lvm"
+    }]
+  }
+
   worker1 = {
     name = "worker-1"
     vm_id = 10121

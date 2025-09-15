@@ -77,6 +77,12 @@ tasks:
           MACHINE: control-2
           IP: 10.242.20.162
           ARGS: --insecure
+      - task: talos:apply:controlplane
+        vars:
+          ROLE: controlplane
+          MACHINE: control-3
+          IP: 10.242.20.163
+          ARGS: --insecure
       - task: talos:apply:worker
         vars:
           ROLE: worker
