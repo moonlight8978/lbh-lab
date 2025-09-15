@@ -99,6 +99,8 @@ tasks:
     cmds:
       - for: [worker-1, worker-2]
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/worker=worker
+      - for: [worker-1, worker-2]
+        cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/openebs=openebs
 
   k8s:bootstrap:
     dir: kubernetes/charts

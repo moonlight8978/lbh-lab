@@ -1,0 +1,17 @@
+---
+openebsMonitoringAddon:
+  zfsLocalPV:
+    enabled: false
+  lvmLocalPV:
+    enabled: false
+  mayastor:
+    enabled: true
+
+kube-prometheus-stack:
+  install: false
+
+node-problem-detector:
+  install: false
+
+localpv-provisioner:
+  install: false

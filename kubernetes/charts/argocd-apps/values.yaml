@@ -38,6 +38,12 @@ applicationsets:
             - name: cert-manager
               namespace: cert-manager
               project: system
+            - name: addons
+              namespace: kube-system
+              project: system
+            - name: openebs
+              namespace: openebs
+              project: system
     template:
       metadata:
         name: "{{.name}}"
@@ -94,6 +100,8 @@ projects:
         namespace: external-secrets
       - name: *cluster
         namespace: cert-manager
+      - name: *cluster
+        namespace: openebs
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"

@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: openebs-monitoring
+    namespace: openebs
+    repo: https://openebs.github.io/monitoring
+    name: monitoring
+    version: 4.1.0
+    valuesFile: values.yaml

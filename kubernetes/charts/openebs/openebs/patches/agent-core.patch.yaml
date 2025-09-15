@@ -1,0 +1,7 @@
+---
+- op: replace
+  path: /spec/template/spec/containers/0/args/3
+  value: --grpc-server-addr=0.0.0.0:50051
+- op: replace
+  path: /spec/template/spec/containers/1/args/0
+  value: -g=0.0.0.0:50052

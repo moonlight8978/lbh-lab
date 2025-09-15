@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: openebs
+    namespace: openebs
+    repo: oci://ghcr.io/home-operations/charts-mirror/
+    name: openebs
+    version: 4.3.3
+    valuesFile: values.yaml
+
+patches:
+  - target:
+      name: openebs-agent-core
+      kind: Deployment
+    path: patches/agent-core.patch.yaml
+  - target:
+      name: openebs-api-rest
+      kind: Deployment
+    path: patches/api-rest.patch.yaml
+  - target:
+      name: openebs-obs-callhome
+      kind: Deployment
+    path: patches/obs-callhome.patch.yaml
+  - target:
+      name: openebs-io-engine
+      kind: DaemonSet
+    path: patches/io-engine.patch.yaml

@@ -1,0 +1,33 @@
+---
+# https://github.com/openebs/openebs/blob/develop/charts/values.yaml
+
+openebs-crds:
+  csi:
+    volumeSnapshots:
+      enabled: false
+
+engines:
+  local:
+    zfs:
+      enabled: false
+    lvm:
+      enabled: false
+
+mayastor:
+  csi:
+    node:
+      topology:
+        nodeSelector:
+          node-role.kubernetes.io/openebs: openebs
+  storageClass:
+    default: false
+    nameSuffix: mayastor
+    parameters:
+      protocol: nvmf
+      repl: 2
+
+loki:
+  enabled: false
+
+alloy:
+  enabled: false
