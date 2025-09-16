@@ -1,0 +1,26 @@
+---
+# https://github.com/external-secrets/bitwarden-sdk-server/blob/main/hack/cluster_issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden
+  namespace: external-secrets
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  secretName: bitwarden-tls-certs
+  dnsNames:
+    - bitwarden-sdk-server.default.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.default.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+    - ::1
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  issuerRef:
+    name: self-signed
+    kind: ClusterIssuer
+    group: cert-manager.io

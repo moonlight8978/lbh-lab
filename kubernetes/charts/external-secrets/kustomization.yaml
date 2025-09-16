@@ -12,3 +12,6 @@ helmCharts:
     version: 0.19.2
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - manifests/certificate.yaml
