@@ -19,12 +19,20 @@ mayastor:
       topology:
         nodeSelector:
           node-role.kubernetes.io/openebs: openebs
+  etcd:
+    replicaCount: 1
+    # replicaCount: 3
+  nats:
+    cluster:
+      replicas: 2
+      # replicas: 3
   storageClass:
     default: false
     nameSuffix: mayastor
     parameters:
       protocol: nvmf
       repl: 2
+      # repl: 3
 
 loki:
   enabled: false

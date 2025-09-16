@@ -72,4 +72,27 @@ locals {
       }
     ]
   }
+
+  worker3 = {
+    name = "worker-3"
+    vm_id = 10123
+    cpu = 4
+    memory = 8
+    ip4 = "10.242.20.174/24"
+    gateway4 = "10.242.20.1"
+    disks = [
+      {
+        size = 50
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 50,
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 100,
+        datastore_id = "slow"
+      }
+    ]
+  }
 }

@@ -1,0 +1,26 @@
+machine:
+  kubelet:
+    extraMounts:
+      - destination: /var/local/openebs
+        type: bind
+        source: /var/local/openebs
+        options:
+          - rbind
+          - rshared
+          - rw
+# ---
+# apiVersion: v1alpha1
+# kind: UserVolumeConfig
+# name: slow
+# provisioning:
+#   diskSelector:
+#     match: "'/dev/disk/by-path/pci-0000:01:03.0-scsi-0:0:0:2' in disk.symlinks"
+#   minSize: 100GB
+# ---
+# apiVersion: v1alpha1
+# kind: UserVolumeConfig
+# name: fast
+# provisioning:
+#   diskSelector:
+#     match: "'/dev/disk/by-path/pci-0000:01:02.0-scsi-0:0:0:1' in disk.symlinks"
+#   minSize: 50GB

@@ -1,6 +1,9 @@
 ---
 version: "3"
 
+vars:
+  WORKERS: [worker-1, worker-2, worker-3]
+
 tasks:
   tf:stack:
     vars: &tf_vars
@@ -71,15 +74,21 @@ tasks:
       - task: talos:apply:controlplane
         vars:
           CLI_ARGS_LIST: [control-2, 10.242.20.162, --insecure]
-      # - task: talos:apply:controlplane
-      #   vars:
-      #     CLI_ARGS_LIST: [control-3, 10.242.20.163, --insecure]
+      - task: talos:apply:controlplane
+        vars:
+          CLI_ARGS_LIST: [control-3, 10.242.20.163, --insecure]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-1, 10.242.20.171, --insecure]
+          CLI_ARGS_LIST:
+            [worker-1, 10.242.20.171, --insecure -p @nodes/storage.yaml]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-2, 10.242.20.172, --insecure]
+          CLI_ARGS_LIST:
+            [worker-2, 10.242.20.172, --insecure -p @nodes/storage.yaml]
+      - task: talos:apply:worker
+        vars:
+          CLI_ARGS_LIST:
+            [worker-3, 10.242.20.173, --insecure -p @nodes/storage.yaml]
       - sleep 10
       - talosctl bootstrap --talosconfig talosconfig --nodes 10.242.20.161
       - talosctl kubeconfig --talosconfig talosconfig --nodes 10.242.20.161
@@ -94,9 +103,9 @@ tasks:
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
     cmds:
-      - for: [worker-1, worker-2]
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/worker=worker
-      - for: [worker-1, worker-2]
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/openebs=openebs
 
   k8s:bootstrap:
@@ -117,7 +126,8 @@ tasks:
   argocd:bootstrap:
     cmds:
       - task: argocd:login
-      - argocd app sync --project system
+      - for: [core, system]
+        cmd: argocd app sync --project {{.ITEM}}
 
   bootstrap:
     cmds:
