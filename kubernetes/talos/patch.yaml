@@ -12,11 +12,14 @@ machine:
     hostDNS:
       forwardKubeDNSToHost: false
   certSANs:
+    # - 127.0.0.1
     - 10.242.20.160
+    # - 10.242.20.161
 
 cluster:
   clusterName: lbhlab
   controlPlane:
+    # endpoint: https://10.242.20.161:6443
     endpoint: https://10.242.20.160:6443
   network:
     cni:
