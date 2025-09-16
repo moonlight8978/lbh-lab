@@ -55,3 +55,4 @@ tmp/*
 .env*
 
 kubernetes/charts/**/charts/
+kubernetes/charts/**/build.yaml

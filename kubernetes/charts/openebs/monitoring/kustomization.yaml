@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: openebs-monitoring
     namespace: openebs
-    repo: https://openebs.github.io/monitoring
+    repo: https://openebs.github.io/monitoring/
     name: monitoring
     version: 4.1.1
     valuesFile: values.yaml

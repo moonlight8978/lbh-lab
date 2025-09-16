@@ -23,26 +23,29 @@ applicationsets:
               namespace: argocd
               project: cicd
 
-            - name: cilium
-              namespace: kube-system
-              project: system
+            # Core apps, must be bootstrapped first
             - name: coredns
               namespace: kube-system
-              project: system
+              project: core
             - name: external-secrets
               namespace: external-secrets
+              project: core
+            - name: addons
+              namespace: kube-system
+              project: core
+            - name: openebs
+              namespace: openebs
+              project: core
+
+            # System apps
+            - name: cilium
+              namespace: kube-system
               project: system
             - name: descheduler
               namespace: kube-system
               project: system
             - name: cert-manager
               namespace: cert-manager
-              project: system
-            - name: addons
-              namespace: kube-system
-              project: system
-            - name: openebs
-              namespace: openebs
               project: system
     template:
       metadata:
@@ -85,7 +88,7 @@ applicationsets:
         {{- end }}
 
 projects:
-  system:
+  system: &system
     namespace: argocd
     description: System Components
     finalizers: []
@@ -97,13 +100,7 @@ projects:
       - name: *cluster
         namespace: cilium-secrets
       - name: *cluster
-        namespace: external-secrets
-      - name: *cluster
         namespace: cert-manager
-      - name: *cluster
-        namespace: openebs
-      - name: *cluster
-        namespace: csi-addons-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
@@ -125,6 +122,25 @@ projects:
           - "*"
         duration: 1h
         manualSync: true
+
+  core:
+    namespace: argocd
+    description: Core Components
+    finalizers: []
+    sourceRepos:
+      - *repo
+    destinations:
+      - name: *cluster
+        namespace: kube-system
+      - name: *cluster
+        namespace: csi-addons-system
+      - name: *cluster
+        namespace: openebs
+      - name: *cluster
+        namespace: external-secrets
+    clusterResourceWhitelist: *clusterResourceWhitelist
+    namespaceResourceWhitelist: *namespaceResourceWhitelist
+    syncWindows: *syncWindows
 
   cicd:
     namespace: argocd
