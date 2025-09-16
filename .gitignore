@@ -53,6 +53,7 @@ tmp/*
 **/*.dec.yml
 **/secrets.yml
 .env*
+!.env.example
 
 kubernetes/charts/**/charts/
 kubernetes/charts/**/build.yaml

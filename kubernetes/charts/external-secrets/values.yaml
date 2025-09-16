@@ -1,4 +1,6 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/deploy/charts/external-secrets/values.schema.json
+
 installCRDs: true
 
 serviceMonitor:
@@ -8,3 +10,7 @@ resources:
   requests:
     cpu: 50m
     memory: 64Mi
+
+# https://github.com/external-secrets/bitwarden-sdk-server/blob/main/deploy/charts/bitwarden-sdk-server/values.yaml
+bitwarden-sdk-server:
+  enabled: true

@@ -12,3 +12,6 @@ helmCharts:
     valuesFile: values.yaml
     includeCRDs: true
     version: v1.18.2
+
+resources:
+  - manifests/selfsigned.yaml

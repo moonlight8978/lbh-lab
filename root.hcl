@@ -47,9 +47,9 @@ terraform {
       version = "0.78.1"
     }
 
-    vault = {
-      source = "hashicorp/vault"
-      version = "5.1.0"
+    bitwarden = {
+      source = "maxlaverse/bitwarden"
+      version = "0.16.0"
     }
   }
 }
@@ -61,10 +61,8 @@ provider "proxmox" {
   password = "${local.values.proxmox_password}"
 }
 
-provider "vault" {
-  address = "https://vault.10.242.20.150.sslip.io"
-  token = "${local.values.vault.root_token}"
-  skip_tls_verify = true
+provider "bitwarden" {
+  access_token = "${local.values.bitwarden_access_token}"
 }
 EOF
 }
