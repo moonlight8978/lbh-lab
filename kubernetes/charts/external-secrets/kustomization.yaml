@@ -10,4 +10,5 @@ helmCharts:
     repo: oci://ghcr.io/external-secrets/charts/
     name: external-secrets
     version: 0.19.2
+    includeCRDs: true
     valuesFile: values.yaml

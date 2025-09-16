@@ -27,37 +27,34 @@ locals {
     }]
   }
 
-  controller3 = {
-    name = "control-3"
-    vm_id = 10103
-    cpu = 2
-    memory = 4
-    ip4 = "10.242.20.163/24"
-    gateway4 = "10.242.20.1"
-    disks = [{
-      size = 30
-      datastore_id = "local-lvm"
-    }]
-  }
-
   worker1 = {
     name = "worker-1"
     vm_id = 10121
-    cpu = 8
-    memory = 16
+    cpu = 4
+    memory = 8
     ip4 = "10.242.20.171/24"
     gateway4 = "10.242.20.1"
-    disks = [{
-      size = 50
-      datastore_id = "local-lvm"
-    }]
+    disks = [
+      {
+        size = 50
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 50,
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 100,
+        datastore_id = "slow"
+      }
+    ]
   }
 
   worker2 = {
     name = "worker-2"
     vm_id = 10122
-    cpu = 8
-    memory = 16
+    cpu = 4
+    memory = 8
     ip4 = "10.242.20.172/24"
     gateway4 = "10.242.20.1"
     disks = [

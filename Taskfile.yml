@@ -42,7 +42,7 @@ tasks:
     vars:
       IP: "{{ index .CLI_ARGS_LIST 0 }}"
     dir: kubernetes/talos
-    cmd: talosctl reset --nodes {{.IP}} --talosconfig talosconfig
+    cmd: talosctl reset --nodes {{.IP}} --talosconfig talosconfig --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL
 
   # controlplane or worker
   talos:apply:*:
@@ -62,39 +62,25 @@ tasks:
     cmds:
       - talosctl reboot --nodes {{.IP}} --talosconfig talosconfig
 
-  talos:boostrap:
+  talos:bootstrap:
     dir: kubernetes/talos
     cmds:
       - task: talos:apply:controlplane
         vars:
-          ROLE: controlplane
-          MACHINE: control-1
-          IP: 10.242.20.161
-          ARGS: --insecure
+          CLI_ARGS_LIST: [control-1, 10.242.20.161, --insecure]
       - task: talos:apply:controlplane
         vars:
-          ROLE: controlplane
-          MACHINE: control-2
-          IP: 10.242.20.162
-          ARGS: --insecure
-      - task: talos:apply:controlplane
-        vars:
-          ROLE: controlplane
-          MACHINE: control-3
-          IP: 10.242.20.163
-          ARGS: --insecure
+          CLI_ARGS_LIST: [control-2, 10.242.20.162, --insecure]
+      # - task: talos:apply:controlplane
+      #   vars:
+      #     CLI_ARGS_LIST: [control-3, 10.242.20.163, --insecure]
       - task: talos:apply:worker
         vars:
-          ROLE: worker
-          MACHINE: worker-1
-          IP: 10.242.20.171
-          ARGS: --insecure
+          CLI_ARGS_LIST: [worker-1, 10.242.20.171, --insecure]
       - task: talos:apply:worker
         vars:
-          ROLE: worker
-          MACHINE: worker-2
-          IP: 10.242.20.172
-          ARGS: --insecure
+          CLI_ARGS_LIST: [worker-2, 10.242.20.172, --insecure]
+      - sleep 10
       - talosctl bootstrap --talosconfig talosconfig --nodes 10.242.20.161
       - talosctl kubeconfig --talosconfig talosconfig --nodes 10.242.20.161
       - yq -i '.clusters[0].cluster.server = "https://10.242.20.161:6443"' kubeconfig
@@ -111,7 +97,7 @@ tasks:
   k8s:bootstrap:
     dir: kubernetes/charts
     cmds:
-      - helmfile apply --skip-diff-on-install --suppress-diff
+      - helmfile sync --skip-diff-on-install --suppress-diff --wait
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
 
@@ -125,6 +111,7 @@ tasks:
 
   argocd:bootstrap:
     cmds:
+      - task: argocd:login
       - argocd app sync --project system
 
   bootstrap:
@@ -133,6 +120,9 @@ tasks:
         vars:
           workdir: prod/kubernetes
           args: apply
+      # TODO: wait for machines
       - task: talos:bootstrap
+      # TODO: wait for nodes to be ready
       - task: k8s:nodelabel
       - task: k8s:bootstrap
+      - task: argocd:bootstrap
