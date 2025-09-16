@@ -5,7 +5,7 @@ locals {
     name = "control-1"
     vm_id = 10101
     cpu = 4
-    memory = 4
+    memory = 8
     ip4 = "10.242.20.161/24"
     gateway4 = "10.242.20.1"
     disks = [{
@@ -18,7 +18,7 @@ locals {
     name = "control-2"
     vm_id = 10102
     cpu = 4
-    memory = 4
+    memory = 8
     ip4 = "10.242.20.162/24"
     gateway4 = "10.242.20.1"
     disks = [{

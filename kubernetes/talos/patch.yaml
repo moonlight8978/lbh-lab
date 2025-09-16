@@ -3,7 +3,7 @@ machine:
     disk: /dev/sda
   sysctls:
     fs.inotify.max_user_instances: "8192"
-    fs.inotify.max_user_watches: "1048576"
+    fs.inotify.max_user_watches: "524288"
     net.ipv6.conf.all.disable_ipv6: "1"
     net.ipv6.conf.default.disable_ipv6: "1"
     net.ipv6.conf.lo.disable_ipv6: "1"
@@ -12,8 +12,8 @@ machine:
     hostDNS:
       forwardKubeDNSToHost: false
   certSANs:
-    # - 127.0.0.1
     - 10.242.20.160
+    # - 127.0.0.1
     # - 10.242.20.161
 
 cluster:

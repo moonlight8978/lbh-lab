@@ -85,6 +85,11 @@ tasks:
       - talosctl kubeconfig --talosconfig talosconfig --nodes 10.242.20.161
       - yq -i '.clusters[0].cluster.server = "https://10.242.20.161:6443"' kubeconfig
 
+  talosctl:
+    dir: kubernetes/talos
+    cmds:
+      - talosctl --talosconfig=./talosconfig --nodes {{.CLI_ARGS}}
+
   k8s:nodelabel:
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
@@ -97,7 +102,7 @@ tasks:
   k8s:bootstrap:
     dir: kubernetes/charts
     cmds:
-      - helmfile sync --skip-diff-on-install --suppress-diff --wait
+      - helmfile sync --wait --hide-notes
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
 
