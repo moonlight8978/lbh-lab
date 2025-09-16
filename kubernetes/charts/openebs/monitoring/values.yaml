@@ -14,4 +14,4 @@ node-problem-detector:
   install: false
 
 localpv-provisioner:
-  install: false
+  enabled: false

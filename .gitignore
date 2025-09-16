@@ -53,3 +53,5 @@ tmp/*
 **/*.dec.yml
 **/secrets.yml
 .env*
+
+kubernetes/charts/**/charts/
