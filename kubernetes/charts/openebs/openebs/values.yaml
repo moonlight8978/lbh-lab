@@ -27,12 +27,14 @@ mayastor:
       replicas: 2
       # replicas: 3
   storageClass:
-    default: false
+    default: true
     nameSuffix: mayastor
     parameters:
       protocol: nvmf
       repl: 2
       # repl: 3
+      poolAffinityTopologyLabel: |
+        tier: fast
 
 loki:
   enabled: false

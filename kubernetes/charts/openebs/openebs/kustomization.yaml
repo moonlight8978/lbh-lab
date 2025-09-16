@@ -13,6 +13,10 @@ helmCharts:
     includeCRDs: true
     valuesFile: values.yaml
 
+resources:
+  - manifests/slow.yaml
+  - manifests/fast.yaml
+
 patches:
   - target:
       name: openebs-agent-core

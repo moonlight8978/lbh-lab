@@ -1,5 +1,4 @@
 ---
-
 global:
   enabled: true
   resources:
@@ -8,47 +7,9 @@ global:
       cpu: 50m
     limits:
       memory: 256Mi
-      cpu: 250m
 
 injector:
   enabled: false
-  # replicas: 2
-
-  # agentDefaults:
-  #   cpuLimit: 500m
-  #   cpuRequest: 250m
-  #   memLimit: 128m
-  #   memRequest: 64m
-
-  # metrics:
-  #   enabled: true
-
-  # logFormat: json
-
-  # revokeOnShutdown: false
-
-  # resources:
-  #   requests:
-  #     memory: 256Mi
-  #     cpu: 250m
-  #   limits:
-  #     memory: 512Mi
-  #     cpu: 500m
-
-  # webhook:
-  #   objectSelector:
-  #     matchLabels:
-  #       vault/sidecar: "true"
-
-  # affinity: |
-  #   podAntiAffinity:
-  #     requiredDuringSchedulingIgnoredDuringExecution:
-  #     - labelSelector:
-  #         matchLabels:
-  #           app.kubernetes.io/name: {{ template "vault.name" . }}-agent-injector
-  #           app.kubernetes.io/instance: "{{ .Release.Name }}"
-  #           component: webhook
-  #       topologyKey: kubernetes.io/hostname
 
 server:
   enabled: true
@@ -58,7 +19,7 @@ server:
 
   ha:
     enabled: true
-    replicas: 3
+    replicas: 2
     raft:
       enabled: true
       setNodeId: true
@@ -82,7 +43,6 @@ server:
   resources:
     limits:
       memory: 4Gi
-      cpu: "2"
     requests:
       memory: 64Mi
       cpu: "50m"
@@ -98,13 +58,13 @@ server:
 
   dataStorage:
     enabled: true
-    storageClass: ceph-block-fast
-    size: 5Gi
+    storageClass: openebs-mayastor
+    size: 500Mi
 
   auditStorage:
     enabled: true
-    storageClass: ceph-block-slow
-    size: 5Gi
+    storageClass: openebs-mayastor
+    size: 500Mi
 
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain

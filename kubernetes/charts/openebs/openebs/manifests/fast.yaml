@@ -1,0 +1,24 @@
+---
+apiVersion: "openebs.io/v1beta3"
+kind: DiskPool
+metadata:
+  name: fast-1-1
+  namespace: openebs
+spec:
+  node: worker-1
+  disks: ["aio:///dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1"]
+  topology:
+    labelled:
+      tier: fast
+---
+apiVersion: "openebs.io/v1beta3"
+kind: DiskPool
+metadata:
+  name: fast-2-1
+  namespace: openebs
+spec:
+  node: worker-2
+  disks: ["aio:///dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1"]
+  topology:
+    labelled:
+      tier: fast
