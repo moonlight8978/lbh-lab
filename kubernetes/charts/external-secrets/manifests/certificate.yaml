@@ -1,5 +1,6 @@
 ---
 # https://github.com/external-secrets/bitwarden-sdk-server/blob/main/hack/cluster_issuer.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/cert-manager.io/certificate-v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

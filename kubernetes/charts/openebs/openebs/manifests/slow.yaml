@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/openebs.io/diskpool-v1beta3.json
 apiVersion: "openebs.io/v1beta3"
 kind: DiskPool
 metadata:
@@ -11,6 +12,7 @@ spec:
     labelled:
       tier: slow
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/openebs.io/diskpool-v1beta3.json
 apiVersion: "openebs.io/v1beta3"
 kind: DiskPool
 metadata:

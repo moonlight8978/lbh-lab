@@ -149,3 +149,7 @@ tasks:
       - task: tf:unit
         vars:
           CLI_ARGS_LIST: [prod/bitwarden, apply]
+
+  schema:
+    cmds:
+      - kss sync --auth-method kubeconfig --kubeconfig kubernetes/talos/kubeconfig --destination dist

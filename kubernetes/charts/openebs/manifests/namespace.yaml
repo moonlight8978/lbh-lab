@@ -1,3 +1,6 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/namespace-v1.json
+
 kind: Namespace
 apiVersion: v1
 metadata:
