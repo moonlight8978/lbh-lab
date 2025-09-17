@@ -1,6 +1,9 @@
 ---
 # https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
 
+global:
+  hostname: argocd-10-242-20-170.lab-local.bichls.dev
+
 redis-ha:
   enabled: true
 
