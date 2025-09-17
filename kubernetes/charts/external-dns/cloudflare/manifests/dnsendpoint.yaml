@@ -13,4 +13,4 @@ spec:
     - dnsName: lab-local.bichls.dev
       recordType: NS
       targets:
-        - ns-do-sg.sslip.io.
+        - ns-do-sg.sslip.io
