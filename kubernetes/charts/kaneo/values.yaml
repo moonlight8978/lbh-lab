@@ -113,6 +113,12 @@ route:
           - path:
               type: PathPrefix
               value: /api
+        filters:
+          - type: URLRewrite
+            urlRewrite:
+              path:
+                type: ReplacePrefixMatch
+                replacePrefixMatch: /
       - backendRefs:
           - identifier: web
             port: *web_port
