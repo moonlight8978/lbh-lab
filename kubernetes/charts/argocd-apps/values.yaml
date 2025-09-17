@@ -36,6 +36,11 @@ applicationsets:
             - name: openebs
               namespace: openebs
               project: core
+              ignoreDifferences:
+                - kind: Secret
+                  name: openebs-etcd-jwt-token
+                  jsonPointers:
+                    - /data
 
             # System apps
             - name: cilium
