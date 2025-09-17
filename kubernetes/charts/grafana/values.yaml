@@ -1,0 +1,110 @@
+---
+# https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+
+replicas: 1
+
+admin:
+  existingSecret: grafana-admin-creds
+
+annotations:
+  reloader.stakater.com/auto: "true"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: "512Mi"
+
+route:
+  main:
+    enabled: true
+    parentRefs:
+      - name: envoy
+    hostnames:
+      - grafana-10-242-20-170.lab-local.bichls.dev
+
+persistence:
+  enabled: false
+
+serviceMonitor:
+  enabled: true
+
+sidecar:
+  dashboards:
+    enabled: true
+    searchNamespace: ALL
+    label: grafana_dashboard
+    labelValue: "1"
+    folderAnnotation: grafana_folder
+    provider:
+      disableDelete: true
+      foldersFromFilesStructure: true
+  datasources:
+    enabled: true
+    searchNamespace: ALL
+    label: grafana_datasource
+    labelValue: "1"
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - access: proxy
+        name: Prometheus
+        type: prometheus
+        url: http://prometheus-operated.monitoring.svc.cluster.local:9090
+        isDefault: true
+        jsonData:
+          prometheusType: Prometheus
+      - name: Alertmanager
+        type: alertmanager
+        access: proxy
+        url: http://alertmanager-operated.monitoring.svc.cluster.local:9093
+        jsonData:
+          implementation: prometheus
+
+    deleteDatasources:
+      - name: Alertmanager
+        orgId: 1
+      - name: Prometheus
+        orgId: 1
+      - name: Loki
+        orgId: 1
+
+grafana.ini:
+  analytics:
+    check_for_updates: false
+
+  # auth.proxy:
+  #   enabled: true
+  #   header_name: X-Authentik-Email
+  #   auto_sign_up: true
+  #   enable_login_token: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        disableDeletion: false
+        editable: false
+        folder: ""
+        options:
+          path: /var/lib/grafana/dashboards/default
+        orgId: 1
+        type: file
+
+dashboards:
+  default:
+    cert-manager:
+      # renovate: depName="Cert-manager-Kubernetes"
+      gnetId: 20842
+      revision: 3
+      datasource: Prometheus
+
+    pvc:
+      # renovate: depName="K8s / Storage / Volumes / Cluster"
+      gnetId: 11454
+      revision: 14
+      datasource: Prometheus

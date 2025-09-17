@@ -1,0 +1,131 @@
+---
+# https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+
+crds:
+  enabled: true
+  upgradeJob:
+    enabled: false
+
+cleanPrometheusOperatorObjectNames: true
+
+alertmanager:
+  route:
+    main:
+      enabled: true
+      parentRefs:
+        - name: envoy
+      hostnames:
+        - alert-10-242-20-170.lab-local.bichls.dev
+  alertmanagerSpec:
+    externalUrl: https://alert-10-242-20-170.lab-local.bichls.dev
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: openebs-mayastor-slow
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+
+grafana:
+  enabled: false
+  forceDeployDashboards: true
+  sidecar:
+    dashboards:
+      annotations:
+        grafana_folder: Kubernetes
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+  prometheusConfigReloader:
+    resources:
+      requests:
+        cpu: 5m
+        memory: 32M
+      limits:
+        memory: 32M
+
+prometheus:
+  route:
+    main:
+      enabled: true
+      parentRefs:
+        - name: envoy
+      hostnames:
+        - prometheus-10-242-20-170.lab-local.bichls.dev
+  prometheusSpec:
+    externalUrl: https://prometheus-10-242-20-170.lab-local.bichls.dev
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    scrapeConfigSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 3d
+    retentionSize: 18GB
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: openebs-mayastor-slow
+          resources:
+            requests:
+              storage: 20Gi
+
+kubeApiServer:
+  enabled: true
+
+kubelet:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+nodeExporter:
+  enabled: true
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  prometheus:
+    monitor:
+      enabled: true
+
+windowsMonitoring:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+coreDns:
+  enabled: false
+
+kubeDns:
+  enabled: false

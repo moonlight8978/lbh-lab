@@ -61,6 +61,15 @@ applicationsets:
             - name: reloader
               namespace: kube-system
               project: system
+
+            # Monitoring
+            - name: prometheus
+              namespace: monitoring
+              project: monitoring
+            - name: grafana
+              namespace: monitoring
+              project: monitoring
+
     template:
       metadata:
         name: "{{.name}}"
@@ -156,6 +165,19 @@ projects:
         namespace: external-secrets
       - name: *cluster
         namespace: cert-manager
+    clusterResourceWhitelist: *clusterResourceWhitelist
+    namespaceResourceWhitelist: *namespaceResourceWhitelist
+    syncWindows: *syncWindows
+
+  monitoring:
+    namespace: argocd
+    description: Monitoring
+    finalizers: []
+    sourceRepos:
+      - *repo
+    destinations:
+      - name: *cluster
+        namespace: monitoring
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows: *syncWindows
