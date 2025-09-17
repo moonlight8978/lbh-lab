@@ -11,3 +11,6 @@ helmCharts:
     version: 77.6.2
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - manifests/namespace.yaml
