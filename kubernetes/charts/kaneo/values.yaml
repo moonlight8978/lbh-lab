@@ -10,7 +10,7 @@ controllers:
     containers:
       main:
         image:
-          repository: ghcr.io/usekaneo/web
+          repository: ghcr.io/usekaneo/api
           tag: 1.2.4
           pullPolicy: IfNotPresent
         ports:
@@ -19,6 +19,7 @@ controllers:
         envFrom:
           - secret: kaneo-env
           - configMap: api
+          - configMap: main
         probes:
           readiness:
             path: /me
@@ -52,7 +53,7 @@ controllers:
           - name: http
             containerPort: &web_port 5173
         envFrom:
-          - configMap: web
+          - configMap: main
         probes:
           readiness:
             path: /
@@ -78,7 +79,7 @@ configMaps:
     includeInChecksum: true
     data:
       DISABLE_REGISTRATION: "{{.Values.registrationDisabled}}"
-  web:
+  main:
     includeInChecksum: true
     data:
       KANEO_API_URL: "{{.Values.baseUrl}}/api"
