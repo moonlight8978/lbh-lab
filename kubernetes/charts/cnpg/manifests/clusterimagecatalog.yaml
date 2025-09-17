@@ -5,6 +5,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: ClusterImageCatalog
 metadata:
   name: postgresql
+  annotations:
+    argocd.argoproj.io/hook: PostSync
 spec:
   images:
     - major: 15

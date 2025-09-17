@@ -7,3 +7,5 @@ metadata:
   name: monitoring
   labels:
     pod-security.kubernetes.io/enforce: privileged
+  annotations:
+    argocd.argoproj.io/hook: PreSync
