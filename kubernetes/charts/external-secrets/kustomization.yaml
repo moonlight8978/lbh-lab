@@ -15,3 +15,4 @@ helmCharts:
 
 resources:
   - manifests/certificate.yaml
+  - manifests/clustersecretstore-bitwarden.yaml

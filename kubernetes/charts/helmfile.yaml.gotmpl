@@ -55,21 +55,18 @@ releases:
       - ./cert-manager/values.yaml
     needs:
       - kube-system/coredns
-
-  - name: argocd
-    namespace: argocd
-    chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
-    version: 8.3.9
-    values:
-      - ./argocd/values.yaml
-    needs:
-      - kube-system/coredns
     hooks:
       - events: ["postsync"]
         command: bash
         args:
           - -c
-          - until kubectl get crd applicationsets.argoproj.io appprojects.argoproj.io &>/dev/null; do sleep 5; done
+          - until kubectl get crd clusterissuers.cert-manager.io &>/dev/null; do sleep 5; done
+      - events: ["postsync"]
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./cert-manager/manifests/selfsigned.yaml
 
   - name: external-secrets-creds
     namespace: external-secrets
@@ -82,6 +79,42 @@ releases:
             stringData:
               access-token: ref+sops://../../secrets.yml#/bitwarden_access_token
 
+  - name: external-secrets
+    namespace: external-secrets
+    chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    version: 0.19.2
+    values:
+      - ./external-secrets/values.yaml
+    needs:
+      - cert-manager/cert-manager
+    hooks:
+      - events: ["postsync"]
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd clustersecretstores.external-secrets.io &>/dev/null; do sleep 5; done
+      - events: ["postsync"]
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./external-secrets/manifests
+
+  - name: argocd
+    namespace: argocd
+    chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
+    version: 8.3.9
+    values:
+      - ./argocd/values.yaml
+    needs:
+      - external-secrets/external-secrets
+    hooks:
+      - events: ["postsync"]
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd applicationsets.argoproj.io appprojects.argoproj.io &>/dev/null; do sleep 5; done
+
   - name: argocd-apps
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argocd-apps
@@ -90,5 +123,3 @@ releases:
       - ./argocd-apps/values.yaml
     needs:
       - argocd/argocd
-      - external-secrets/external-secrets-creds
-      - cert-manager/cert-manager
