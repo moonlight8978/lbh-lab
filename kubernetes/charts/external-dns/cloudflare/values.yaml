@@ -31,7 +31,7 @@ sources:
 
 extraArgs:
   - --cloudflare-proxied
-  - --zone-id-filter=$CF_ZONE_ID
+  - --zone-id-filter=$(CF_ZONE_ID)
 
 triggerLoopOnEvent: true
 
