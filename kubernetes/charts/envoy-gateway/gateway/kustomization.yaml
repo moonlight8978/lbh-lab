@@ -10,3 +10,7 @@ helmCharts:
     name: gateway-helm
     version: v1.5.1
     includeCRDs: true
+
+resources:
+  - manifests/gateway.yaml
+  - manifests/certificate.yaml

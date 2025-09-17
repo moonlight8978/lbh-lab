@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/externaldns.k8s.io/dnsendpoint-v1alpha1.json
+
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: sslip
+  namespace: external-dns
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  endpoints:
+    - dnsName: lab-local.bichls.dev
+      recordType: NS
+      targets:
+        - ns-do-sg.sslip.io.

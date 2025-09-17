@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/heads/master/charts/external-dns/values.schema.json
+# https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/values.yaml
+provider:
+  name: cloudflare
+
+logLevel: info
+
+env:
+  - name: CF_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-creds
+        key: CF_API_TOKEN
+  - name: CF_ZONE_ID
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-creds
+        key: CF_ZONE_ID
+
+domainFilters:
+  - bichls.dev
+
+excludeDomains:
+  - lab-local.bichls.dev
+
+policy: upsert-only
+
+sources:
+  - crd
+
+extraArgs:
+  - --cloudflare-proxied
+  - --zone-id-filter=$CF_ZONE_ID
+
+triggerLoopOnEvent: true
+
+txtSuffix: .k8s
+
+deploymentAnnotations:
+  reloader.stakater.com/auto: "true"
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi
+  limits:
+    memory: 128Mi
+
+serviceMonitor:
+  enabled: true

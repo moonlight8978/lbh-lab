@@ -5,14 +5,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-  - releaseName: argocd
-    namespace: argocd
-    repo: oci://ghcr.io/argoproj/argo-helm/
-    name: argo-cd
-    version: 8.5.0
+  - releaseName: external-dns-cloudflare
+    namespace: external-dns
+    repo: https://kubernetes-sigs.github.io/external-dns/
+    name: external-dns
+    version: 1.19.0
     includeCRDs: true
     valuesFile: values.yaml
 
 resources:
   - manifests/externalsecret.yaml
-  - manifests/httproute.yaml
+  - manifests/dnsendpoint.yaml

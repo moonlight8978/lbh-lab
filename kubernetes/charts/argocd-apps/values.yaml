@@ -55,6 +55,9 @@ applicationsets:
             - name: envoy-gateway
               namespace: envoy-gateway-system
               project: system
+            - name: external-dns
+              namespace: external-dns
+              project: system
     template:
       metadata:
         name: "{{.name}}"
@@ -109,6 +112,8 @@ projects:
         namespace: cilium-secrets
       - name: *cluster
         namespace: envoy-gateway-system
+      - name: *cluster
+        namespace: external-dns
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"

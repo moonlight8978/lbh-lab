@@ -110,6 +110,12 @@ releases:
       - external-secrets/external-secrets
     hooks:
       - events: ["postsync"]
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./argocd/manifests/externalsecret.yaml
+      - events: ["postsync"]
         command: bash
         args:
           - -c
