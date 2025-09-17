@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/stakater/Reloader/refs/heads/master/deployments/kubernetes/chart/reloader/values.schema.json
+# https://github.com/stakater/Reloader/blob/master/deployments/kubernetes/chart/reloader/values.yaml
+
+fullnameOverride: reloader
+
+reloader:
+  watchGlobally: true
+
+  reloadStrategy: annotations
+
+  deployment:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
+
+  podMonitor:
+    enabled: true

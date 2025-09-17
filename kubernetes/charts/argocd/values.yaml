@@ -51,10 +51,13 @@ controller:
 server:
   replicas: 1
 
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+
   resources:
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 100m
+      memory: 512Mi
 
   service:
     type: LoadBalancer
@@ -70,6 +73,9 @@ repoServer:
       memory: 64Mi
 
 dex:
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+
   resources:
     requests:
       cpu: 10m

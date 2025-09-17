@@ -58,6 +58,9 @@ applicationsets:
             - name: external-dns
               namespace: external-dns
               project: system
+            - name: reloader
+              namespace: kube-system
+              project: system
     template:
       metadata:
         name: "{{.name}}"
