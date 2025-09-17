@@ -73,6 +73,11 @@ applicationsets:
               namespace: monitoring
               project: monitoring
 
+            # Applications
+            - name: kaneo
+              namespace: application
+              project: application
+
     template:
       metadata:
         name: "{{.name}}"
@@ -199,3 +204,23 @@ projects:
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows: *syncWindows
+
+  application:
+    namespace: argocd
+    description: Applications
+    finalizers: []
+    sourceRepos:
+      - *repo
+    destinations:
+      - name: *cluster
+        namespace: application
+    clusterResourceWhitelist: *clusterResourceWhitelist
+    namespaceResourceWhitelist: *namespaceResourceWhitelist
+    syncWindows:
+      - kind: deny
+        schedule: "0 * * * *"
+        timeZone: "Asia/Bangkok"
+        applications:
+          - "*"
+        duration: 1h
+        manualSync: true

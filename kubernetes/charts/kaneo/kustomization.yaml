@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: kaneo
+    namespace: application
+    repo: oci://ghcr.io/bjw-s-labs/helm/
+    name: app-template
+    valuesFile: values.yaml
+    version: 4.3.0
+
+resources:
+  - manifests/postgresql.yaml
+  - manifests/externalsecret.yaml

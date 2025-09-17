@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+baseUrl: https://kaneo-10-242-20-170.lab-local.bichls.dev
+registrationDisabled: "true"
+
+controllers:
+  api:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/usekaneo/web
+          tag: 1.2.4
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &api_port 1337
+        envFrom:
+          - secret: kaneo-env
+          - configMap: api
+        probes:
+          readiness:
+            path: /me
+            port: *api_port
+            spec:
+              initialDelaySeconds: 5
+              periodSeconds: 10
+          liveness:
+            path: /me
+            port: *api_port
+            spec:
+              initialDelaySeconds: 30
+              periodSeconds: 10
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 512Mi
+
+  web:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/usekaneo/web
+          tag: 1.2.4
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &web_port 5173
+        envFrom:
+          - configMap: web
+        probes:
+          readiness:
+            path: /
+            port: *web_port
+            spec:
+              initialDelaySeconds: 5
+              periodSeconds: 10
+          liveness:
+            path: /
+            port: *web_port
+            spec:
+              initialDelaySeconds: 30
+              periodSeconds: 10
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 256Mi
+
+configMaps:
+  api:
+    includeInChecksum: true
+    data:
+      DISABLE_REGISTRATION: "{{.Values.registrationDisabled}}"
+  web:
+    includeInChecksum: true
+    data:
+      KANEO_API_URL: "{{.Values.baseUrl}}/api"
+
+service:
+  api:
+    controller: api
+    ports:
+      http:
+        port: *api_port
+        targetPort: *api_port
+  web:
+    controller: web
+    ports:
+      http:
+        port: *web_port
+        targetPort: *web_port
+
+route:
+  api:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - kaneo-10-242-20-170.lab-local.bichls.dev
+    rules:
+      - backendRefs:
+          - identifier: api
+            port: *api_port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /api
+      - backendRefs:
+          - identifier: web
+            port: *web_port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
