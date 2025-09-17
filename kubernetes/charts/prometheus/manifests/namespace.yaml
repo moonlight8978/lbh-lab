@@ -8,4 +8,4 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: privileged
   annotations:
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-100"

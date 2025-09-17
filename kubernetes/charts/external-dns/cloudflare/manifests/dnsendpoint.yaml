@@ -7,7 +7,7 @@ metadata:
   name: sslip
   namespace: external-dns
   annotations:
-    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "100"
 spec:
   endpoints:
     - dnsName: lab-local.bichls.dev

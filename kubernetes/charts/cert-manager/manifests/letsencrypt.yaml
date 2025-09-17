@@ -6,7 +6,7 @@ metadata:
   name: letsencrypt
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "100"
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -27,7 +27,7 @@ metadata:
   name: letsencrypt-staging
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/sync-wave: "100"
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
