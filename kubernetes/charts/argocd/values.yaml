@@ -92,6 +92,7 @@ configs:
   params:
     create: true
     controller.diff.server.side: true
+    server.insecure: true
 
   # rbac:
   #   policy.csv: |
