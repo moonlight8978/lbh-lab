@@ -47,6 +47,15 @@ releases:
     needs:
       - kube-system/cilium
 
+  - name: cert-manager
+    namespace: cert-manager
+    chart: oci://quay.io/jetstack/charts/cert-manager
+    version: v1.18.2
+    values:
+      - ./cert-manager/values.yaml
+    needs:
+      - kube-system/coredns
+
   - name: argocd
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
@@ -82,3 +91,4 @@ releases:
     needs:
       - argocd/argocd
       - external-secrets/external-secrets-creds
+      - cert-manager/cert-manager
