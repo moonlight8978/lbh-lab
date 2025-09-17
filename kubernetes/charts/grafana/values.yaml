@@ -21,6 +21,7 @@ route:
     enabled: true
     parentRefs:
       - name: envoy
+        namespace: envoy-gateway-system
     hostnames:
       - grafana-10-242-20-170.lab-local.bichls.dev
 

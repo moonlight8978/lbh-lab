@@ -14,6 +14,7 @@ alertmanager:
       enabled: true
       parentRefs:
         - name: envoy
+          namespace: envoy-gateway-system
       hostnames:
         - alert-10-242-20-170.lab-local.bichls.dev
   alertmanagerSpec:
@@ -59,6 +60,7 @@ prometheus:
       enabled: true
       parentRefs:
         - name: envoy
+          namespace: envoy-gateway-system
       hostnames:
         - prometheus-10-242-20-170.lab-local.bichls.dev
   prometheusSpec:
