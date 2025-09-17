@@ -1,0 +1,24 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    ":automergeMinor",
+    ":automergePatch",
+    "github>moonlight8978/renovate-config",
+    "local>moonlight8978/lbh-lab//.renovate/grafana-charts.json5",
+  ],
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: [
+        "/^.*\\.ya?ml$/"
+      ],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s*image\\:\\s?.*:(?<currentValue>.*?)\\s",
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( extractVersion=(?<extractVersion>.*?))?( versioning=(?<versioning>.*?))?\\s*value\\:\\s?.*:(?<currentValue>.*?)\\s"
+      ],
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+}

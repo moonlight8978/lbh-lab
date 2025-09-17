@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cloudnative-pg/values.schema.json
+
+crds:
+  create: true
+
+config:
+  clusterWide: true
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi
+  limits:
+    memory: 512Mi
+
+monitoring:
+  podMonitorEnabled: true

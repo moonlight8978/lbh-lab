@@ -1,0 +1,24 @@
+{
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: [
+        "/\\.ya?ml$/"
+      ],
+      matchStrings: [
+        "#\\s+renovate:\\s+depName=\"(?<depName>.*)\"\\n\\s+gnetId:\\s+(?<packageName>.*?)\\n\\s+revision:\\s+(?<currentValue>.*)"
+      ],
+      versioningTemplate: "regex:^(?<major>\\d+)$",
+      datasourceTemplate: "custom.grafanaDashboards"
+    }
+  ],
+  customDatasources: {
+    grafanaDashboards: {
+      defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
+      format: "json",
+      transformTemplates: [
+        "{\"releases\":[{\"version\": $string(revision)}]}"
+      ]
+    }
+  }
+}

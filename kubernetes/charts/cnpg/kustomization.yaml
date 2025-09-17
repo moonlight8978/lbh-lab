@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: cnpg
+    namespace: cnpg-system
+    repo: oci://ghcr.io/cloudnative-pg/charts
+    name: cloudnative-pg
+    version: 0.26.0
+    valuesFile: values.yaml
+
+resources:
+  - manifests/clusterimagecatalog.yaml
+  # TODO: renovate
+  - https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/v0.5.0/manifest.yaml

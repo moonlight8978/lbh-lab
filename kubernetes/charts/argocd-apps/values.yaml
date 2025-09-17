@@ -61,6 +61,9 @@ applicationsets:
             - name: reloader
               namespace: kube-system
               project: system
+            - name: cnpg
+              namespace: cnpg-system
+              project: system
 
             # Monitoring
             - name: prometheus
@@ -126,6 +129,8 @@ projects:
         namespace: envoy-gateway-system
       - name: *cluster
         namespace: external-dns
+      - name: *cluster
+        namespace: cnpg-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
