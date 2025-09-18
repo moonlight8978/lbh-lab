@@ -48,7 +48,7 @@ configMaps:
       # Queue mode
       # EXECUTIONS_MODE: queue
       # DB
-      DB_TYPE: postgres
+      DB_TYPE: postgresdb
       DB_POSTGRESDB_DATABASE: n8n_production
       DB_POSTGRESDB_HOST: n8n-postgresql-rw
       DB_POSTGRESDB_PORT: "5432"
