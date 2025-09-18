@@ -10,6 +10,21 @@ controllers:
       karakeep:
         envFrom:
           - secret: karakeep-env
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
+  chrome:
+    containers:
+      chrome:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
 
 secrets:
   karakeep:
@@ -46,5 +61,11 @@ meilisearch:
     enabled: true
     storageClass: openebs-mayastor
     size: 1Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
   serviceMonitor:
     enabled: true
