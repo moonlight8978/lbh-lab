@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/postgresql.cnpg.io/cluster-v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: n8n-postgresql
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  instances: 1
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: stable
+    major: 17
+  bootstrap:
+    initdb:
+      database: n8n_production
+      owner: n8n
+      secret:
+        name: n8n-postgresql-creds
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 512Mi
+  storage:
+    storageClass: openebs-mayastor
+    size: 2Gi

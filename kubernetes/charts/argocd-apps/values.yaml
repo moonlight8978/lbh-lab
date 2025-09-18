@@ -80,6 +80,9 @@ applicationsets:
             - name: karakeep
               namespace: application
               project: application
+            - name: n8n
+              namespace: application
+              project: application
 
     template:
       metadata:

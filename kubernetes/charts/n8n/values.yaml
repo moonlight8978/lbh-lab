@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+scheme: https
+hostname: &hostname n8n-10-242-20-170.lab-local.bichls.dev
+tz: &tz Asia/Bangkok
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: &image docker.n8n.io/n8nio/n8n
+          tag: &tag 1.111.0
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &port 5678
+        envFrom:
+          - configMap: main
+          - secret: n8n-env
+        probes:
+          liveness:
+            path: /healthz
+            port: *port
+          readiness:
+            path: /healthz/readiness
+            port: *port
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      N8N_EDITOR_BASE_URL: "{{.Values.scheme}}://{{.Values.hostname}}"
+      N8N_HOST: "{{.Values.hostname}}"
+      N8N_PROTOCOL: "{{.Values.scheme}}"
+      N8N_LISTEN_ADDRESS: 0.0.0.0
+      TZ: "{{.Values.tz}}"
+      GENERIC_TIMEZONE: "{{.Values.tz}}"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_HIRING_BANNER_ENABLED: "false"
+      N8N_PUBLIC_API_SWAGGERUI_DISABLED: "true"
+      # Task runners
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+      # Queue mode
+      # EXECUTIONS_MODE: queue
+      # DB
+      DB_TYPE: postgres
+      DB_POSTGRESDB_DATABASE: n8n_production
+      DB_POSTGRESDB_HOST: n8n-postgresql-rw
+      DB_POSTGRESDB_PORT: "5432"
+      # SMTP
+      N8N_EMAIL_MODE: smtp
+      N8N_SMTP_PORT: "587"
+      N8N_SMTP_SSL: "true"
+      N8N_SMTP_STARTTLS: "true"
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+            weight: 1
