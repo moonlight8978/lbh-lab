@@ -3,13 +3,21 @@ hostname: ${name}
 timezone: Asia/Bangkok
 package_update: true
 package_upgrade: true
+packages:
+  - qemu-guest-agent
 users:
   - name: labo
     groups: sudo
+    shell: /bin/bash
     ssh_authorized_keys:
       %{~ for key in ssh_keys ~}
       - ${key}
       %{~ endfor ~}
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    lock_passwd: false
+    passwd: ${vm_passwd}
 runcmd:
   - sed -i 's/debian-template/${name}/g' /etc/hosts
+  - systemctl daemon-reload
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent

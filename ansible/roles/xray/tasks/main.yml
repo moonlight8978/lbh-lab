@@ -1,0 +1,123 @@
+- name: Install xray
+  become: true
+  shell: |
+    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+  args:
+    creates: /usr/local/bin/xray
+
+- name: Update geoip.dat and geosite.dat
+  become: true
+  when: xray_update_geoip
+  shell: |
+    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install-geodata
+
+- name: Create xray config
+  become: true
+  tags:
+    - reload
+  copy:
+    dest: /usr/local/etc/xray/config.json
+    content: "{{ xray_config }}"
+    owner: nobody
+    group: nogroup
+
+# Fix ip route not persisted across restarts
+- name: Get ManageForeignRoutingPolicyRules
+  ansible.builtin.shell: |
+    cat /etc/systemd/networkd.conf | grep ManageForeignRoutingPolicyRules | awk -F '=' '{print $2}'
+  register: manage_foreign_routing_policy_rules
+
+- name: Set ManageForeignRoutingPolicyRules=no
+  when: manage_foreign_routing_policy_rules.stdout == "yes"
+  ansible.builtin.shell: |
+    sed -i 's/ManageForeignRoutingPolicyRules=yes/ManageForeignRoutingPolicyRules=no/' /etc/systemd/networkd.conf
+
+- name: Uncomment ManageForeignRoutingPolicyRules
+  ansible.builtin.shell: |
+    sed -i 's/#ManageForeignRoutingPolicyRules=/ManageForeignRoutingPolicyRules=/' /etc/systemd/networkd.conf
+
+- name: Setup nftables rules
+  become: true
+  copy:
+    dest: /etc/nftables.conf
+    mode: "0644"
+    content: |
+      #!/usr/sbin/nft -f
+
+      flush ruleset
+
+      table ip xray {
+              chain prerouting {
+                      type filter hook prerouting priority mangle; policy accept;
+                      ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
+                      meta l4proto tcp ip daddr 192.168.0.0/16 return
+                      meta l4proto tcp ip daddr 10.0.0.0/8 return
+                      meta l4proto tcp ip daddr 172.17.0.0/8 return
+                      ip daddr 10.0.0.0/8 udp dport != 53 return
+                      ip protocol tcp tproxy to 127.0.0.1:12345 meta mark set 1
+                      ip protocol udp tproxy to 127.0.0.1:12345 meta mark set 1
+              }
+              chain output {
+                      type route hook output priority mangle; policy accept;
+                      ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
+                      meta l4proto tcp ip daddr 192.168.0.0/16 return
+                      meta l4proto tcp ip daddr 10.0.0.0/8 return
+                      meta l4proto tcp ip daddr 172.17.0.0/8 return
+                      ip daddr 10.0.0.0/8 udp dport != 53 return
+                      meta mark 2 return
+                      ip protocol tcp meta mark set 1
+                      ip protocol udp meta mark set 1
+              }
+      }
+
+- name: Create tproxy service
+  become: true
+  ansible.builtin.copy:
+    dest: /lib/systemd/system/nftables.service
+    content: |
+      [Unit]
+      Description=nftables
+      Documentation=man:nft(8) http://wiki.nftables.org
+      Wants=network-pre.target
+      Before=network-pre.target shutdown.target
+      Conflicts=shutdown.target
+      DefaultDependencies=no
+
+      [Service]
+      Type=oneshot
+      RemainAfterExit=yes
+      StandardInput=null
+      ProtectSystem=full
+      ProtectHome=true
+      ExecStart=/usr/sbin/nft -f /etc/nftables.conf ; /usr/sbin/ip route add local default dev lo table 100 ; /usr/sbin/ip rule add fwmark 1 table 100
+      ExecReload=/usr/sbin/nft -f /etc/nftables.conf
+      ExecStop=/usr/sbin/nft flush ruleset ; /usr/sbin/ip route del local default dev lo table 100 ; /usr/sbin/ip rule del table 100
+
+      [Install]
+      WantedBy=sysinit.target
+
+- name: Start xray
+  become: true
+  tags:
+    - xray_config
+  systemd_service:
+    name: xray
+    enabled: true
+    daemon_reload: true
+    state: started
+
+- name: Restart xray
+  become: true
+  tags:
+    - xray_config
+  systemd_service:
+    name: xray
+    state: restarted
+
+- name: Start nftables
+  become: true
+  systemd_service:
+    name: nftables
+    enabled: true
+    state: started
+    daemon_reload: true

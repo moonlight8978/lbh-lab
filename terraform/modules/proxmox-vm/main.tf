@@ -75,5 +75,5 @@ output "vm_id" {
 }
 
 output "ip4" {
-  value = try([for ip in flatten(proxmox_virtual_environment_vm.main.ipv4_addresses) : ip if ip != "127.0.0.1"][0], null)
+  value = var.ip4
 }

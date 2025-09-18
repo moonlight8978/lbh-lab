@@ -8,9 +8,9 @@ terraform {
 }
 
 inputs = {
-  url = "https://cdimage.debian.org/images/cloud/bookworm/20250909-2230/debian-12-nocloud-amd64-20250909-2230.qcow2"
+  url = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
   node_name = "pve1"
   datastore_id = "local"
-  file_name = "debian-12-nocloud-amd64.qcow2.iso"
+  file_name = "ubuntu-noble-server-cloudimg-amd64.img"
   location = "/var/lib/vz/template/iso"
 }

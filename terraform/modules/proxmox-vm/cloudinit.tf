@@ -6,6 +6,7 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     data = templatefile("${path.module}/cloudinit/user_data.tftpl", {
       name     = var.name
       ssh_keys = var.ssh_keys
+      vm_passwd = var.vm_passwd
     })
     file_name = "${var.name}-user-data-cloud-config.yml"
   }

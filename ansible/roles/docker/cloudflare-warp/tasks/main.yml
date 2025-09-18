@@ -1,0 +1,25 @@
+- name: Create warp volume
+  become: true
+  community.docker.docker_volume:
+    name: cloudflare-warp
+    state: present
+
+- name: Run warp as container
+  become: true
+  community.docker.docker_container:
+    name: cloudflare-warp
+    image: caomingjun/warp:latest
+    state: started
+    restart_policy: always
+    network_mode: host
+    volumes:
+      - cloudflare-warp:/var/lib/cloudflare-warp
+    capabilities:
+      - MKNOD
+      - AUDIT_WRITE
+      - NET_ADMIN
+    device_cgroup_rules:
+      - "c 10:200 rwm"
+    env:
+      WARP_SLEEP: "2"
+      WARP_LICENSE_KEY: "{{ cloudflare_warp_license_key }}"

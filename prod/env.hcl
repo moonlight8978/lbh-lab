@@ -1,5 +1,6 @@
 locals {
   talos_template_id = 10010
+  ubuntu_template_id = 10020
 
   controller1 = {
     name = "control-1"

@@ -44,6 +44,9 @@ cp ${var.cloudimg.location} /tmp/${trimsuffix(var.cloudimg.file_name, ".iso")}
 xz -d /tmp/${trimsuffix(var.cloudimg.file_name, ".iso")}
 mv /tmp/${trimsuffix(var.cloudimg.file_name, ".xz.iso")} /tmp/${random_string.temp_file.result}
 EOF
+    "none" = <<EOF
+cp ${var.cloudimg.location} /tmp/${random_string.temp_file.result}
+EOF
   }
 }
 
@@ -66,7 +69,7 @@ resource "null_resource" "diskimport" {
       "qm unlink ${var.vm.vm_id} --idlist unused0",
 
       # Decompress image
-      var.compression == "none" ? null : local.decompress[var.compression],
+      local.decompress[var.compression],
 
       # Import cloudimg disk, replace the current one
       "qm importdisk ${var.vm.vm_id} /tmp/${random_string.temp_file.result} ${var.datastore_id}",

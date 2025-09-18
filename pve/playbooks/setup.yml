@@ -1,7 +1,0 @@
----
-- name: PVE nodes
-  hosts: pve
-  roles:
-    - ../../ansible/roles/proxmox-host
-    - ../../ansible/roles/interactive
-    - ../../ansible/roles/wake-on-lan

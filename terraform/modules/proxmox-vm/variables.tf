@@ -70,3 +70,7 @@ variable "started" {
   type    = bool
   default = true
 }
+
+variable "vm_passwd" {
+  type = string
+}

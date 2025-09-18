@@ -1,0 +1,136 @@
+---
+- name: Setup transparent proxy
+  hosts: tproxy
+  become: true
+  roles:
+    - ../roles/pkg-latest
+    - ../roles/docker-engine
+    - ../roles/xray
+    - ../roles/docker/cloudflare-warp
+  vars:
+    xray_update_geoip: false
+    cloudflare_warp_license_key: ""
+    xray_config: |
+      {
+        "log": {
+          "loglevel": "warning"
+        },
+        "inbounds": [
+          {
+            "listen": "127.0.0.1",
+            "tag": "all-in",
+            "port": 12345,
+            "protocol": "dokodemo-door",
+            "settings": {
+              "network": "tcp,udp",
+              "followRedirect": true
+            },
+            "sniffing": {
+              "enabled": true,
+              "destOverride": ["http", "tls"]
+            },
+            "streamSettings": {
+              "sockopt": {
+                "tproxy": "tproxy"
+              }
+            }
+          },
+          {
+            "port": 10808,
+            "protocol": "socks",
+            "sniffing": {
+              "enabled": true,
+              "destOverride": ["http", "tls", "quic"]
+            },
+            "settings": {
+              "auth": "noauth",
+              "udp": true
+            }
+          }
+        ],
+        "outbounds": [
+          {
+            "tag": "direct",
+            "protocol": "freedom",
+            "settings": {
+              "domainStrategy": "UseIPv4"
+            },
+            "streamSettings": {
+              "sockopt": {
+                "mark": 2
+              }
+            }
+          },
+          {
+            "tag": "dns-out",
+            "protocol": "dns",
+            "streamSettings": {
+              "sockopt": {
+                "mark": 2
+              }
+            }
+          },
+          {
+            "tag": "warp",
+            "protocol": "socks",
+            "settings": {
+              "servers": [
+                {
+                  "address": "127.0.0.1",
+                  "port": 1080
+                }
+              ]
+            },
+            "streamSettings": {
+              "sockopt": {
+                "mark": 2
+              }
+            }
+          }
+        ],
+        "dns": {
+          "servers": [
+            "1.1.1.1",
+            "8.8.8.8",
+            "127.0.0.53"
+          ]
+        },
+        "routing": {
+          "domainStrategy": "AsIs",
+          "rules": [
+            {
+              "type": "field",
+              "inboundTag": ["all-in"],
+              "port": 123,
+              "network": "udp",
+              "outboundTag": "direct"
+            },
+            {
+              "type": "field",
+              "inboundTag": ["all-in"],
+              "port": 53,
+              "outboundTag": "dns-out"
+            },
+            {
+              "type": "field",
+              "ip": ["8.8.8.8", "1.1.1.1"],
+              "outboundTag": "warp"
+            },
+            {
+              "type": "field",
+              "domain": ["geosite:github", "geosite:aws"],
+              "outboundTag": "warp"
+            },
+            {
+              "type": "field",
+              "ip": ["geoip:private"],
+              "outboundTag": "direct"
+            },
+            {
+              "type": "field",
+              "ip": ["0.0.0.0/0"],
+              "outboundTag": "warp"
+            }
+          ]
+        }
+      }

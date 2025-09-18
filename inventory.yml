@@ -1,0 +1,19 @@
+all:
+  vars:
+    ansible_ssh_private_key_file: /Users/moonlight/.ssh/moonlight
+
+pve:
+  children:
+    pve1:
+      hosts:
+        10.242.20.77:
+  vars:
+    ansible_user: root
+
+ubuntu:
+  vars:
+    ansible_user: labo
+  children:
+    tproxy:
+      hosts:
+        10.242.20.140:
