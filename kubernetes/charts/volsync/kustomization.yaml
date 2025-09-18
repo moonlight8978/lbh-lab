@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: volsync
+    namespace: volsync-system
+    repo: oci://ghcr.io/home-operations/charts-mirror/
+    name: volsync
+    version: 0.13.0
+    valuesFile: values.yaml

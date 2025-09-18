@@ -64,6 +64,9 @@ applicationsets:
             - name: cnpg
               namespace: cnpg-system
               project: system
+            - name: volsync
+              namespace: volsync-system
+              project: system
 
             # Monitoring
             - name: prometheus
@@ -140,6 +143,8 @@ projects:
         namespace: external-dns
       - name: *cluster
         namespace: cnpg-system
+      - name: *cluster
+        namespace: volsync-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
