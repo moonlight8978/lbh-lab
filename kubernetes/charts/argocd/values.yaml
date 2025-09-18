@@ -70,6 +70,10 @@ server:
 repoServer:
   replicas: 1
 
+  env:
+    - name: ARGOCD_EXEC_TIMEOUT
+      value: "5m"
+
   resources:
     requests:
       cpu: 10m
