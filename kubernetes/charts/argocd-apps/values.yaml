@@ -129,8 +129,6 @@ projects:
       - name: *cluster
         namespace: kube-system
       - name: *cluster
-        namespace: cilium-secrets
-      - name: *cluster
         namespace: envoy-gateway-system
       - name: *cluster
         namespace: external-dns
@@ -167,6 +165,8 @@ projects:
     destinations:
       - name: *cluster
         namespace: kube-system
+      - name: *cluster
+        namespace: cilium-secrets
       - name: *cluster
         namespace: csi-addons-system
       - name: *cluster
