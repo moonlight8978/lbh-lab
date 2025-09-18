@@ -1,6 +1,11 @@
+---
 machine:
   install:
     disk: /dev/sda
+  network:
+    nameservers:
+      - 1.1.1.1
+      - 1.0.0.1
   sysctls:
     fs.inotify.max_user_instances: "8192"
     fs.inotify.max_user_watches: "524288"

@@ -1,3 +1,11 @@
+---
 machine:
   network:
     hostname: worker-1
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.242.20.171/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.242.20.140
