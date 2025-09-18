@@ -8,15 +8,15 @@ terraform {
 }
 
 inputs = merge(include.root.locals.values, {
-  name = "tproxy"
-  vm_id = 10200
-  cpu = 2
-  memory = 2
+  name = "cloudflare-warp"
+  vm_id = 10201
+  cpu = 1
+  memory = 1
   disks = [{
     datastore_id = "local-lvm",
-    size = 20
+    size = 10
   }]
   clone_vm_id = include.root.locals.values.ubuntu_template_id
-  ip4 = "10.242.20.140/24"
+  ip4 = "10.242.20.141/24"
   gateway4 = "10.242.20.1"
 })

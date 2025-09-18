@@ -1,15 +1,12 @@
 ---
-- name: Setup transparent proxy
-  hosts: tproxy
+- name: Setup xray as transparent proxy
+  hosts: xray
   become: true
   roles:
     - ../roles/pkg-latest
-    - ../roles/docker-engine
     - ../roles/xray
-    - ../roles/docker/cloudflare-warp
   vars:
     xray_update_geoip: false
-    cloudflare_warp_license_key: ""
     xray_config: |
       {
         "log": {
@@ -76,7 +73,7 @@
             "settings": {
               "servers": [
                 {
-                  "address": "127.0.0.1",
+                  "address": "10.242.20.141",
                   "port": 1080
                 }
               ]
@@ -90,9 +87,8 @@
         ],
         "dns": {
           "servers": [
-            "1.1.1.1",
-            "8.8.8.8",
-            "127.0.0.53"
+            "https://1.1.1.1/dns-query",
+            "https://8.8.8.8/dns-query"
           ]
         },
         "routing": {
@@ -125,12 +121,23 @@
               "type": "field",
               "ip": ["geoip:private"],
               "outboundTag": "direct"
-            },
-            {
-              "type": "field",
-              "ip": ["0.0.0.0/0"],
-              "outboundTag": "warp"
             }
           ]
         }
       }
+
+- name: Setup warp
+  hosts: warp
+  become: true
+  pre_tasks:
+    - name: Get secrets
+      community.sops.load_vars:
+        file: ../../secrets.yml
+        expressions: ignore
+      register: secrets
+    - set_fact:
+        cloudflare_warp_license_key: "{{ secrets.ansible_facts.cloudflare_warp_license }}"
+  roles:
+    - ../roles/pkg-latest
+    - ../roles/docker-engine
+    - ../roles/docker/cloudflare-warp

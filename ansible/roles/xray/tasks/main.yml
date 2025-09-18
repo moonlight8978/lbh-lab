@@ -1,3 +1,4 @@
+---
 - name: Install xray
   become: true
   shell: |
@@ -52,18 +53,17 @@
                       ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
                       meta l4proto tcp ip daddr 192.168.0.0/16 return
                       meta l4proto tcp ip daddr 10.0.0.0/8 return
-                      meta l4proto tcp ip daddr 172.17.0.0/8 return
-                      ip daddr 10.0.0.0/8 udp dport != 53 return
+                      ip daddr { 10.0.0.0/8, 192.168.0.0/16 } udp dport != 53 return
                       ip protocol tcp tproxy to 127.0.0.1:12345 meta mark set 1
                       ip protocol udp tproxy to 127.0.0.1:12345 meta mark set 1
               }
+
               chain output {
                       type route hook output priority mangle; policy accept;
                       ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
                       meta l4proto tcp ip daddr 192.168.0.0/16 return
                       meta l4proto tcp ip daddr 10.0.0.0/8 return
-                      meta l4proto tcp ip daddr 172.17.0.0/8 return
-                      ip daddr 10.0.0.0/8 udp dport != 53 return
+                      ip daddr { 10.0.0.0/8, 192.168.0.0/16 } udp dport != 53 return
                       meta mark 2 return
                       ip protocol tcp meta mark set 1
                       ip protocol udp meta mark set 1
@@ -104,14 +104,6 @@
     name: xray
     enabled: true
     daemon_reload: true
-    state: started
-
-- name: Restart xray
-  become: true
-  tags:
-    - xray_config
-  systemd_service:
-    name: xray
     state: restarted
 
 - name: Start nftables
@@ -119,5 +111,5 @@
   systemd_service:
     name: nftables
     enabled: true
-    state: started
+    state: restarted
     daemon_reload: true
