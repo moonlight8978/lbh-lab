@@ -38,10 +38,12 @@ configMaps:
       N8N_LISTEN_ADDRESS: 0.0.0.0
       TZ: "{{.Values.tz}}"
       GENERIC_TIMEZONE: "{{.Values.tz}}"
-      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
       N8N_HIRING_BANNER_ENABLED: "false"
-      N8N_PUBLIC_API_SWAGGERUI_DISABLED: "true"
       N8N_PROXY_HOPS: "1"
+      # Security
+      N8N_PUBLIC_API_SWAGGERUI_DISABLED: "true"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
       # Task runners
       N8N_RUNNERS_ENABLED: "true"
       N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
