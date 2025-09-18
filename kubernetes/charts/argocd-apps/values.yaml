@@ -77,6 +77,9 @@ applicationsets:
             - name: kaneo
               namespace: application
               project: application
+            - name: karakeep
+              namespace: application
+              project: application
 
     template:
       metadata:

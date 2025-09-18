@@ -1,0 +1,50 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+# https://github.com/karakeep-app/helm-charts/blob/main/charts/karakeep/values.yaml
+applicationHost: &hostname karakeep-10-242-20-170.lab-local.bichls.dev
+applicationProtocol: https
+
+controllers:
+  karakeep:
+    containers:
+      karakeep:
+        envFrom:
+          - secret: karakeep-env
+
+secrets:
+  karakeep:
+    enabled: false
+    stringData: {}
+  meilesearch:
+    enabled: false
+    stringData: {}
+
+ingress:
+  karakeep:
+    enabled: false
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: karakeep
+            port: http
+            weight: 1
+
+# https://github.com/meilisearch/meilisearch-kubernetes/blob/main/charts/meilisearch/values.yaml
+meilisearch:
+  environment:
+    MEILI_ENV: production
+  auth:
+    existingMasterKeySecret: karakeep-meilisearch-creds
+  persistence:
+    enabled: true
+    storageClass: openebs-mayastor
+    size: 1Gi
+  serviceMonitor:
+    enabled: true
