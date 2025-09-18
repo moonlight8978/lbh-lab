@@ -48,7 +48,7 @@ route:
     rules:
       - backendRefs:
           - identifier: karakeep
-            port: http
+            port: 3000
             weight: 1
 
 # https://github.com/meilisearch/meilisearch-kubernetes/blob/main/charts/meilisearch/values.yaml
