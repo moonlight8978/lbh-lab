@@ -1,0 +1,54 @@
+---
+# https://github.com/kyverno/kyverno/blob/main/charts/kyverno/values.yaml
+
+admissionController:
+  replicas: 1
+  container:
+    resources:
+      requests: &requests
+        cpu: 50m
+        memory: 64Mi
+  rbac:
+    clusterRole:
+      extraResources: &extraResources
+        - apiGroups:
+            - ""
+          resources:
+            - secrets
+            - configmaps
+          verbs:
+            - create
+            - update
+            - delete
+            - patch
+            - list
+            - get
+            - watch
+  serviceMonitor:
+    enabled: true
+
+backgroundController:
+  replicas: 1
+  resources:
+    requests: *requests
+    limits:
+      memory: 1Gi
+  rbac:
+    clusterRole:
+      extraResources: *extraResources
+  serviceMonitor:
+    enabled: true
+
+cleanupController:
+  replicas: 1
+  resources:
+    requests: *requests
+  serviceMonitor:
+    enabled: true
+
+reportsController:
+  replicas: 1
+  resources:
+    requests: *requests
+  serviceMonitor:
+    enabled: true

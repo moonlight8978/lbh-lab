@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/kyverno.io/clusterpolicy-v1.json
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: update-pod-unreachable-toleration
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
+    policies.kyverno.io/title: Change Default Unreachable Toleration
+    policies.kyverno.io/category: System
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod, Toleration
+    policies.kyverno.io/description: >-
+      Pods are configured with a default toleration for the 'unreachable' taint for 300 seconds. This policy reduces that time to 60 seconds to ensure that Pods are rescheduled faster on nodes that become unreachable.
+spec:
+  mutateExistingOnPolicyUpdate: false
+  background: false
+  rules:
+    - name: update-unreachable-toleration
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      mutate:
+        foreach:
+          - list: "request.object.spec.tolerations[]"
+            preconditions:
+              all:
+                - key: "{{element.key || ''}}"
+                  operator: Equals
+                  value: node.kubernetes.io/unreachable
+                - key: "{{element.tolerationSeconds || `0`}}"
+                  operator: GreaterThan
+                  value: 60
+            patchesJson6902: |-
+              - op: replace
+                path: /spec/tolerations/{{elementIndex0}}/tolerationSeconds
+                value: 60

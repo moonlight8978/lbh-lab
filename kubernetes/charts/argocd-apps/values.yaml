@@ -61,14 +61,14 @@ applicationsets:
             - name: reloader
               namespace: kube-system
               project: system
+            - name: kyverno
+              namespace: kyverno
+              project: system
             - name: cnpg
               namespace: cnpg-system
               project: system
             - name: volsync
               namespace: volsync-system
-              project: system
-            - name: kasten
-              namespace: kasten-io
               project: system
 
             # Monitoring
@@ -149,7 +149,7 @@ projects:
       - name: *cluster
         namespace: volsync-system
       - name: *cluster
-        namespace: kasten-io
+        namespace: kyverno
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
