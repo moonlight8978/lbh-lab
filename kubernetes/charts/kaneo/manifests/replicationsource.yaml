@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kaneo-restic
+  namespace: application
+  labels:
+    volsync/restic: cloudflare
+  annotations:
+    volsync/restic-repository: kaneo
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: kaneo-postgresql
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: kaneo-postgresql-1
+  trigger:
+    manual: "1"
+  restic:
+    pruneIntervalDays: 3
+    repository: kaneo-restic-cloudflare
+    retain:
+      daily: 3
+    copyMethod: Snapshot
+    moverSecurityContext:
+      fsGroup: 26

@@ -15,3 +15,4 @@ helmCharts:
 resources:
   - manifests/postgresql.yaml
   - manifests/externalsecret.yaml
+  - manifests/replicationsource.yaml

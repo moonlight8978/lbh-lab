@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/kyverno.io/clusterpolicy-v1.json
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-restic-cloudflare
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+    policies.kyverno.io/title: Generate Restic Cloudflare Secret
+    policies.kyverno.io/category: Configuration
+    policies.kyverno.io/subject: Secret,
+    policies.kyverno.io/description: >-
+      Generate Restic Cloudflare Secret.
+spec:
+  rules:
+    - name: generate-restic-cloudflare
+      match:
+        any:
+          - resources:
+              kinds:
+                - v1/ConfigMap
+              selector:
+                matchExpressions:
+                  - key: volsync/restic
+                    operator: In
+                    values:
+                      - cloudflare
+      generate:
+        synchronize: true
+        generateExisting: true
+        foreach:
+          - list: 'request.object.metadata.annotations."volsync/restic-repository" | split(@, '','')'
+            apiVersion: v1
+            kind: Secret
+            context:
+              - name: repo
+                variable:
+                  value: "{{trim(element, ' ')}}"
+            name: "{{repo}}-restic-cloudflare"
+            namespace: "{{request.object.metadata.namespace}}"
+            clone:
+              name: restic-cloudflare
+              namespace: volsync-system
+
+    - name: mutate-cloned
+      match:
+        all:
+          - resources:
+              kinds:
+                - v1/Secret
+              names:
+                - "*-restic-cloudflare"
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - volsync-system
+      context:
+        - name: repo
+          variable:
+            value: "{{split(request.object.metadata.name, '-restic-') | [0] }}"
+      mutate:
+        patchesJson6902: |-
+          - op: replace
+            path: /data/RESTIC_REPOSITORY
+            value: "{{ base64_encode('{{ base64_decode(request.object.data.RESTIC_REPOSITORY) }}/{{repo}}') }}"
+          - op: add
+            path: /metadata/annotations
+            value:
+              volsync/restic-repository: "{{repo}}"
