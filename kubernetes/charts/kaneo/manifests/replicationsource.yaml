@@ -4,15 +4,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kaneo-restic
+  name: kaneo-kopia
   namespace: application
   labels:
-    volsync/restic: cloudflare
+    volsync/kopia: cloudflare
   annotations:
-    volsync/restic-repository: kaneo
+    volsync/kopia-repository: kaneo
     argocd.argoproj.io/sync-wave: "100"
 data: {}
-
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
 
@@ -27,11 +26,13 @@ spec:
   sourcePVC: kaneo-postgresql-1
   trigger:
     manual: "1"
-  restic:
-    pruneIntervalDays: 3
-    repository: kaneo-restic-cloudflare
+  kopia:
+    repository: kaneo-kopia-cloudflare
+    compression: zstd
     retain:
       daily: 3
-    copyMethod: Snapshot
+    copyMethod: Direct
     moverSecurityContext:
       fsGroup: 26
+      runAsGroup: 26
+      runAsUser: 26

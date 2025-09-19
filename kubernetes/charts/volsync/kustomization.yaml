@@ -8,10 +8,10 @@ helmCharts:
   - releaseName: volsync
     namespace: volsync-system
     repo: oci://ghcr.io/home-operations/charts-mirror/
-    name: volsync
-    version: 0.13.0
+    name: volsync-perfectra1n
+    version: 0.16.9
     valuesFile: values.yaml
 
 resources:
   - manifests/externalsecret.yaml
-  - manifests/generate-restic-cloudflare-policy.yaml
+  - manifests/generate-kopia-cloudflare-policy.yaml

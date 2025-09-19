@@ -1,8 +1,19 @@
 ---
+# https://github.com/perfectra1n/volsync/blob/main/helm/volsync/values.yaml
+
 manageCRDs: true
+
+fullNameOverride: volsync
+nameOverride: volsync
 
 metrics:
   disableAuth: true
+
+image: &image
+  repository: ghcr.io/perfectra1n/volsync
+  tag: 0.15.45
+kopia: *image
+restic: *image
 
 resources:
   requests:
