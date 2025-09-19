@@ -10,6 +10,7 @@ controllers:
       karakeep:
         envFrom:
           - secret: karakeep-env
+          - configMap: main
         resources:
           requests:
             cpu: 50m
@@ -41,6 +42,17 @@ secrets:
   meilesearch:
     enabled: false
     stringData: {}
+
+configMaps:
+  main:
+    data:
+      DISABLE_SIGNUPS: "true"
+      NODE_ENV: production
+      OPENAI_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
+      INFERENCE_TEXT_MODEL: gemini-2.0-flash
+      INFERENCE_IMAGE_MODEL: gemini-2.0-flash
+      EMBEDDING_TEXT_MODEL: text-embedding-3-small
+      INFERENCE_LANG: english
 
 ingress:
   karakeep:
