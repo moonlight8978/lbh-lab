@@ -2,6 +2,8 @@
 - name: Setup xray as transparent proxy
   hosts: xray
   become: true
+  tags:
+    - tproxy
   roles:
     - ../roles/pkg-latest
     - ../roles/xray
@@ -129,6 +131,8 @@
 - name: Setup warp
   hosts: warp
   become: true
+  tags:
+    - tproxy
   pre_tasks:
     - name: Get secrets
       community.sops.load_vars:
@@ -141,3 +145,22 @@
     - ../roles/pkg-latest
     - ../roles/docker-engine
     - ../roles/docker/cloudflare-warp
+
+- name: Setup wgeasy
+  hosts: warp
+  become: true
+  tags:
+    - vpn
+  vars:
+    wg_host: "10.242.20.141"
+  pre_tasks:
+    - name: Get secrets
+      community.sops.load_vars:
+        file: ../../secrets.yml
+        expressions: ignore
+      register: secrets
+    - set_fact:
+        wg_admin_username: "{{ secrets.ansible_facts.wg_admin_username }}"
+        wg_admin_password: "{{ secrets.ansible_facts.wg_admin_password }}"
+  roles:
+    - ../roles/docker/wgeasy

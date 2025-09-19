@@ -10,6 +10,17 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 2
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: envoy
+                  topologyKey: kubernetes.io/hostname
+                  matchLabelKeys:
+                    - pod-template-hash
+
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/gateway.networking.k8s.io/gatewayclass-v1.json
 apiVersion: gateway.networking.k8s.io/v1

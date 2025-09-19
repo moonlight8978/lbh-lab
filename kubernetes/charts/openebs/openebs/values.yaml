@@ -19,6 +19,11 @@ mayastor:
       topology:
         nodeSelector:
           node-role.kubernetes.io/openebs: openebs
+  io_engine:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
   etcd:
     replicaCount: 1
     # replicaCount: 3

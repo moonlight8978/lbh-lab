@@ -1,0 +1,37 @@
+---
+- name: Create wgeasy volume
+  become: true
+  community.docker.docker_volume:
+    name: wgeasy
+    state: present
+
+- name: Run wgeasy as container
+  become: true
+  community.docker.docker_container:
+    name: wgeasy
+    image: ghcr.io/wg-easy/wg-easy:15
+    state: started
+    restart_policy: always
+    volumes:
+      - wgeasy:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
+    capabilities:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      net.ipv4.ip_forward: 1
+      net.ipv4.conf.all.src_valid_mark: 1
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+      net.ipv6.conf.default.forwarding: 1
+    ports:
+      - 51821:51821
+      - 51820:51820/udp
+    env:
+      INSECURE: "true"
+      DISABLE_IPV6: "true"
+      INIT_ENABLED: "true"
+      INIT_IPV4_CIDR: "10.8.1.0/24"
+      INIT_HOST: "{{wg_host}}"
+      INIT_USERNAME: "{{wg_admin_username}}"
+      INIT_PASSWORD: "{{wg_admin_password}}"

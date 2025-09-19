@@ -2,7 +2,7 @@
 version: "3"
 
 vars:
-  WORKERS: [worker-1, worker-2, worker-3]
+  WORKERS: [worker-1, worker-2]
 
 tasks:
   tf:stack:
@@ -80,13 +80,16 @@ tasks:
           CLI_ARGS_LIST: [control-3, 10.242.20.163, --insecure]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-1, 10.242.20.171, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-1, 10.242.20.171, --insecure -p @nodes/storage.yaml]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-2, 10.242.20.172, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-2, 10.242.20.172, --insecure -p @nodes/storage.yaml]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-3, 10.242.20.173, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-3, 10.242.20.173, --insecure -p @nodes/storage.yaml]
       - sleep 10
       - talosctl bootstrap --talosconfig talosconfig --nodes 10.242.20.161
       - talosctl kubeconfig --talosconfig talosconfig --nodes 10.242.20.161
@@ -97,13 +100,13 @@ tasks:
     cmds:
       - talosctl --talosconfig=./talosconfig --nodes {{.CLI_ARGS}}
 
-  k8s:nodelabel:
+  k8s:noderole:
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
     cmds:
-      - for: {var: WORKERS}
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/worker=worker
-      - for: {var: WORKERS}
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/openebs=openebs
 
   k8s:bootstrap:
@@ -136,7 +139,7 @@ tasks:
       # TODO: wait for machines
       - task: talos:bootstrap
       # TODO: wait for nodes to be ready
-      - task: k8s:nodelabel
+      - task: k8s:noderole
       - task: k8s:bootstrap
       - task: argocd:bootstrap
 
@@ -151,12 +154,12 @@ tasks:
     cmds:
       - kss sync --auth-method kubeconfig --kubeconfig kubernetes/talos/kubeconfig --destination dist
 
-  tproxy:
+  vm:
     cmds:
       - task: tf:unit
         vars:
           CLI_ARGS_LIST: [prod/tproxy, apply]
-      - task: ansible-playbook -i inventory.yml ansible/playbooks/setup-tproxy.yml
+      - task: ansible-playbook -i inventory.yml ansible/playbooks/setup-vm.yml
 
   ansible:run:
     cmds:

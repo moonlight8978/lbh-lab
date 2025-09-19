@@ -45,6 +45,9 @@ resources:
   requests:
     cpu: 50m
     memory: 64M
+  limits:
+    cpu: null
+    memory: 256Mi
 
 replicas: 2
 
