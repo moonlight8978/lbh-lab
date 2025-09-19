@@ -67,6 +67,9 @@ applicationsets:
             - name: volsync
               namespace: volsync-system
               project: system
+            - name: kasten
+              namespace: kasten-io
+              project: system
 
             # Monitoring
             - name: prometheus
@@ -145,6 +148,8 @@ projects:
         namespace: cnpg-system
       - name: *cluster
         namespace: volsync-system
+      - name: *cluster
+        namespace: kasten-io
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"

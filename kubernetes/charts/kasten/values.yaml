@@ -1,0 +1,29 @@
+eula:
+  accept: true
+  company: private
+  email: work@bichls.dev
+
+global:
+  persistence:
+    size: 1Gi
+    storageClass: openebs-mayastor
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  network:
+    enable_ipv6: false
+  prometheus:
+    external:
+      host: prometheus-operated.monitoring.svc
+      port: "9090"
+
+clusterName: lbhlab
+
+auth:
+  basicAuth:
+    secretName: kasten-dashboard-creds
+
+prometheus:
+  server:
+    enabled: false
