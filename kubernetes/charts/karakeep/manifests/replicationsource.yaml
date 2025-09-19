@@ -4,12 +4,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kaneo-kopia
+  name: karakeep-kopia
   namespace: application
   labels:
     volsync/kopia: cloudflare
   annotations:
-    volsync/kopia-repository: kaneo
+    volsync/kopia-repository: karakeep
     argocd.argoproj.io/sync-wave: "100"
 data: {}
 ---
@@ -18,21 +18,22 @@ data: {}
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: kaneo-postgresql
+  name: karakeep-db
   namespace: application
   annotations:
     argocd.argoproj.io/sync-wave: "200"
 spec:
-  sourcePVC: kaneo-postgresql-1
+  sourcePVC: data-karakeep-0
   trigger:
     schedule: "0 19 * * *"
   kopia:
-    repository: kaneo-kopia-cloudflare
+    maintenanceIntervalDays: 3
+    repository: karakeep-kopia-cloudflare
     compression: zstd
     retain:
       daily: 3
     copyMethod: Direct
     moverSecurityContext:
-      fsGroup: 26
-      runAsGroup: 26
-      runAsUser: 26
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsUser: 1000

@@ -61,10 +61,12 @@ spec:
           variable:
             value: "{{split(request.object.metadata.name, '-kopia-') | [0] }}"
       mutate:
+        # Use same repo for all backups
+        # https://github.com/perfectra1n/volsync/blob/8b02aad6d3c52099986285dcf01b49e03847384f/docs/usage/kopia/index.rst#id45
+        # - op: replace
+        #   path: /data/KOPIA_REPOSITORY
+        #   value: "{{ base64_encode('{{ base64_decode(request.object.data.KOPIA_REPOSITORY) }}/{{repo}}//') }}"
         patchesJson6902: |-
-          - op: replace
-            path: /data/KOPIA_REPOSITORY
-            value: "{{ base64_encode('{{ base64_decode(request.object.data.KOPIA_REPOSITORY) }}/{{repo}}/') }}"
           - op: add
             path: /metadata/annotations
             value:
