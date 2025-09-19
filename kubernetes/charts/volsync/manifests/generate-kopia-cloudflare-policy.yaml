@@ -64,7 +64,7 @@ spec:
         patchesJson6902: |-
           - op: replace
             path: /data/KOPIA_REPOSITORY
-            value: "{{ base64_encode('{{ base64_decode(request.object.data.KOPIA_REPOSITORY) }}/{{repo}}') }}"
+            value: "{{ base64_encode('{{ base64_decode(request.object.data.KOPIA_REPOSITORY) }}/{{repo}}/') }}"
           - op: add
             path: /metadata/annotations
             value:
