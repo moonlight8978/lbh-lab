@@ -11,3 +11,6 @@ helmCharts:
     name: volsync
     version: 0.13.0
     valuesFile: values.yaml
+
+resources:
+  - manifests/externalsecret.yaml
