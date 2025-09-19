@@ -4,7 +4,7 @@
 openebs-crds:
   csi:
     volumeSnapshots:
-      enabled: true
+      enabled: false
 
 engines:
   local:
