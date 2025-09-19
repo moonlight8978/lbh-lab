@@ -6,6 +6,8 @@ applicationProtocol: https
 
 controllers:
   karakeep:
+    annotations:
+      reloader.stakater.com/auto: "true"
     pod:
       securityContext:
         runAsGroup: 1000
