@@ -42,6 +42,7 @@ applicationsets:
             - name: openebs
               namespace: openebs
               project: core
+              skipCrdsCheck: true
               ignoreDifferences:
                 - kind: Secret
                   name: openebs-etcd-jwt-token
@@ -112,6 +113,7 @@ applicationsets:
             - ServerSideDiff=true
             - RespectIgnoreDifferences=true
             - ApplyOutOfSyncOnly=true
+            - SkipDryRunOnMissingResource={{.skipCrdsCheck | default false}}
         source:
           repoURL: *repo
           targetRevision: *branch
