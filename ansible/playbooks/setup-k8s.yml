@@ -1,5 +1,7 @@
 ---
 - name: Setup control plane nodes
+  tags:
+    - controller
   hosts: controller
   become: true
   roles:
@@ -7,6 +9,8 @@
     - ../roles/kubernetes/machine
 
 - name: Setup worker nodes
+  tags:
+    - worker
   hosts: worker
   become: true
   roles:

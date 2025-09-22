@@ -9,4 +9,5 @@
 - name: Enable nvme-tcp module
   community.general.modprobe:
     name: nvme-tcp
+    params: "1"
     persistent: present
