@@ -1,0 +1,8 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/namespace-v1.json
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: application
+  labels:
+    pod-security.kubernetes.io/enforce: privileged

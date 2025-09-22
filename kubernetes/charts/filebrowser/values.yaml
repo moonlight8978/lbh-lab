@@ -13,10 +13,9 @@ controllers:
       nodeSelector:
         node-role.kubernetes.io/nas: nas
       securityContext:
-        runAsGroup: 1000
-        runAsUser: 1000
-        fsGroup: 1000
-        runAsNonRoot: true
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
     containers:
       main:
         image:
@@ -26,8 +25,6 @@ controllers:
         ports:
           - name: http
             containerPort: *port
-        envFrom:
-          - configMap: main
         probes:
           readiness:
             path: /health
@@ -41,11 +38,6 @@ controllers:
             memory: 64Mi
           limits:
             memory: 1Gi
-
-configMaps:
-  main:
-    data:
-      PORT: "{{.Values.port}}"
 
 persistence:
   database:
@@ -61,6 +53,8 @@ persistence:
   srv:
     type: hostPath
     hostPath: /var/mnt/test
+    globalMounts:
+      - path: /srv
 
 service:
   main:
