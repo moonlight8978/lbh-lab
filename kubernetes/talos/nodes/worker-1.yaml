@@ -9,3 +9,10 @@ machine:
         routes:
           - network: 0.0.0.0/0
             gateway: 10.242.20.140
+---
+apiVersion: v1alpha1
+kind: ExistingVolumeConfig
+name: test
+discovery:
+  volumeSelector:
+    match: "'/dev/disk/by-path/pci-0000:01:04.0-scsi-0:0:0:3' in disk.symlinks"

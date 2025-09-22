@@ -43,12 +43,14 @@ resource "proxmox_virtual_environment_vm" "main" {
 
     content {
       interface    = "scsi${disk.key}"
-      iothread     = true
+      iothread     = disk.value.iothread
       datastore_id = disk.value.datastore_id
       size         = disk.value.size
       file_format  = "raw"
+      path_in_datastore = disk.value.path_in_datastore
     }
   }
+
   dynamic "initialization" {
     for_each = var.cloudinit ? [true] : []
 

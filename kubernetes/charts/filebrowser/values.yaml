@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname filebrowser-10-242-20-170.lab-local.bichls.dev
+scheme: https
+port: &port 80
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    type: statefulset
+    pod:
+      nodeSelector:
+        node-role.kubernetes.io/nas: nas
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+    containers:
+      main:
+        image:
+          repository: filebrowser/filebrowser
+          tag: v2.43.0
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: *port
+        envFrom:
+          - configMap: main
+        probes:
+          readiness:
+            path: /health
+            port: *port
+          liveness:
+            path: /health
+            port: *port
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+
+configMaps:
+  main:
+    data:
+      PORT: "{{.Values.port}}"
+
+persistence:
+  database:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+  config:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+  srv:
+    type: hostPath
+    hostPath: /var/mnt/test
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /

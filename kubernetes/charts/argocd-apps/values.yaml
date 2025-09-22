@@ -92,6 +92,9 @@ applicationsets:
             - name: termix
               namespace: application
               project: application
+            - name: filebrowser
+              namespace: application
+              project: application
 
     template:
       metadata:

@@ -19,8 +19,10 @@ variable "clone_vm_id" {
 
 variable "disks" {
   type = list(object({
-    datastore_id = string
-    size         = number
+    datastore_id      = string
+    size              = optional(number, null)
+    iothread          = optional(bool, true)
+    path_in_datastore = optional(string, null)
   }))
 }
 
