@@ -1,0 +1,12 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    pkg:
+      - nvme-cli
+      - "linux-modules-extra-{{ ansible_kernel }}"
+    state: latest
+
+- name: Enable nvme-tcp module
+  community.general.modprobe:
+    name: nvme-tcp
+    persistent: present

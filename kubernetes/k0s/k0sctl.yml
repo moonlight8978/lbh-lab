@@ -1,0 +1,90 @@
+---
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: lbhlab
+spec:
+  hosts:
+    - role: controller
+      installFlags:
+        - >-
+          --disable-components=coredns,kube-proxy,metrics-server,network-provider,windows-node
+      ssh:
+        address: 10.242.20.161
+        user: labo
+        port: 22
+        keyPath: /Users/moonlight/.ssh/moonlight
+    - role: worker
+      ssh:
+        address: 10.242.20.171
+        user: labo
+        port: 22
+        keyPath: /Users/moonlight/.ssh/moonlight
+    - role: worker
+      ssh:
+        address: 10.242.20.172
+        user: labo
+        port: 22
+        keyPath: /Users/moonlight/.ssh/moonlight
+  k0s:
+    version: v1.33.4+k0s.0
+    config:
+      apiVersion: k0s.k0sproject.io/v1beta1
+      kind: Cluster
+      metadata:
+        name: lbhlab
+      spec:
+        api:
+          k0sApiPort: 9443
+          port: 6443
+          sans:
+            - 10.242.20.160
+        installConfig:
+          users:
+            etcdUser: etcd
+            kineUser: kube-apiserver
+            konnectivityUser: konnectivity-server
+            kubeAPIserverUser: kube-apiserver
+            kubeSchedulerUser: kube-scheduler
+        konnectivity:
+          adminPort: 8133
+          agentPort: 8132
+        network:
+          clusterDomain: cluster.local
+          dualStack:
+            enabled: false
+          nodeLocalLoadBalancing:
+            enabled: true
+            type: EnvoyProxy
+          kubeProxy:
+            disabled: true
+          podCIDR: 10.42.0.0/16
+          serviceCIDR: 10.43.0.0/16
+          provider: custom
+        podSecurityPolicy:
+          defaultPolicy: 00-k0s-privileged
+        storage:
+          type: etcd
+        telemetry:
+          enabled: true
+  options:
+    wait:
+      enabled: false
+    drain:
+      enabled: true
+      gracePeriod: 2m0s
+      timeout: 5m0s
+      force: true
+      ignoreDaemonSets: true
+      deleteEmptyDirData: true
+      podSelector: ""
+      skipWaitForDeleteTimeout: 0s
+    concurrency:
+      limit: 30
+      workerDisruptionPercent: 10
+      uploads: 5
+    evictTaint:
+      enabled: false
+      taint: k0sctl.k0sproject.io/evict=true
+      effect: NoExecute
+      controllerWorkers: false

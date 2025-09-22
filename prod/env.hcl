@@ -3,10 +3,12 @@ locals {
   ubuntu_template_id = 10020
 
   controller1 = {
+    clone_vm_id = local.ubuntu_template_id
+
     name = "control-1"
     vm_id = 10101
     cpu = 2
-    memory = 6
+    memory = 4
     ip4 = "10.242.20.161/24"
     gateway4 = "10.242.20.140"
     disks = [{
@@ -16,6 +18,8 @@ locals {
   }
 
   controller2 = {
+    clone_vm_id = local.ubuntu_template_id
+
     name = "control-2"
     vm_id = 10102
     cpu = 2
@@ -29,6 +33,8 @@ locals {
   }
 
   worker1 = {
+    clone_vm_id = local.ubuntu_template_id
+
     name = "worker-1"
     vm_id = 10121
     cpu = 4
@@ -52,12 +58,14 @@ locals {
         datastore_id = "/dev/disk/by-path/pci-0000",
         path_in_datastore = "00:14.0-usb-0:4:1.0-scsi-0:0:0:0",
         iothread = null,
-        size = 28
+        size = 14
       }
     ]
   }
 
   worker2 = {
+    clone_vm_id = local.ubuntu_template_id
+
     name = "worker-2"
     vm_id = 10122
     cpu = 4
@@ -81,6 +89,8 @@ locals {
   }
 
   worker3 = {
+    clone_vm_id = local.ubuntu_template_id
+
     name = "worker-3"
     vm_id = 10123
     cpu = 4

@@ -23,7 +23,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "200"
 spec:
-  sourcePVC: filebrowser-datbase
+  sourcePVC: filebrowser-database
   trigger:
     schedule: "0 19 * * *"
   kopia:

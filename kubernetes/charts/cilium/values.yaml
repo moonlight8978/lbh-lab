@@ -3,7 +3,7 @@
 
 kubeProxyReplacement: true
 k8sServiceHost: 127.0.0.1
-k8sServicePort: 7445
+k8sServicePort: 7443
 
 autoDirectNodeRoutes: true
 routingMode: native

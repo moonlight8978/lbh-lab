@@ -1,0 +1,15 @@
+---
+- name: Setup control plane nodes
+  hosts: controller
+  become: true
+  roles:
+    - ../roles/pkg-latest
+    - ../roles/kubernetes/machine
+
+- name: Setup worker nodes
+  hosts: worker
+  become: true
+  roles:
+    - ../roles/pkg-latest
+    - ../roles/kubernetes/machine
+    - ../roles/kubernetes/worker

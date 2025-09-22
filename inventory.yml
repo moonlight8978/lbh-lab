@@ -21,3 +21,24 @@ ubuntu:
     vpn:
       hosts:
         10.242.20.141:
+    kubernetes:
+
+kubernetes:
+  children:
+    controller:
+    worker:
+
+controller:
+  children:
+    controller1:
+      hosts:
+        10.242.20.161:
+
+worker:
+  children:
+    worker1:
+      hosts:
+        10.242.20.171:
+    worker2:
+      hosts:
+        10.242.20.172:
