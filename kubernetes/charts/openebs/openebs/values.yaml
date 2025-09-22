@@ -14,6 +14,8 @@ engines:
       enabled: false
 
 mayastor:
+  crds:
+    enabled: true
   csi:
     node:
       topology:
