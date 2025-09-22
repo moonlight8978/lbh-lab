@@ -89,6 +89,9 @@ applicationsets:
             - name: n8n
               namespace: application
               project: application
+            - name: termix
+              namespace: application
+              project: application
 
     template:
       metadata:

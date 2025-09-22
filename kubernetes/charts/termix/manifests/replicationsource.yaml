@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: termix-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: termix
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: termix-data
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: data-termix-0
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: termix-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Direct
+    moverSecurityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsUser: 1000
