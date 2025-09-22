@@ -15,12 +15,18 @@ spec:
         port: 22
         keyPath: /Users/moonlight/.ssh/moonlight
     - role: worker
+      installFlags:
+        - >-
+          --labels=openebs.io/csi-node=mayastor,openebs.io/engine=mayastor
       ssh:
         address: 10.242.20.171
         user: labo
         port: 22
         keyPath: /Users/moonlight/.ssh/moonlight
     - role: worker
+      installFlags:
+        - >-
+          --labels="openebs.io/csi-node=mayastor,openebs.io/engine=mayastor"
       ssh:
         address: 10.242.20.172
         user: labo

@@ -16,6 +16,7 @@ engines:
 mayastor:
   csi:
     node:
+      kubeletDir: /var/lib/k0s/kubelet
       topology:
         nodeSelector:
           node-role.kubernetes.io/openebs: openebs
