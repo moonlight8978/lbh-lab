@@ -99,7 +99,7 @@ tasks:
 
   k8s:noderole:
     env:
-      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
+      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/k0s/kubeconfig"
     cmds:
       - for: {var: WORKERS}
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/worker=worker
@@ -113,11 +113,11 @@ tasks:
     cmds:
       - helmfile sync --wait --hide-notes
     env:
-      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
+      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/k0s/kubeconfig"
 
   argocd:login:
     env:
-      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/talos/kubeconfig"
+      KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/k0s/kubeconfig"
     cmds:
       - |
         PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
@@ -150,7 +150,7 @@ tasks:
 
   schema:
     cmds:
-      - kss sync --auth-method kubeconfig --kubeconfig kubernetes/talos/kubeconfig --destination dist
+      - kss sync --auth-method kubeconfig --kubeconfig kubernetes/k0s/kubeconfig --destination dist
 
   vm:
     cmds:
