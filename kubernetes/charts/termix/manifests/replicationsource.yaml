@@ -23,7 +23,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "200"
 spec:
-  sourcePVC: data-termix-0
+  sourcePVC: termix
   trigger:
     schedule: "0 19 * * *"
   kopia:

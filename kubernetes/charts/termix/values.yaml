@@ -8,12 +8,7 @@ controllers:
   main:
     annotations:
       reloader.stakater.com/auto: "true"
-    pod:
-      securityContext:
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
+    type: statefulset
     containers:
       main:
         image:
