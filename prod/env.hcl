@@ -8,7 +8,7 @@ locals {
     name = "control-1"
     vm_id = 10101
     cpu = 2
-    memory = 4
+    memory = 6
     ip4 = "10.242.20.161/24"
     gateway4 = "10.242.20.140"
     disks = [{
