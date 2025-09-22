@@ -8,7 +8,7 @@ terraform {
 }
 
 inputs = merge(include.root.locals.values, {
-  name = "cloudflare-warp"
+  name = "vpn"
   vm_id = 10201
   cpu = 1
   memory = 1

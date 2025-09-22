@@ -3,7 +3,7 @@
   hosts: xray
   become: true
   tags:
-    - tproxy
+    - xray
   roles:
     - ../roles/pkg-latest
     - ../roles/xray
@@ -129,10 +129,11 @@
       }
 
 - name: Setup warp
-  hosts: warp
+  hosts: vpn
   become: true
   tags:
-    - tproxy
+    - vpn
+    - xray
   pre_tasks:
     - name: Get secrets
       community.sops.load_vars:
@@ -147,10 +148,11 @@
     - ../roles/docker/cloudflare-warp
 
 - name: Setup wgeasy
-  hosts: warp
+  hosts: vpn
   become: true
   tags:
     - vpn
+    - wireguard
   vars:
     wg_host: "10.242.20.141"
   pre_tasks:

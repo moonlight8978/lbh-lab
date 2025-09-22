@@ -136,8 +136,7 @@ tasks:
     cmds:
       - task: tf:unit
         vars:
-          workdir: prod/kubernetes
-          args: apply
+          CLI_ARGS_LIST: [prod/kubernetes, apply]
       # TODO: wait for machines
       - task: talos:bootstrap
       # TODO: wait for nodes to be ready

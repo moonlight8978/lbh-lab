@@ -18,6 +18,6 @@ ubuntu:
     xray:
       hosts:
         10.242.20.140:
-    warp:
+    vpn:
       hosts:
         10.242.20.141:

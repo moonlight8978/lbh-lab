@@ -15,4 +15,4 @@ kind: ExistingVolumeConfig
 name: test
 discovery:
   volumeSelector:
-    match: "'/dev/disk/by-path/pci-0000:01:04.0-scsi-0:0:0:3' in disk.symlinks"
+    match: volume.dev_path == "/dev/sdd2"
