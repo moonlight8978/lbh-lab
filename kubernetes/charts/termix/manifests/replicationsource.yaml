@@ -45,18 +45,13 @@ metadata:
   name: termix-data
   namespace: application
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
+    argocd.argoproj.io/sync-wave: "200"
 spec:
   trigger:
     manual: restore
   kopia:
     repository: termix-kopia-cloudflare
-    copyMethod: Snapshot
-    storageClassName: openebs-mayastor
-    volumeSnapshotClassName: openebs-mayastor
-    capacity: 1Gi
-    accessModes:
-      - ReadWriteOnce
+    copyMethod: Direct
     enableFileDeletion: true
     cleanupCachePVC: true
     cleanupTempPVC: true
@@ -64,26 +59,4 @@ spec:
       fsGroup: 1000
       runAsGroup: 1000
       runAsUser: 1000
-    sourceIdentity:
-      sourceName: termix-data
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/persistentvolumeclaim-v1.json
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: termix
-  namespace: application
-  annotations:
-    argocd.argoproj.io/sync-wave: "-100"
-spec:
-  storageClassName: openebs-mayastor
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: termix-data
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+    destinationPVC: termix

@@ -45,18 +45,13 @@ metadata:
   name: filebrowser-db
   namespace: application
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
+    argocd.argoproj.io/sync-wave: "200"
 spec:
   trigger:
     manual: restore
   kopia:
     repository: filebrowser-db-kopia-cloudflare
-    copyMethod: Snapshot
-    storageClassName: openebs-mayastor
-    volumeSnapshotClassName: openebs-mayastor
-    capacity: 500Mi
-    accessModes:
-      - ReadWriteOnce
+    copyMethod: Direct
     enableFileDeletion: true
     cleanupCachePVC: true
     cleanupTempPVC: true
@@ -64,29 +59,7 @@ spec:
       fsGroup: 1000
       runAsGroup: 1000
       runAsUser: 1000
-    sourceIdentity:
-      sourceName: filebrowser-db
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/persistentvolumeclaim-v1.json
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: filebrowser-database
-  namespace: application
-  annotations:
-    argocd.argoproj.io/sync-wave: "-100"
-spec:
-  storageClassName: openebs-mayastor
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: filebrowser-db
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
+    destinationPVC: filebrowser-database
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
 
@@ -120,18 +93,13 @@ metadata:
   name: filebrowser-config
   namespace: application
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
+    argocd.argoproj.io/sync-wave: "200"
 spec:
   trigger:
     manual: restore
   kopia:
     repository: filebrowser-config-kopia-cloudflare
-    copyMethod: Snapshot
-    storageClassName: openebs-mayastor
-    volumeSnapshotClassName: openebs-mayastor
-    capacity: 500Mi
-    accessModes:
-      - ReadWriteOnce
+    copyMethod: Direct
     enableFileDeletion: true
     cleanupCachePVC: true
     cleanupTempPVC: true
@@ -139,26 +107,4 @@ spec:
       fsGroup: 1000
       runAsGroup: 1000
       runAsUser: 1000
-    sourceIdentity:
-      sourceName: filebrowser-config
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/persistentvolumeclaim-v1.json
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: filebrowser-config
-  namespace: application
-  annotations:
-    argocd.argoproj.io/sync-wave: "-100"
-spec:
-  storageClassName: openebs-mayastor
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: filebrowser-config
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
+    destinationPVC: filebrowser-config
