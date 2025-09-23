@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+scheme: https
+hostname: &hostname syncthing-10-242-20-170.lab-local.bichls.dev
+tz: &tz Asia/Bangkok
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+    type: statefulset
+    containers:
+      main:
+        image:
+          repository: ghcr.io/syncthing/syncthing
+          tag: 2.0.9
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8384
+          - containerPort: 22000
+            protocol: UDP
+          - containerPort: 22000
+            protocol: TCP
+          - containerPort: 21027
+            protocol: UDP
+        envFrom:
+          - configMap: main
+        probes:
+          liveness:
+            path: /rest/noauth/health
+            port: *http
+          readiness:
+            path: /rest/noauth/health
+            port: *http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  rootfs:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      TZ: *tz
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+            weight: 1
