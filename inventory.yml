@@ -27,6 +27,7 @@ kubernetes:
   children:
     controller:
     worker:
+    nas:
 
 controller:
   children:
@@ -42,3 +43,6 @@ worker:
     worker2:
       hosts:
         10.242.20.172:
+    nas:
+      hosts:
+        10.242.20.171:
