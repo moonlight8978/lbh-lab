@@ -3,3 +3,4 @@ collections:
   - name: community.general
   - name: community.docker
   - name: community.sops
+  - name: ansible.posix

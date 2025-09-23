@@ -52,7 +52,7 @@ persistence:
     size: 500Mi
   srv:
     type: hostPath
-    hostPath: /var/mnt/test
+    hostPath: /mnt/driver
     globalMounts:
       - path: /srv
 

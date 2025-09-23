@@ -58,7 +58,7 @@ locals {
         datastore_id = "/dev/disk/by-path/pci-0000",
         path_in_datastore = "00:14.0-usb-0:4:1.0-scsi-0:0:0:0",
         iothread = null,
-        size = 14
+        size = 465
       }
     ]
   }

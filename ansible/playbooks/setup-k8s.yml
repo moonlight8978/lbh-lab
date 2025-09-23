@@ -17,3 +17,14 @@
     - ../roles/pkg-latest
     - ../roles/kubernetes/machine
     - ../roles/kubernetes/worker
+
+- name: Setup NAS nodes
+  tags:
+    - nas
+  hosts: nas
+  become: true
+  vars:
+    nas_mount_point: /mnt/driver
+    nas_device: /dev/disk/by-path/pci-0000:01:04.0-scsi-0:0:0:3-part2
+  roles:
+    - ../roles/kubernetes/nas

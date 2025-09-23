@@ -1,0 +1,21 @@
+---
+- name: Install exfat tools
+  ansible.builtin.apt:
+    pkg:
+      - exfat-fuse
+    state: latest
+
+- name: Create mount point
+  ansible.builtin.file:
+    path: "{{ nas_mount_point }}"
+    state: directory
+    mode: "0755"
+
+- name: Mount external drive
+  ansible.posix.mount:
+    path: "{{ nas_mount_point }}"
+    src: "{{ nas_device }}"
+    fstype: exfat-fuse
+    opts: defaults,utf8
+    state: mounted
+    boot: true
