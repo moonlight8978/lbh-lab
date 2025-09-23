@@ -63,6 +63,10 @@
           {
             "tag": "dns-out",
             "protocol": "dns",
+            "settings": {
+              "address": "8.8.8.8",
+              "port": 53
+            },
             "streamSettings": {
               "sockopt": {
                 "mark": 2
@@ -88,9 +92,12 @@
           }
         ],
         "dns": {
+          "hosts": {
+            "dns.google": ["8.8.8.8", "8.8.4.4"]
+          },
           "servers": [
             "https://1.1.1.1/dns-query",
-            "https://8.8.8.8/dns-query"
+            "https://dns.google/dns-query"
           ]
         },
         "routing": {
@@ -107,12 +114,7 @@
               "type": "field",
               "inboundTag": ["all-in"],
               "port": 53,
-              "outboundTag": "dns-out"
-            },
-            {
-              "type": "field",
-              "ip": ["8.8.8.8", "1.1.1.1"],
-              "outboundTag": "warp"
+              "outboundTag": "direct"
             },
             {
               "type": "field",
