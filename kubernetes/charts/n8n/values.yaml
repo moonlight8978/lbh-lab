@@ -62,8 +62,8 @@ configMaps:
       DB_POSTGRESDB_PORT: "5432"
       # SMTP
       N8N_EMAIL_MODE: smtp
-      N8N_SMTP_PORT: "465"
-      N8N_SMTP_SSL: "true"
+      N8N_SMTP_PORT: "587"
+      N8N_SMTP_SSL: "false"
       N8N_SMTP_STARTTLS: "true"
 
 service:

@@ -48,6 +48,7 @@ tmp/*
 !tmp/.gitkeep
 .tmp/
 **/.DS_Store
+.st*
 
 # Secrets
 **/*.dec.yml
