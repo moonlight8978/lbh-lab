@@ -37,3 +37,54 @@ spec:
       fsGroup: 1000
       runAsGroup: 1000
       runAsUser: 1000
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationdestination-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: karakeep-db
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  trigger:
+    manual: restore
+  kopia:
+    repository: karakeep-kopia-cloudflare
+    copyMethod: Snapshot
+    storageClassName: openebs-mayastor
+    volumeSnapshotClassName: openebs-mayastor
+    capacity: 1Gi
+    accessModes:
+      - ReadWriteOnce
+    enableFileDeletion: true
+    cleanupCachePVC: true
+    cleanupTempPVC: true
+    moverSecurityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsUser: 1000
+    sourceIdentity:
+      sourceName: karakeep-db
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/persistentvolumeclaim-v1.json
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-karakeep-0
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-100"
+spec:
+  storageClassName: openebs-mayastor
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: karakeep-db
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

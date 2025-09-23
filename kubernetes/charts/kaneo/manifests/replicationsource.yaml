@@ -36,3 +36,29 @@ spec:
       fsGroup: 26
       runAsGroup: 26
       runAsUser: 26
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationdestination-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: kaneo-postgresql
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  trigger:
+    manual: restore
+  kopia:
+    repository: kaneo-kopia-cloudflare
+    copyMethod: Direct
+    storageClassName: openebs-mayastor
+    volumeSnapshotClassName: openebs-mayastor
+    enableFileDeletion: true
+    cleanupCachePVC: true
+    cleanupTempPVC: true
+    moverSecurityContext:
+      fsGroup: 26
+      runAsGroup: 26
+      runAsUser: 26
+    destinationPVC: kaneo-postgresql-1
