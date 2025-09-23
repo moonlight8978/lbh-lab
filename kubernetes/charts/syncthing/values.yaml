@@ -8,12 +8,11 @@ controllers:
   main:
     annotations:
       reloader.stakater.com/auto: "true"
+    type: statefulset
     pod:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroup: 1000
-    type: statefulset
+        fsGroupChangePolicy: Always
     containers:
       main:
         image:
@@ -50,18 +49,21 @@ persistence:
     type: persistentVolumeClaim
     storageClass: openebs-mayastor
     accessMode: ReadWriteOnce
-    size: 1Gi
+    size: 500Mi
   rootfs:
     type: persistentVolumeClaim
     storageClass: openebs-mayastor
     accessMode: ReadWriteOnce
     size: 1Gi
+    globalMounts:
+      - path: /var/syncthing
 
 configMaps:
   main:
     includeInChecksum: true
     data:
       TZ: *tz
+      STHOMEDIR: /config
 
 service:
   main:
