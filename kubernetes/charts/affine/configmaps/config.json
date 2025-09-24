@@ -1,9 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/toeverything/AFFiNE/refs/heads/canary/.docker/selfhost/schema.json",
   "server": {
-    "name": "AFFiNE"
+    "name": "AFFiNE",
+    "externalUrl": "https://affine-10-242-20-77.lab-local.bichls.dev"
   },
   "metrics": {
     "enabled": true
+  },
+  "auth": {
+    "allowSignup": false,
+    "allowSignupForOauth": false
   }
 }
