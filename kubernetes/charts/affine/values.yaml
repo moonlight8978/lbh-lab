@@ -35,7 +35,7 @@ controllers:
   migration:
     type: job
     annotations:
-      argocd.argoproj.io/hook: PreSync
+      argocd.argoproj.io/hook: PostSync
       argocd.argoproj.io/hook-delete-policy: HookSucceeded
     containers:
       main:
@@ -73,6 +73,7 @@ persistence:
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
     size: 1Gi
+    storageClass: openebs-mayastor
     advancedMounts:
       main:
         main:
@@ -100,4 +101,4 @@ route:
     rules:
       - backendRefs:
           - identifier: main
-            port: *port
+            port: *http
