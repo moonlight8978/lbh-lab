@@ -67,8 +67,21 @@ persistence:
   config:
     type: configMap
     name: affine-config
+    items:
+      - path: config.json
+        key: config.json
     globalMounts:
       - path: /root/.affine/config
+        subPath: config.json
+  secret:
+    type: secret
+    name: affine-secret
+    items:
+      - path: private.key
+        key: private.key
+    globalMounts:
+      - path: /root/.affine/config
+        subPath: private.key
   upload:
     type: persistentVolumeClaim
     accessMode: ReadWriteOnce
