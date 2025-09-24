@@ -102,6 +102,9 @@ applicationsets:
             - name: syncthing
               namespace: application
               project: application
+            - name: affine
+              namespace: application
+              project: application
 
     template:
       metadata:

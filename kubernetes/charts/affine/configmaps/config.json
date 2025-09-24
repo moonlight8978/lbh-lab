@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/toeverything/AFFiNE/refs/heads/canary/.docker/selfhost/schema.json",
+  "server": {
+    "name": "AFFiNE"
+  },
+  "metrics": {
+    "enabled": true
+  }
+}

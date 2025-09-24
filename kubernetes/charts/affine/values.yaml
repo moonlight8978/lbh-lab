@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname affine-10-242-20-170.lab-local.bichls.dev
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: &image ghcr.io/toeverything/affine
+          tag: &tag 0.24.1
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 3010
+        envFrom:
+          - configMap: main
+          - secret: affine-env
+        probes:
+          liveness:
+            path: /info
+            port: *http
+          readiness:
+            path: /info
+            port: *http
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+  migration:
+    type: job
+    annotations:
+      argocd.argoproj.io/hook: PreSync
+      argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    containers:
+      main:
+        image:
+          repository: *image
+          tag: *tag
+          pullPolicy: IfNotPresent
+        args:
+          - node
+          - ./scripts/self-host-predeploy.js
+        envFrom:
+          - configMap: main
+          - secret: affine-env
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      REDIS_SERVER_HOST: affine-redis
+      AFFINE_INDEXER_ENABLED: "false"
+
+persistence:
+  config:
+    type: configMap
+    name: affine-config
+    globalMounts:
+      - path: /root/.affine/config
+  upload:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    advancedMounts:
+      main:
+        main:
+          - path: /root/.affine/storage
+      migration:
+        main:
+          - path: /root/.affine/storage
+            readOnly: true
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port

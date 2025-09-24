@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/postgresql.cnpg.io/cluster-v1.json
+
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: affine-postgresql
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-100"
+spec:
+  instances: 1
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: stable
+    major: 17
+  superuserSecret:
+    name: affine-postgresql-root-creds
+  bootstrap:
+    initdb:
+      database: affine_production
+      owner: affine
+      secret:
+        name: affine-postgresql-creds
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 512Mi
+  storage:
+    storageClass: openebs-mayastor
+    size: 1Gi
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/postgresql.cnpg.io/database-v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: affine-production
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  name: affine_production
+  owner: affine
+  cluster:
+    name: affine-postgresql
+  extensions:
+    - name: vector
+      ensure: present
+      # latest version is not bundled in cnpg postgresql image
+      # version: "0.8.1"
