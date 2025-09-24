@@ -1,0 +1,26 @@
+---
+# https://github.com/OT-CONTAINER-KIT/redis-operator/blob/main/charts/redis-operator/values.yaml
+
+redisOperator:
+  webhook: true
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+issuer:
+  create: false
+  kind: ClusterIssuer
+  name: self-signed
+
+certmanager:
+  enabled: true
+
+featureGates:
+  GenerateConfigInInitContainer: true
+
+service:
+  namespace: redis-system

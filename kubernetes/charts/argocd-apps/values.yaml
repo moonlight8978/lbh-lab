@@ -68,6 +68,9 @@ applicationsets:
             - name: cnpg
               namespace: cnpg-system
               project: system
+            - name: redis-operator
+              namespace: redis-system
+              project: system
             - name: volsync
               namespace: volsync-system
               project: system
@@ -155,6 +158,8 @@ projects:
         namespace: envoy-gateway-system
       - name: *cluster
         namespace: external-dns
+      - name: *cluster
+        namespace: redis-system
       - name: *cluster
         namespace: cnpg-system
       - name: *cluster
