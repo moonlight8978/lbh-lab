@@ -1,0 +1,3 @@
+- op: replace
+  path: /metadata/generateName
+  value: affine-migration-

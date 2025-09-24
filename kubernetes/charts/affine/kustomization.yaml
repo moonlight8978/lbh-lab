@@ -25,3 +25,9 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - configmaps/config.json
+
+patches:
+  - path: patches/job-migration.yaml
+    target:
+      kind: Job
+      name: affine-migration
