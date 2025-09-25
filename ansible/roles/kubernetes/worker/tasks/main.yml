@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     pkg:
       - nvme-cli
-      - "linux-modules-extra-{{ ansible_kernel }}"
+      - linux-generic
     state: latest
 
 - name: Enable nvme-tcp module
