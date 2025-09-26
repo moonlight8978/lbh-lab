@@ -1,0 +1,3 @@
+---
+k8s_machine_eth_device: ens18
+cloudflare_warp_connector_ip4: 10.242.20.142

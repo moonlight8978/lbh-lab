@@ -1,15 +1,33 @@
 ---
 - name: Configure sysctl
   loop:
-    - {name: fs.inotify.max_user_instances, value: "8192"}
-    - {name: fs.inotify.max_user_watches, value: "524288"}
-    - {name: net.ipv6.conf.all.disable_ipv6, value: "1"}
-    - {name: net.ipv6.conf.default.disable_ipv6, value: "1"}
-    - {name: net.ipv6.conf.lo.disable_ipv6, value: "1"}
-    - {name: vm.nr_hugepages, value: "1024"}
+    - { name: fs.inotify.max_user_instances, value: "8192" }
+    - { name: fs.inotify.max_user_watches, value: "524288" }
+    - { name: net.ipv6.conf.all.disable_ipv6, value: "1" }
+    - { name: net.ipv6.conf.default.disable_ipv6, value: "1" }
+    - { name: net.ipv6.conf.lo.disable_ipv6, value: "1" }
+    - { name: vm.nr_hugepages, value: "1024" }
   ansible.builtin.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     sysctl_set: true
     reload: true
     sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+
+- name: Configure Cloudflare CGNAT route
+  ansible.builtin.copy:
+    dest: /etc/netplan/99-cloudflare-cgnat.yaml
+    owner: root
+    group: root
+    mode: "0600"
+    content: |
+      network:
+        version: 2
+        ethernets:
+          {{ k8s_machine_eth_device }}:
+            routes:
+              - to: 100.96.0.0/12
+                via: {{ cloudflare_warp_connector_ip4 }}
+
+- name: Apply Cloudflare CGNAT route
+  ansible.builtin.shell: netplan apply

@@ -34,3 +34,19 @@
 - name: Connect to cloudflare
   become: false
   ansible.builtin.shell: warp-cli --accept-tos connect
+
+# Fix https issue with cilium virtual IP
+# Cilium add overhead for tls traffic
+# So we need to clamp the mss to prevent it exceed the cloudflare mtu, which is 1280
+- name: Check mss clamp rule
+  ansible.builtin.shell: >-
+    iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN
+    -j TCPMSS --set-mss 1240
+  register: check_clamp_rule
+  ignore_errors: true
+
+- name: Insert TCPMSS clamp rule if not present
+  ansible.builtin.shell: >
+    iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN
+    -j TCPMSS --set-mss 1240
+  when: check_clamp_rule.rc != 0
