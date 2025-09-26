@@ -1,0 +1,36 @@
+---
+- name: Add cloudflare gpg key
+  ansible.builtin.shell: curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+
+- name: Add cloudflare apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ {{ ansible_distribution_release }} main"
+    state: present
+    filename: cloudflare-client
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    state: latest
+    pkg:
+      - cloudflare-warp
+
+- name: Configure sysctl
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.d/99-warp-svc.conf
+
+- name: Register
+  become: false
+  ansible.builtin.shell: warp-cli --accept-tos connector new {{ cloudflare_warp_connector_token }}
+  args:
+    creates: /var/lib/cloudflare-warp/reg.json
+
+- name: Connect to cloudflare
+  become: false
+  ansible.builtin.shell: warp-cli --accept-tos connect

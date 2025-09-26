@@ -137,11 +137,7 @@
     - vpn
     - xray
   pre_tasks:
-    - name: Get secrets
-      community.sops.load_vars:
-        file: ../../secrets.yml
-        expressions: ignore
-      register: secrets
+    - include_tasks: ../tasks/load-secrets.yaml
     - set_fact:
         cloudflare_warp_license_key: "{{ secrets.ansible_facts.cloudflare_warp_license }}"
   roles:
@@ -158,13 +154,22 @@
   vars:
     wg_host: "10.242.20.141"
   pre_tasks:
-    - name: Get secrets
-      community.sops.load_vars:
-        file: ../../secrets.yml
-        expressions: ignore
-      register: secrets
+    - include_tasks: ../tasks/load-secrets.yaml
     - set_fact:
         wg_admin_username: "{{ secrets.ansible_facts.wg_admin_username }}"
         wg_admin_password: "{{ secrets.ansible_facts.wg_admin_password }}"
   roles:
     - ../roles/docker/wgeasy
+
+- name: Setup warp connector
+  hosts: warp-connector
+  become: true
+  tags:
+    - warp-connector
+  pre_tasks:
+    - include_tasks: ../tasks/load-secrets.yaml
+    - set_fact:
+        cloudflare_warp_connector_token: "{{ secrets.ansible_facts.cloudflare_warp_site_remote_connector_token }}"
+  roles:
+    - ../roles/pkg-latest
+    - ../roles/cloudflare-warp

@@ -21,6 +21,9 @@ ubuntu:
     vpn:
       hosts:
         10.242.20.141:
+    warp-connector:
+      hosts:
+        10.242.20.142:
     kubernetes:
 
 kubernetes:

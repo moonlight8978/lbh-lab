@@ -112,4 +112,34 @@ locals {
       }
     ]
   }
+
+  warp_connector = {
+    clone_vm_id = local.ubuntu_template_id
+
+    name = "warp-connector"
+    vm_id = 10202
+    cpu = 1
+    memory = 1
+    disks = [{
+      datastore_id = "local-lvm",
+      size = 10
+    }]
+    ip4 = "10.242.20.142/24"
+    gateway4 = "10.242.20.1"
+  }
+
+  playground = {
+    clone_vm_id = local.ubuntu_template_id
+
+    name = "playground"
+    vm_id = 10210
+    cpu = 1
+    memory = 1
+    disks = [{
+      datastore_id = "local-lvm",
+      size = 10
+    }]
+    ip4 = "10.242.20.145/24"
+    gateway4 = "10.242.20.1"
+  }
 }
