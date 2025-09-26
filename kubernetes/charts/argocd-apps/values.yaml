@@ -105,6 +105,9 @@ applicationsets:
             - name: affine
               namespace: application
               project: application
+            - name: jellyfin
+              namespace: application
+              project: application
 
     template:
       metadata:
