@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname cloudbeaver-10-242-20-170.lab-local.bichls.dev
+scheme: https
+
+controllers:
+  main:
+    type: statefulset
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+    containers:
+      main:
+        image:
+          repository: dbeaver/cloudbeaver
+          tag: 25.2.1
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8978
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
+        probes:
+          liveness:
+            path: /status
+            port: *http
+          readiness:
+            path: /status
+            port: *http
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /opt/cloudbeaver/workspace
+  api-token:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /opt/cloudbeaver/conf/keys
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      CLOUDBEAVER_DB_DRIVER: &db_driver sqlite_jdbc
+      CLOUDBEAVER_DB_URL: &db_url jdbc:sqlite:/opt/cloudbeaver/workspace/cloudbeaver.db
+      CLOUDBEAVER_DB_SCHEMA: cb
+      CLOUDBEAVER_QM_DB_DRIVER: *db_driver
+      CLOUDBEAVER_QM_DB_URL: *db_url
+      CLOUDBEAVER_QM_DB_SCHEMA: qm
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http

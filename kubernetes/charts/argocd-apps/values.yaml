@@ -108,6 +108,9 @@ applicationsets:
             - name: jellyfin
               namespace: application
               project: application
+            - name: cloudbeaver
+              namespace: application
+              project: application
 
     template:
       metadata:

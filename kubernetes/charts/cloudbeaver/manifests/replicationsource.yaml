@@ -1,0 +1,62 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudbeaver-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: cloudbeaver-data,cloudbeaver-api-token
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: cloudbeaver-data
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: cloudbeaver-data
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: cloudbeaver-data-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Direct
+    moverSecurityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsUser: 1000
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: cloudbeaver-api-token
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: cloudbeaver-api-token
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: cloudbeaver-api-token-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Direct
+    moverSecurityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsUser: 1000
