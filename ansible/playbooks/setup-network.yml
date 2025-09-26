@@ -172,4 +172,4 @@
         cloudflare_warp_connector_token: "{{ secrets.ansible_facts.cloudflare_warp_site_remote_connector_token }}"
   roles:
     - ../roles/pkg-latest
-    - ../roles/cloudflare-warp
+    - ../roles/warp-connector

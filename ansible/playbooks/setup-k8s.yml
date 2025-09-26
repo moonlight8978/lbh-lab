@@ -4,6 +4,10 @@
     - controller
   hosts: controller
   become: true
+  pre_tasks:
+    - include_tasks: ../tasks/load-secrets.yaml
+    - set_fact:
+        site_b_cidr: "{{ secrets.ansible_facts.site_b_cidr }}"
   roles:
     - ../roles/pkg-latest
     - ../roles/kubernetes/machine
@@ -13,6 +17,10 @@
     - worker
   hosts: worker
   become: true
+  pre_tasks:
+    - include_tasks: ../tasks/load-secrets.yaml
+    - set_fact:
+        site_b_cidr: "{{ secrets.ansible_facts.site_b_cidr }}"
   roles:
     - ../roles/pkg-latest
     - ../roles/kubernetes/machine

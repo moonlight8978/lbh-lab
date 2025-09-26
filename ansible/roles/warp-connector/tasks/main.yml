@@ -1,0 +1,118 @@
+---
+- name: Add cloudflare gpg key
+  ansible.builtin.shell: curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+
+- name: Add cloudflare apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ {{ ansible_distribution_release }} main"
+    state: present
+    filename: cloudflare-client
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    state: latest
+    pkg:
+      - cloudflare-warp
+
+- name: Configure sysctl
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.d/99-warp-svc.conf
+
+- name: Register
+  become: false
+  ansible.builtin.shell: warp-cli --accept-tos connector new {{ cloudflare_warp_connector_token }}
+  args:
+    creates: /var/lib/cloudflare-warp/reg.json
+
+- name: Connect to cloudflare
+  become: false
+  ansible.builtin.shell: warp-cli --accept-tos connect
+
+# Fix https issue with cilium virtual IP
+# Cilium add overhead for tls traffic
+# So we need to clamp the mss to prevent it exceed the cloudflare mtu, which is 1280
+- name: Check mss clamp rule
+  ansible.builtin.shell: >-
+    iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN
+    -j TCPMSS --set-mss 1240
+  register: check_clamp_rule
+  ignore_errors: true
+
+- name: Insert TCPMSS clamp rule if not present
+  ansible.builtin.shell: >
+    iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN
+    -j TCPMSS --set-mss 1240
+  when: check_clamp_rule.rc != 0
+
+- name: Install nginx
+  block:
+    - name: Skip post-installation
+      ansible.builtin.copy:
+        dest: /usr/sbin/policy-rc.d
+        content: |
+          #!/bin/sh
+          exit 101
+        mode: "0755"
+
+    - name: Install nginx
+      ansible.builtin.apt:
+        update_cache: true
+        state: latest
+        pkg:
+          - nginx
+      ignore_errors: true
+  always:
+    - name: Remove policy
+      ansible.builtin.file:
+        path: /usr/sbin/policy-rc.d
+        state: absent
+
+- name: Configure TLS endpoint
+  vars:
+    certs_dir: /etc/cloudflare-warp/certs
+  block:
+    - name: Install nginx
+      ansible.builtin.apt:
+        state: latest
+        pkg:
+          - nginx
+
+    - name: Generate TLS endpoint certificate
+      ansible.builtin.shell: |
+        mkdir -p {{ certs_dir }}
+        openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/cloudflare-warp/certs/tls.key -out /etc/cloudflare-warp/certs/tls.pem -subj "/CN=warp-connector" -addext "subjectAltName=DNS:warp-connector"
+
+    - name: Create nginx config
+      ansible.builtin.copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          server {
+            listen              127.0.0.1:8443 ssl;
+            ssl_certificate     {{ certs_dir }}/tls.pem;
+            ssl_certificate_key {{ certs_dir }}/tls.key;
+            location / {
+                  return 200;
+            }
+          }
+
+    - name: Restart nginx
+      ansible.builtin.systemd_service:
+        name: nginx
+        enabled: true
+        state: restarted
+
+    - name: Get fingerprint
+      ansible.builtin.shell: |
+        openssl x509 -noout -fingerprint -sha256 -inform pem -in {{ certs_dir }}/tls.pem | tr -d :
+      register: fingerprint
+
+    - name: Show fingerprint
+      ansible.builtin.debug:
+        var: fingerprint.stdout

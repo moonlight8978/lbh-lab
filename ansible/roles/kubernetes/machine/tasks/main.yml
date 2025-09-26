@@ -28,6 +28,8 @@
             routes:
               - to: 100.96.0.0/12
                 via: {{ cloudflare_warp_connector_ip4 }}
+              - to: {{ site_b_cidr }}
+                via: {{ cloudflare_warp_connector_ip4 }}
 
 - name: Apply Cloudflare CGNAT route
   ansible.builtin.shell: netplan apply
