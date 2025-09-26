@@ -9,6 +9,6 @@ helmCharts:
     namespace: redis-system
     repo: https://ot-container-kit.github.io/helm-charts/
     name: redis-operator
-    version: 0.22.0
+    version: 0.22.1
     includeCRDs: true
     valuesFile: values.yaml
