@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
 hostname: &hostname jellyfin-10-242-20-170.lab-local.bichls.dev
@@ -64,6 +65,12 @@ persistence:
     hostPath: /mnt/driver/Music
     globalMounts:
       - path: /media
+        readOnly: true
+  youtube:
+    type: hostPath
+    hostPath: /mnt/driver/Youtube
+    globalMounts:
+      - path: /media2
         readOnly: true
   fonts:
     type: emptyDir
