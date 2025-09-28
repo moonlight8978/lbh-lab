@@ -111,6 +111,9 @@ applicationsets:
             - name: cloudbeaver
               namespace: application
               project: application
+            - name: metube
+              namespace: application
+              project: application
 
     template:
       metadata:

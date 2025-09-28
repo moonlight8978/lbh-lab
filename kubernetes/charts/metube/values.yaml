@@ -1,0 +1,74 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname metube-10-242-20-170.lab-local.bichls.dev
+scheme: https
+
+controllers:
+  main:
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+    containers:
+      main:
+        image:
+          repository: ghcr.io/alexta69/metube
+          tag: "2025.09.28"
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8081
+        envFrom:
+          - configMap: main
+        probes:
+          readiness:
+            path: /version
+            port: *http
+          liveness:
+            path: /version
+            port: *http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
+
+configMaps:
+  main:
+    data:
+      DOWNLOAD_MODE: sequential
+      DELETE_FILE_ON_TRASHCAN: "false"
+      CUSTOM_DIRS: "false"
+      TEMP_DIR: /tmp
+      PUBLIC_HOST_URL: "{{.Values.scheme}}://{{.Values.hostname}}"
+
+persistence:
+  downloads:
+    type: hostPath
+    hostPath: /mnt/driver/Youtube
+  tmp:
+    type: emptyDir
+    sizeLimit: 1Gi
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
