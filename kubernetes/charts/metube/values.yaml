@@ -45,9 +45,15 @@ configMaps:
       DELETE_FILE_ON_TRASHCAN: "false"
       CUSTOM_DIRS: "false"
       TEMP_DIR: /tmp
+      STATE_DIR: /data
       PUBLIC_HOST_URL: "{{.Values.scheme}}://{{.Values.hostname}}"
 
 persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
   downloads:
     type: hostPath
     hostPath: /mnt/driver/Youtube

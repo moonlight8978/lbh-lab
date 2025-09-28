@@ -11,3 +11,6 @@ helmCharts:
     name: app-template
     valuesFile: values.yaml
     version: 4.3.0
+
+resources:
+  - manifests/replicationsource.yaml
