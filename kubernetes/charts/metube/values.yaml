@@ -7,10 +7,11 @@ scheme: https
 controllers:
   main:
     pod:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+      # Need to migrate exfat to vfat to support user permissions
+      # securityContext:
+      #   runAsUser: 1000
+      #   runAsGroup: 1000
+      #   fsGroup: 1000
       nodeSelector:
         node-role.kubernetes.io/nas: nas
     containers:
@@ -41,7 +42,10 @@ controllers:
 configMaps:
   main:
     data:
-      DOWNLOAD_MODE: sequential
+      UID: "0"
+      GID: "0"
+      DOWNLOAD_MODE: limited
+      MAX_CONCURRENT_DOWNLOADS: "1"
       DELETE_FILE_ON_TRASHCAN: "false"
       CUSTOM_DIRS: "false"
       TEMP_DIR: /tmp
@@ -57,6 +61,9 @@ persistence:
   downloads:
     type: hostPath
     hostPath: /mnt/driver/Youtube
+    hostPathType: Directory
+    globalMounts:
+      - path: /downloads
   tmp:
     type: emptyDir
     sizeLimit: 1Gi
