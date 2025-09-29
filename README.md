@@ -20,30 +20,41 @@
 
 - Terraform (Terragrunt) to provision almost everything automatically
 
-- Just, Taskfile for local task runner, and Ansible for remote task runner
+- Taskfile for local task runner, and Ansible for automating Linux server setup
 
 ## Manual operations
 
 - Proxmox installation on bare metals
 
-- Template machine installation
+- ~~Template machine installation~~
 
-  -> Use qm CLI to import the cloud image?
+  ~~-> Use qm CLI to import the cloud image?~~
+
+  Already use cloud image, and cloudinit to bootstrap the VM
 
 ## Goals
 
 - Automated provisioning
-  - [x] Proxmox machines post installation
-  - [x] K3s cluster
+  - [x] template machines
+  - [x] network (vpn, proxy) nodes
+  - [x] k0s nodes
+  - [x] k0s cluster
 
 - Security
+  - [x] Cloudflare tunnel between datacenters
+  - [x] User-to-site VPN
   - [ ] Egress Management
   - [ ] Access Control: OPA, Kyverno
   - [ ] Internal Network Encryption in transit (TLS)
 
-- Services
+- Miscs
+  - [x] The whole infrastructure must be reproducible
+  - [x] Flexible HDD storage (macOS, Windows friendly, easy to copy data for non-tech family members)
+  - [x] Backup/Restore
+  - [x] Cost (Electricity bills) optimized
+  - [ ] Monitoring with near real-time alerts
   - [ ] DNS for local network
-  - [ ] VPN
+  - [ ] Geoblock, CVE protection for external access
 
 ## How to provision the cluster
 
@@ -56,21 +67,19 @@ ansible-playbook -i inventory.ini pve/playbooks/pve.yml
 
 - Provision the template
 ```bash
-just terragrunt apply prod/debian-template --all --non-interactive
+task tf:unit -- prod/ubuntu-template apply
 ```
 
-- Setup the template machine
-
-- Provision the k8s cluster
+- Provision the networking VMs
 
 ```bash
-task k8s:provision
+task vm
 ```
 
-- Installs the boostrapping apps
+- Provision the k8s nodes, cluster
 
 ```bash
-task k8s:boostrap-apps
+task bootstrap
 ```
 
 ## Development
@@ -84,15 +93,38 @@ task k8s:boostrap-apps
 - To run terragrunt commands
 
 ```bash
-just terragrunt <cmd> <dir> <-flags>
+task tf:unit -- ./relative-path/to/stack <apply|output|plan|init>
+task tf:stack -- ./relative-path/to/stack <apply|output|plan|init>
+```
 
-just terragrunt apply prod/debian-template --all
-just terragrunt init prod/debian-template --all
+### Ansible
+
+```bash
+task ansible:init
+task ansible:run -- playbook-name.yml --tags <tag>
+```
+
+### Sops
+
+```bash
+task sops:enc
+task sops:dec
+task secret:update
+```
+
+### Json schema sync
+
+- Use [kubernetes-schema-store](https://github.com/moonlight8978/kubernetes-schema-store)
+
+```bash
+task kss
 ```
 
 ## Credits
 
 The project is heavily inspired of those awesome projects
+
+- https://github.com/onedr0p/home-ops
 
 - https://github.com/bjw-s-labs/home-ops
 
