@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname calibre-10-242-20-170.lab-local.bichls.dev
+scheme: https
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    pod:
+      nodeSelector:
+        node-role.kubernetes.io/nas: nas
+    containers:
+      main:
+        image:
+          repository: lscr.io/linuxserver/calibre-web
+          tag: 0.6.25-ls349
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &port 8083
+        envFrom:
+          - configMap: main
+        probes:
+          readiness:
+            path: /login
+            port: *port
+          liveness:
+            path: /login
+            port: *port
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+
+configMaps:
+  main:
+    data:
+      DOCKER_MODS: linuxserver/mods:universal-calibre
+      TZ: Asia/Bangkok
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+  books:
+    type: hostPath
+    hostPath: /mnt/driver/Books
+    globalMounts:
+      - path: /books
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /

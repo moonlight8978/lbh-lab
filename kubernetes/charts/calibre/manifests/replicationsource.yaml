@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: calibre-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: calibre
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: calibre-config
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: calibre
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: calibre-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Direct
+    moverSecurityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0

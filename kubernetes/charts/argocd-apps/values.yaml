@@ -117,6 +117,9 @@ applicationsets:
             - name: miniflux
               namespace: application
               project: application
+            - name: calibre
+              namespace: application
+              project: application
 
     template:
       metadata:
