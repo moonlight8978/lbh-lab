@@ -27,7 +27,6 @@ spec:
   trigger:
     schedule: "0 19 * * *"
   kopia:
-    maintenanceIntervalDays: 3
     repository: karakeep-kopia-cloudflare
     compression: zstd
     retain:
