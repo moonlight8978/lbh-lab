@@ -4,12 +4,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: n8n-kopia
+  name: miniflux-kopia
   namespace: application
   labels:
     volsync/kopia: cloudflare
   annotations:
-    volsync/kopia-repository: n8n
+    volsync/kopia-repository: miniflux
     argocd.argoproj.io/sync-wave: "100"
 data: {}
 ---
@@ -18,16 +18,16 @@ data: {}
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: n8n-postgresql
+  name: miniflux-postgresql
   namespace: application
   annotations:
     argocd.argoproj.io/sync-wave: "200"
 spec:
-  sourcePVC: n8n-postgresql-1
+  sourcePVC: miniflux-postgresql-1
   trigger:
     schedule: "0 19 * * *"
   kopia:
-    repository: n8n-kopia-cloudflare
+    repository: miniflux-kopia-cloudflare
     compression: zstd
     retain:
       daily: 3

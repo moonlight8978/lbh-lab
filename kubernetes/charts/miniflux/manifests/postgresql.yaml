@@ -3,7 +3,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: n8n-postgresql
+  name: miniflux-postgresql
   namespace: application
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
@@ -15,13 +15,13 @@ spec:
     name: stable
     major: 17
   superuserSecret:
-    name: n8n-postgresql-root-creds
+    name: miniflux-postgresql-root-creds
   bootstrap:
     initdb:
-      database: n8n_production
-      owner: n8n
+      database: miniflux_production
+      owner: miniflux
       secret:
-        name: n8n-postgresql-creds
+        name: miniflux-postgresql-creds
   postgresql:
     parameters:
       wal_keep_size: 64MB

@@ -23,6 +23,9 @@ spec:
       owner: affine
       secret:
         name: affine-postgresql-creds
+  postgresql:
+    parameters:
+      wal_keep_size: 64MB
   resources:
     requests:
       cpu: 50m

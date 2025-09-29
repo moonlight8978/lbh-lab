@@ -34,29 +34,5 @@ spec:
     copyMethod: Direct
     moverSecurityContext:
       fsGroup: 26
-      runAsGroup: 26
-      runAsUser: 26
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
-
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: affine-redis
-  namespace: application
-  annotations:
-    argocd.argoproj.io/sync-wave: "200"
-spec:
-  sourcePVC: affine-redis-affine-redis-0
-  trigger:
-    schedule: "0 19 * * *"
-  kopia:
-    repository: affine-redis-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
-    copyMethod: Direct
-    moverSecurityContext:
-      fsGroup: 1000
-      runAsGroup: 1000
-      runAsUser: 1000
+      runAsGroup: 0
+      runAsUser: 0

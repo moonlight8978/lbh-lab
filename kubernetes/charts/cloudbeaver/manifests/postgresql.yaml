@@ -22,6 +22,9 @@ spec:
       owner: cloudbeaver
       secret:
         name: cloudbeaver-postgresql-creds
+  postgresql:
+    parameters:
+      wal_keep_size: 64MB
   resources:
     requests:
       cpu: 50m

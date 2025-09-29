@@ -22,6 +22,9 @@ spec:
       owner: kaneo
       secret:
         name: kaneo-postgresql-creds
+  postgresql:
+    parameters:
+      wal_keep_size: 64MB
   resources:
     requests:
       cpu: 50m

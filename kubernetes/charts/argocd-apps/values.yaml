@@ -114,6 +114,9 @@ applicationsets:
             - name: metube
               namespace: application
               project: application
+            - name: miniflux
+              namespace: application
+              project: application
 
     template:
       metadata:

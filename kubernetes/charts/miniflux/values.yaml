@@ -1,0 +1,68 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+scheme: https
+hostname: &hostname miniflux-10-242-20-170.lab-local.bichls.dev
+tz: &tz Asia/Bangkok
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    pod:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+    containers:
+      main:
+        image:
+          repository: ghcr.io/miniflux/miniflux
+          tag: 2.2.13
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8080
+        envFrom:
+          - secret: miniflux-env
+          - configMap: main
+        probes:
+          readiness:
+            path: /healthcheck
+            port: *http
+          liveness:
+            path: /healthcheck
+            port: *http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      RUN_MIGRATIONS: "1"
+      CREATE_ADMIN: "1"
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http

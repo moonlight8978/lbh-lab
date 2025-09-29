@@ -34,8 +34,8 @@ spec:
     copyMethod: Direct
     moverSecurityContext:
       fsGroup: 26
-      runAsGroup: 26
-      runAsUser: 26
+      runAsGroup: 0
+      runAsUser: 0
 # ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationdestination-v1alpha1.json
 
