@@ -28,14 +28,13 @@
             routes:
               - to: {{ cloudflare_cgnat_cidr }}
                 via: {{ cloudflare_warp_connector_ip4 }}
-              - to: {{ site_b_cidr }}
-                via: {{ cloudflare_warp_connector_ip4 }}
+              - to: 10.0.0.0/8
+                via: 10.242.20.1
 
 - name: Apply Cloudflare CGNAT route
   # ansible.builtin.shell: netplan apply
   loop:
     - "{{ cloudflare_cgnat_cidr }}"
-    - "{{ site_b_cidr }}"
   # Prevent cilium routes to be flushed when running `netplan apply`
   ansible.builtin.shell: |
     ip route add {{ item }} via {{ cloudflare_warp_connector_ip4 }}
