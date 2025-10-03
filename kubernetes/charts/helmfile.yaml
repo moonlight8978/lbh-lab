@@ -88,6 +88,12 @@ releases:
     needs:
       - cert-manager/cert-manager
     hooks:
+      - events: ["presync"]
+        command: kubectl
+        args:
+          - apply
+          - -f
+          - ./external-secrets/manifests/certificate.yaml
       - events: ["postsync"]
         command: bash
         args:
