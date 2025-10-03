@@ -115,17 +115,12 @@ releases:
     needs:
       - external-secrets/external-secrets
     hooks:
-      - events: ["postsync"]
+      - events: ["presync"]
         command: kubectl
         args:
           - apply
           - -f
           - ./argocd/manifests/externalsecret.yaml
-      - events: ["postsync"]
-        command: bash
-        args:
-          - -c
-          - until kubectl get crd applicationsets.argoproj.io appprojects.argoproj.io &>/dev/null; do sleep 5; done
 
   - name: argocd-apps
     namespace: argocd
@@ -135,3 +130,9 @@ releases:
       - ./argocd-apps/values.yaml
     needs:
       - argocd/argocd
+    hooks:
+      - events: ["presync"]
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd applicationsets.argoproj.io appprojects.argoproj.io &>/dev/null; do sleep 5; done
