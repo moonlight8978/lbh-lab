@@ -12,5 +12,6 @@ helmCharts:
     includeCRDs: true
 
 resources:
-  - manifests/gateway.yaml
   - manifests/certificate.yaml
+  - manifests/gateway-internal.yaml
+  - manifests/gateway-external.yaml
