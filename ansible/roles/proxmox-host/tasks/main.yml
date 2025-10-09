@@ -11,3 +11,49 @@
       - btop
       # Decompress xz disks
       - xz-utils
+      # PVE prometheus exporter
+      - python3
+      - python3-pip
+
+- name: Install PVE Exporter
+  ansible.builtin.pip:
+    executable: /usr/bin/pip3
+    break_system_packages: true
+    name: prometheus-pve-exporter
+
+- name: Declare service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/prometheus-pve-exporter.service
+    content: |
+      [Unit]
+      Description=Prometheus exporter for Proxmox VE
+      Documentation=https://github.com/znerol/prometheus-pve-exporter
+
+      [Service]
+      Restart=always
+      User=root
+      ExecStart=/usr/local/bin/pve_exporter --config.file /etc/prometheus/pve.yml
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Ensure config dir exist
+  ansible.builtin.file:
+    path: /etc/prometheus
+    state: directory
+
+- name: Create config file
+  ansible.builtin.copy:
+    dest: /etc/prometheus/pve.yml
+    content: |
+      default:
+        user: "{{ pve_prometheus_user }}"
+        password: "{{ pve_prometheus_password }}"
+        verify_ssl: false
+
+- name: Register and start the unit
+  ansible.builtin.systemd_service:
+    state: started
+    name: prometheus-pve-exporter
+    enabled: true
+    daemon_reload: true

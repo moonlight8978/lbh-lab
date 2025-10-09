@@ -1,8 +1,0 @@
----
-- name: PVE nodes
-  hosts: pve
-  roles:
-    - ../roles/pkg-latest
-    - ../roles/proxmox-host
-    - ../roles/interactive
-    - ../roles/wake-on-lan
