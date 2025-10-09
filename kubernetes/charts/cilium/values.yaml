@@ -16,6 +16,8 @@ loadBalancer:
   mode: dsr
   dsrDispatch: opt
   algorithm: maglev
+bpf:
+  lbModeAnnotation: true
 
 l2announcements:
   enabled: true

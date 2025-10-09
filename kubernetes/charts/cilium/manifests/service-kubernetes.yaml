@@ -7,13 +7,28 @@ metadata:
   namespace: kube-system
   annotations:
     lbipam.cilium.io/ips: 10.242.20.160
+    service.cilium.io/forwarding-mode: snat
 spec:
   type: LoadBalancer
-  selector:
-    app.kubernetes.io/name: kube-apiserver
-    app.kubernetes.io/component: control-plane
   ports:
     - name: https
       port: 6443
       protocol: TCP
       targetPort: 6443
+---
+# yaml-language-server: $schema=https://s3-next.miraistudio.games/schemastore/discovery.k8s.io/endpointslice-v1.json
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+  labels:
+    kubernetes.io/service-name: kube-apiserver
+addressType: IPv4
+ports:
+  - name: https
+    port: 6443
+    protocol: TCP
+endpoints:
+  - addresses:
+      - 10.242.20.161
