@@ -114,4 +114,6 @@ dashboards:
       # renovate: depName="Proxmox via Prometheus"
       gnetId: 10347
       revision: 5
-      datasource: Prometheus
+      datasource:
+        - name: DS_PROMETHEUS
+          value: Prometheus
