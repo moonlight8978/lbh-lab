@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/monitoring.coreos.com/scrapeconfig-v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: pve
+  namespace: monitoring
+spec:
+  metricsPath: /metrics
+  staticConfigs:
+    - labels:
+        job: pve
+      targets:
+        - 10.242.20.77:9221
+  scheme: HTTP
+  scrapeInterval: 1m
