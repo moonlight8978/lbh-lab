@@ -36,3 +36,11 @@
     nas_device: /dev/disk/by-path/pci-0000:01:04.0-scsi-0:0:0:3-part2
   roles:
     - ../roles/kubernetes/nas
+
+- name: Clean up worker images
+  tags:
+    - prune
+  hosts: worker
+  become: true
+  roles:
+    - ../roles/kubernetes/prune

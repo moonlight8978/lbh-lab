@@ -1,0 +1,2 @@
+- name: Prune unused images
+  ansible.builtin.shell: k0s ctr image prune --all
