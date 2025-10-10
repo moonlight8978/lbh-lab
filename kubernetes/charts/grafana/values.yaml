@@ -110,6 +110,14 @@ dashboards:
       revision: 14
       datasource: Prometheus
 
+    pvc-2:
+      # renovate: depName="kubernetes-persistent-volumes"
+      gnetId: 13646
+      revision: 2
+      datasource:
+        - name: DS_PROMETHEUS
+          value: Prometheus
+
     proxmox:
       url: https://raw.githubusercontent.com/moonlight8978/grafana-dashboards/refs/heads/main/proxmox/10347/10347_modified.json
       curlOptions: -fsL
