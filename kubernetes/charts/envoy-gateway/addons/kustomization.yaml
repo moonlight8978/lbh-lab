@@ -8,5 +8,5 @@ helmCharts:
     namespace: envoy-gateway-system
     repo: oci://docker.io/envoyproxy
     name: gateway-addons-helm
-    version: 1.5.2
+    version: 1.5.3
     valuesFile: values.yaml
