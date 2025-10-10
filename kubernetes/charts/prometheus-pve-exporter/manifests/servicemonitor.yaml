@@ -5,13 +5,18 @@ metadata:
   name: prometheus-pve-exporter
   namespace: monitoring
 spec:
+  jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
       app.kubernetes.io/name: prometheus-pve-exporter
   endpoints:
     - scheme: http
       path: /pve
+      interval: 1m
       params:
         cluster: ["1"]
         node: ["1"]
         target: ["10.242.20.77"]
+      relabelings:
+        - sourceLabels: [__param_target]
+          targetLabel: instance

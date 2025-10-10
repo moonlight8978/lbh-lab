@@ -109,3 +109,7 @@ dashboards:
       gnetId: 11454
       revision: 14
       datasource: Prometheus
+
+    proxmox:
+      url: https://raw.githubusercontent.com/moonlight8978/grafana-dashboards/refs/heads/main/proxmox/10347/10347_modified.json
+      curlOptions: -fsL

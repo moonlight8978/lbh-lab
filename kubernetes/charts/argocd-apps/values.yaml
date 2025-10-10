@@ -82,6 +82,9 @@ applicationsets:
             - name: grafana
               namespace: monitoring
               project: monitoring
+            - name: prometheus-pve-exporter
+              namespace: monitoring
+              project: monitoring
 
             # Applications
             - name: kaneo
