@@ -1,7 +1,0 @@
----
-- op: replace
-  path: /spec/template/spec/containers/0/args/2
-  value: --http=0.0.0.0:8081
-- op: add
-  path: /spec/template/spec/containers/0/args/-
-  value: --https=0.0.0.0:8080
