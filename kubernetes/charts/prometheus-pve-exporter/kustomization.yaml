@@ -1,13 +1,17 @@
 ---
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-  - releaseName: prometheus-stack
+  - releaseName: prometheus-pve-exporter
     namespace: monitoring
-    repo: oci://ghcr.io/prometheus-community/charts/
-    name: kube-prometheus-stack
-    version: 77.12.1
-    includeCRDs: true
+    repo: oci://ghcr.io/bjw-s-labs/helm/
+    name: app-template
     valuesFile: values.yaml
+    version: 4.3.0
+
+resources:
+  - manifests/externalsecret.yaml
+  - manifests/servicemonitor.yaml
