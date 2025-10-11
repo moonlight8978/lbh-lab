@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: volsync
     namespace: volsync-system
-    repo: oci://ghcr.io/home-operations/charts-mirror/
+    repo: oci://ghcr.io/home-operations/charts-mirror
     name: volsync-perfectra1n
     version: 0.17.14
     valuesFile: values.yaml

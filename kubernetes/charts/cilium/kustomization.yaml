@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: cilium
     namespace: kube-system
-    repo: oci://ghcr.io/home-operations/charts-mirror/
+    repo: oci://ghcr.io/home-operations/charts-mirror
     name: cilium
     version: 1.18.2
     includeCRDs: true

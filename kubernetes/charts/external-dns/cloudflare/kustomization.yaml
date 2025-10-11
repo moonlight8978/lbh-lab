@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: external-dns-cloudflare
     namespace: external-dns
-    repo: oci://ghcr.io/home-operations/charts-mirror/
+    repo: oci://ghcr.io/home-operations/charts-mirror
     name: external-dns
     version: 1.19.0
     includeCRDs: true

@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: grafana
     namespace: monitoring
-    repo: oci://ghcr.io/grafana/helm-charts/
+    repo: oci://ghcr.io/grafana/helm-charts
     name: grafana
     valuesFile: values.yaml
     version: 10.1.0

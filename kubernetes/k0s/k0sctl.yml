@@ -78,7 +78,7 @@ spec:
     wait:
       enabled: false
     drain:
-      enabled: true
+      enabled: false
       gracePeriod: 2m0s
       timeout: 5m0s
       force: true

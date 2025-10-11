@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: coredns
     namespace: kube-system
-    repo: oci://ghcr.io/coredns/charts/
+    repo: oci://ghcr.io/coredns/charts
     name: coredns
     version: 1.44.3
     valuesFile: values.yaml

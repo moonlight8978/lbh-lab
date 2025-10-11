@@ -5,7 +5,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: snapshot-controller
     namespace: kube-system
-    repo: oci://ghcr.io/piraeusdatastore/helm-charts/
+    repo: oci://ghcr.io/piraeusdatastore/helm-charts
     name: snapshot-controller
     includeCRDs: true
     version: 4.1.0

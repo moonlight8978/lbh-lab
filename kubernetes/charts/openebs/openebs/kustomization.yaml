@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: openebs
     namespace: openebs
-    repo: oci://ghcr.io/home-operations/charts-mirror/
+    repo: oci://ghcr.io/home-operations/charts-mirror
     name: openebs
     version: 4.3.3
     includeCRDs: true

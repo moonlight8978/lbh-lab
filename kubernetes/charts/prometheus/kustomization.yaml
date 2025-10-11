@@ -6,7 +6,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: prometheus-stack
     namespace: monitoring
-    repo: oci://ghcr.io/prometheus-community/charts/
+    repo: oci://ghcr.io/prometheus-community/charts
     name: kube-prometheus-stack
     version: 78.1.0
     includeCRDs: true

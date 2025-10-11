@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: reloader
     namespace: kube-system
-    repo: oci://ghcr.io/stakater/charts/
+    repo: oci://ghcr.io/stakater/charts
     name: reloader
     version: 2.2.3
     valuesFile: values.yaml

@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: descheduler
     namespace: kube-system
-    repo: oci://ghcr.io/home-operations/charts-mirror/
+    repo: oci://ghcr.io/home-operations/charts-mirror
     name: descheduler
     version: 0.33.0
     valuesFile: values.yaml
