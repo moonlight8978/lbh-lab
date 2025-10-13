@@ -9,7 +9,7 @@
   become: true
   community.docker.docker_container:
     name: cloudflare-warp
-    image: caomingjun/warp:latest
+    image: caomingjun/warp:2025.8.779.0-2.12.0
     state: started
     restart_policy: always
     volumes:
