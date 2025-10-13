@@ -13,6 +13,7 @@ helmCharts:
 
 resources:
   - manifests/externalsecret.yaml
+  - manifests/referencegrant.yaml
 
 configMapGenerator:
   - name: oauth2proxy-config
