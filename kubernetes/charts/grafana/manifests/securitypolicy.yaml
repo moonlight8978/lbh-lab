@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/gateway.envoyproxy.io/securitypolicy-v1alpha1.json
+
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: grafana-ext-auth
+  namespace: monitoring
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: grafana
+  extAuth:
+    http:
+      backendRefs:
+        - name: oauth2proxy
+          namespace: application
+          port: 4180
+          kind: Service
+      path: /
+      headersToBackend: ["X-Auth-Request-Email"]
+    headersToExtAuth:
+      - Cookie

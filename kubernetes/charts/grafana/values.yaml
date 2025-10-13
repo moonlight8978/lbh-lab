@@ -77,11 +77,11 @@ grafana.ini:
   analytics:
     check_for_updates: false
 
-  # auth.proxy:
-  #   enabled: true
-  #   header_name: X-Authentik-Email
-  #   auto_sign_up: true
-  #   enable_login_token: true
+  auth.proxy:
+    enabled: true
+    header_name: X-Auth-Request-Email
+    auto_sign_up: true
+    enable_login_token: true
 
 dashboardProviders:
   dashboardproviders.yaml:
