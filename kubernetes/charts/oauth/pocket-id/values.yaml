@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+domain: bichls.dev
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/pocket-id/pocket-id
+          pullPolicy: IfNotPresent
+          tag: v1.13.1
+        ports:
+          - name: http
+            containerPort: &http 1411
+        probes:
+          liveness:
+            path: /healthz
+            port: *http
+          readiness:
+            path: /healthz
+            port: *http
+        envFrom:
+          - configMap: main
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      PUID: "1000"
+      PGID: "1000"
+      TRUST_PROXY: "true"
+      APP_URL: "https://passkey.{{.Values.domain}}"
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /app/data
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    hostnames:
+      - "pocketid-10-242-20-170.lab-local.{{.Values.domain}}"
+      - "passkey.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    rules: &routeRules
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
+  external:
+    hostnames:
+      - "passkey.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy-external
+        namespace: envoy-gateway-system
+    rules: *routeRules

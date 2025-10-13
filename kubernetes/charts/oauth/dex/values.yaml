@@ -1,0 +1,91 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+domain: bichls.dev
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+  annotations:
+    reloader.stakater.com/auto: "true"
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/dexidp/dex
+          tag: v2.44.0
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 5556
+        probes:
+          liveness:
+            path: /healthz
+            port: *http
+          readiness:
+            path: /healthz
+            port: *http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /var/dex
+  config:
+    type: secret
+    name: dex-config
+    globalMounts:
+      - path: /etc/dex
+  tmp:
+    type: emptyDir
+    sizeLimit: 200Mi
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    hostnames:
+      - "dex-10-242-20-170.lab-local.{{.Values.domain}}"
+      - "id.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    rules: &routeRules
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
+  external:
+    hostnames:
+      - "id.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy-external
+        namespace: envoy-gateway-system
+    rules: *routeRules

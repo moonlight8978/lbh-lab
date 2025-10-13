@@ -123,6 +123,9 @@ applicationsets:
             - name: calibre
               namespace: application
               project: application
+            - name: oauth
+              namespace: application
+              project: application
 
     template:
       metadata:

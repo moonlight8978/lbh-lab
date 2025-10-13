@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dex-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: dex
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: dex-data
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: dex
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: dex-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Snapshot
+    moverSecurityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0
+    volumeSnapshotClassName: openebs-mayastor

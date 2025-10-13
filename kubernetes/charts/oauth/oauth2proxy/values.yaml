@@ -1,0 +1,81 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+domain: bichls.dev
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+  annotations:
+    reloader.stakater.com/auto: "true"
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: quay.io/oauth2-proxy/oauth2-proxy
+          pullPolicy: IfNotPresent
+          tag: v7.12.0
+        args:
+          - --config=/config/oauth2-proxy.cfg
+        ports:
+          - name: http
+            containerPort: &http 4180
+        probes:
+          liveness:
+            path: /ping
+            port: *http
+          readiness:
+            path: /ready
+            port: *http
+        envFrom:
+          - secret: oauth2proxy-env
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+persistence:
+  etc:
+    type: secret
+    name: oauth2proxy-config
+    globalMounts:
+      - path: /etc/oauth2-proxy
+
+  config:
+    type: configMap
+    name: oauth2proxy-config
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    hostnames:
+      - "oauth2proxy-10-242-20-170.lab-local.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /

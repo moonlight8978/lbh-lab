@@ -80,13 +80,16 @@ tasks:
           CLI_ARGS_LIST: [control-3, 10.242.20.163, --insecure]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-1, 10.242.20.171, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-1, 10.242.20.171, --insecure -p @nodes/storage.yaml]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-2, 10.242.20.172, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-2, 10.242.20.172, --insecure -p @nodes/storage.yaml]
       - task: talos:apply:worker
         vars:
-          CLI_ARGS_LIST: [worker-3, 10.242.20.173, --insecure -p @nodes/storage.yaml]
+          CLI_ARGS_LIST:
+            [worker-3, 10.242.20.173, --insecure -p @nodes/storage.yaml]
       - sleep 10
       - talosctl bootstrap --talosconfig talosconfig --nodes 10.242.20.161
       - talosctl kubeconfig --talosconfig talosconfig --nodes 10.242.20.161
@@ -101,9 +104,9 @@ tasks:
     env:
       KUBECONFIG: "{{.ROOT_DIR}}/kubernetes/k0s/kubeconfig"
     cmds:
-      - for: {var: WORKERS}
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/worker=worker
-      - for: {var: WORKERS}
+      - for: { var: WORKERS }
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/openebs=openebs
       - for: [worker-1]
         cmd: kubectl label node {{.ITEM}} node-role.kubernetes.io/nas=nas
@@ -187,3 +190,11 @@ tasks:
     dir: kubernetes/k0s
     cmds:
       - k0sctl kubeconfig > kubeconfig
+
+  bin:
+    cmds:
+      - chmod +x scripts/*
+
+  bin:run:
+    cmds:
+      - scripts/{{.CLI_ARGS}}

@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pocket-id-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: pocket-id
+    argocd.argoproj.io/sync-wave: "200"
+data: {}
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: pocket-id-data
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: pocket-id
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: pocket-id-kopia-cloudflare
+    compression: zstd
+    retain:
+      daily: 3
+    copyMethod: Snapshot
+    moverSecurityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0
+    volumeSnapshotClassName: openebs-mayastor
