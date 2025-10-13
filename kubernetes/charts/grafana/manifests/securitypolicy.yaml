@@ -20,7 +20,7 @@ spec:
           namespace: application
           port: 4180
           kind: Service
-      path: /
+      path: /oauth2/start
       headersToBackend: ["X-Auth-Request-Email"]
     headersToExtAuth:
       - Cookie
