@@ -34,8 +34,12 @@ managedRecordTypes:
 extraArgs:
   - --cloudflare-proxied
   - --zone-id-filter=$(CF_ZONE_ID)
+  - --gateway-name=envoy-external
 
 triggerLoopOnEvent: true
+
+gatewayNamespace: envoy-gateway-system
+
 
 txtSuffix: .k8s
 
