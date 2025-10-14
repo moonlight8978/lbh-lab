@@ -14,3 +14,4 @@ helmCharts:
 
 resources:
   - manifests/replicationsource.yaml
+  - manifests/securitypolicy.yaml
