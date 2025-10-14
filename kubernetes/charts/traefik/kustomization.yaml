@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -11,3 +12,9 @@ helmCharts:
     version: 37.1.2
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - manifests/gateway-internal.yaml
+  - manifests/gateway-external.yaml
+  - manifests/certificate.yaml
+  - manifests/httproute.yaml

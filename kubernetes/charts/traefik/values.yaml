@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik/values.schema.json
 # https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
@@ -9,6 +10,19 @@ deployment:
   kind: DaemonSet
 
 # additionalArguments: []
+
+ports:
+  web-ext:
+    port: 9080
+    expose:
+      enabled: true
+  websecure-ext:
+    port: 9443
+    expose:
+      enabled: true
+
+service:
+  enabled: false
 
 resources:
   requests:
@@ -33,6 +47,14 @@ gateway:
   infrastructure:
     annotations:
       lbipam.cilium.io/ips: 10.242.20.189
+  listeners:
+    websecure:
+      port: 8443
+      protocol: HTTPS
+      certificateRefs:
+        - group: ""
+          kind: Secret
+          name: bichls.dev
 
 gatewayClass:
   enabled: true

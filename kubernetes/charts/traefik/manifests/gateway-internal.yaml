@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/service-v1.json
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-internal
+  namespace: traefik-system
+  annotations:
+    lbipam.cilium.io/ips: 10.242.20.188
+    argocd.argoproj.io/sync-wave: "100"
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: traefik
+  ports:
+    - name: web
+      port: 80
+      targetPort: 8000
+    - name: websecure
+      port: 443
+      targetPort: 8443
