@@ -41,6 +41,7 @@ controllers:
             memory: 512Mi
         securityContext:
           readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
               - ALL
@@ -67,9 +68,9 @@ service:
 route:
   main:
     hostnames:
-      - "oauth2proxy-10-242-20-170.lab-local.{{.Values.domain}}"
+      - auth.{{.Values.domain}}
     parentRefs:
-      - name: envoy
+      - name: envoy-external
         namespace: envoy-gateway-system
     rules:
       - backendRefs:

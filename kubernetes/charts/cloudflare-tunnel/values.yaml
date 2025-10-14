@@ -1,0 +1,31 @@
+---
+# https://github.com/cloudflare/helm-charts/blob/main/charts/cloudflare-tunnel/values.yaml
+
+cloudflare:
+  enableWarp: false
+  secretName: cloudflare-tunnel-creds
+  tunnelName: lbhlab
+  ingress:
+    - hostname: "*.bichls.dev"
+      service: https://envoy-external.envoy-gateway-system.svc.cluster.local
+      originRequest:
+        noTLSVerify: true
+
+image:
+  repository: cloudflare/cloudflared
+  tag: 2025.9.1
+
+replicaCount: 2
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - cloudflare-tunnel
+        topologyKey: "kubernetes.io/hostname"
+        matchLabelKeys:
+          - pod-template-hash

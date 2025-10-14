@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+domain: bichls.dev
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: traefik/whoami
+          tag: v1.11.0
+        env:
+          WHOAMI_PORT_NUMBER: &port "8080"
+        probes:
+          liveness:
+            enabled: true
+            spec:
+              httpGet:
+                path: /health
+                port: *port
+          readiness:
+            enabled: true
+            spec:
+              httpGet:
+                path: /health
+                port: *port
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 10m
+          limits:
+            memory: 64Mi
+        securityContext: &securityContext
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+
+      busybox:
+        image:
+          repository: busybox
+          tag: 1.37.0
+        command:
+          - sleep
+          - infinity
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 10m
+          limits:
+            memory: 64Mi
+        securityContext: *securityContext
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+
+route:
+  main:
+    hostnames:
+      - "whoami.{{.Values.domain}}"
+    parentRefs:
+      - name: envoy-external
+        namespace: envoy-gateway-system
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /

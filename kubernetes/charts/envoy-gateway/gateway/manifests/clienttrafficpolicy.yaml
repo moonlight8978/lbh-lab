@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/gateway.envoyproxy.io/clienttrafficpolicy-v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: add-oauth2-redirect-headers
+  namespace: envoy-gateway-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-external
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy
+  headers:
+    earlyRequestHeaders:
+      set:
+        - name: "X-Forwarded-Uri"
+          value: "https://%REQ(Host)%%REQ(:PATH)%"

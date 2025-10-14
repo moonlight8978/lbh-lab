@@ -17,3 +17,4 @@ resources:
   - manifests/gateway-internal.yaml
   - manifests/gateway-external.yaml
   - manifests/httproute-pve.yaml
+  - manifests/clienttrafficpolicy.yaml

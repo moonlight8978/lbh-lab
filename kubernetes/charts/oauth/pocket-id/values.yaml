@@ -37,6 +37,7 @@ controllers:
             memory: 512Mi
         securityContext:
           readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
               - ALL
@@ -70,12 +71,11 @@ service:
 route:
   main:
     hostnames:
-      - "pocketid-10-242-20-170.lab-local.{{.Values.domain}}"
       - "passkey.{{.Values.domain}}"
     parentRefs:
-      - name: envoy
+      - name: envoy-external
         namespace: envoy-gateway-system
-    rules: &routeRules
+    rules:
       - backendRefs:
           - identifier: main
             port: *http
@@ -83,10 +83,3 @@ route:
           - path:
               type: PathPrefix
               value: /
-  external:
-    hostnames:
-      - "passkey.{{.Values.domain}}"
-    parentRefs:
-      - name: envoy-external
-        namespace: envoy-gateway-system
-    rules: *routeRules

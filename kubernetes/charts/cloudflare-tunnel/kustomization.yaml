@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: cloudflare-tunnel
+    namespace: tunnel-system
+    releaseName: cloudflare-tunnel
+    repo: https://cloudflare.github.io/helm-charts
+    valuesFile: values.yaml
+    version: 0.3.2
+
+resources:
+  - manifests/externalsecret.yaml
+
+patches:
+  - path: patches/add-reloader-annotation.patch.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      labelSelector: "app.kubernetes.io/instance=cloudflare-tunnel"
