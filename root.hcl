@@ -51,6 +51,11 @@ terraform {
       source = "maxlaverse/bitwarden"
       version = "0.16.0"
     }
+
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+      version = "~> 5"
+    }
   }
 }
 
@@ -63,6 +68,10 @@ provider "proxmox" {
 
 provider "bitwarden" {
   access_token = "${local.values.bitwarden_access_token}"
+}
+
+provider "cloudflare" {
+  api_token = "${local.values.cloudflare_api_token}"
 }
 EOF
 }

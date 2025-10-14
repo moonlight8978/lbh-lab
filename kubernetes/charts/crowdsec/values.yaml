@@ -1,0 +1,4 @@
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/refs/heads/main/charts/crowdsec/values.schema.json
+# https://github.com/crowdsecurity/helm-charts/blob/main/charts/crowdsec/values.yaml
+
+container_runtime: containerd
