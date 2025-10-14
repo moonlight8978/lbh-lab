@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/cert-manager.io/certificate-v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: &name bichls.dev
+  namespace: traefik-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "-100"
+spec:
+  commonName: bichls.dev
+  subject:
+    organizations:
+      - "Bich Le"
+    organizationalUnits:
+      - "LBH Lab"
+    provinces:
+      - "Ha Noi"
+    countries:
+      - "VN"
+  dnsNames:
+    - bichls.dev
+    - "*.bichls.dev"
+    - "*.lab-local.bichls.dev"
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  secretName: *name
+  duration: 2160h
+  renewBefore: 420h
