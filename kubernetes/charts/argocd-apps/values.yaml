@@ -132,6 +132,9 @@ applicationsets:
             - name: whoami
               namespace: application
               project: application
+            - name: atuin
+              namespace: application
+              project: application
 
     template:
       metadata:

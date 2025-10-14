@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname atuin-10-242-20-170.lab-local.bichls.dev
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    pod:
+      nodeSelector:
+        node-role.kubernetes.io/nas: nas
+    containers:
+      main:
+        image:
+          repository: ghcr.io/atuinsh/atuin
+          tag: 18.8.0
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &port 8888
+        envFrom:
+          - configMap: main
+        probes:
+          readiness:
+            path: /healthz
+            port: *port
+          liveness:
+            path: /healthz
+            port: *port
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 512Mi
+
+configMaps:
+  main:
+    data:
+      ATUIN_HOST: 0.0.0.0
+      ATUIN_PORT: "8888"
+      ATUIN_OPEN_REGISTRATION: "false"
+      ATUIN_DB_URI: sqlite:///data/atuin.db
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  main:
+    parentRefs:
+      - name: envoy
+        namespace: envoy-gateway-system
+        sectionName: https
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
