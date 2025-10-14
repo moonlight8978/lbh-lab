@@ -40,7 +40,6 @@ triggerLoopOnEvent: true
 
 gatewayNamespace: envoy-gateway-system
 
-
 txtSuffix: .k8s
 
 deploymentAnnotations:
