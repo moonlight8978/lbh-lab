@@ -62,6 +62,9 @@ persistence:
     storageClass: openebs-mayastor
     accessMode: ReadWriteOnce
     size: 1Gi
+  config:
+    type: emptyDir
+    sizeLimit: 20Mi
 
 service:
   main:
