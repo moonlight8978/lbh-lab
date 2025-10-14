@@ -53,6 +53,7 @@ spec:
   infrastructure:
     annotations:
       lbipam.cilium.io/ips: 10.242.20.180
+      external-dns.alpha.kubernetes.io/hostname: lab-gateway.bichls.dev
   listeners:
     - name: http
       protocol: HTTP
