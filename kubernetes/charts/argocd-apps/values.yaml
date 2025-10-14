@@ -74,7 +74,7 @@ applicationsets:
             - name: volsync
               namespace: volsync-system
               project: system
-            - name: cloudflare-warp
+            - name: cloudflare-tunnel
               namespace: tunnel-system
               project: system
 
