@@ -3,19 +3,26 @@
 
 hostname: &hostname atuin-10-242-20-170.lab-local.bichls.dev
 
+defaultPodOptions:
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 1000
+    runAsUser: 1000
+    fsGroup: 1000
+
 controllers:
   main:
     annotations:
       reloader.stakater.com/auto: "true"
-    pod:
-      nodeSelector:
-        node-role.kubernetes.io/nas: nas
     containers:
       main:
         image:
           repository: ghcr.io/atuinsh/atuin
           tag: 18.8.0
           pullPolicy: IfNotPresent
+        args:
+          - server
+          - start
         ports:
           - name: http
             containerPort: &port 8888
@@ -34,6 +41,12 @@ controllers:
             memory: 64Mi
           limits:
             memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
 
 configMaps:
   main:
