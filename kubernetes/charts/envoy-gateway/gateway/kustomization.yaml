@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -18,3 +19,4 @@ resources:
   - manifests/gateway-external.yaml
   - manifests/httproute-pve.yaml
   - manifests/clienttrafficpolicy.yaml
+  - manifests/httproute-filters.yaml

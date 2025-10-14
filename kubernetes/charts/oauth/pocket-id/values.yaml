@@ -75,6 +75,7 @@ route:
     parentRefs:
       - name: envoy-external
         namespace: envoy-gateway-system
+        sectionName: https
     rules:
       - backendRefs:
           - identifier: main

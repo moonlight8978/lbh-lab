@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/gateway.networking.k8s.io/httproute-v1.json
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -8,6 +9,7 @@ spec:
   parentRefs:
     - name: envoy
       namespace: envoy-gateway-system
+      sectionName: https
   hostnames:
     - argocd-10-242-20-170.lab-local.bichls.dev
   rules:

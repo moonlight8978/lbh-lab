@@ -81,6 +81,7 @@ route:
     parentRefs:
       - name: envoy
         namespace: envoy-gateway-system
+        sectionName: https
     hostnames:
       - *hostname
     rules:
