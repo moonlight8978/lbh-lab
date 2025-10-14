@@ -74,6 +74,9 @@ applicationsets:
             - name: volsync
               namespace: volsync-system
               project: system
+            - name: cloudflare-warp
+              namespace: tunnel-system
+              project: system
 
             # Monitoring
             - name: prometheus
@@ -124,6 +127,9 @@ applicationsets:
               namespace: application
               project: application
             - name: oauth
+              namespace: application
+              project: application
+            - name: whoami
               namespace: application
               project: application
 
@@ -190,6 +196,8 @@ projects:
         namespace: volsync-system
       - name: *cluster
         namespace: kyverno
+      - name: *cluster
+        namespace: tunnel-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
