@@ -42,8 +42,6 @@ gateway:
   enabled: true
   name: traefik
   namespace: traefik-system
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: traefik.bichls.dev
   infrastructure:
     annotations:
       lbipam.cilium.io/ips: 10.242.20.189
@@ -76,6 +74,6 @@ logs:
 metrics:
   prometheus:
     serviceMonitor:
-      enabled: false
+      enabled: true
     prometheusRule:
-      enabled: false
+      enabled: true
