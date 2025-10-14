@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik/values.schema.json
+# https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+deployment:
+  kind: DaemonSet
+
+# additionalArguments: []
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    memory: 512Mi
+
+ingressClass:
+  enabled: false
+
+experimental:
+  kubernetesGateway:
+    enabled: true
+
+gateway:
+  enabled: true
+  name: traefik
+  namespace: traefik-system
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: traefik.bichls.dev
+  infrastructure:
+    annotations:
+      lbipam.cilium.io/ips: 10.242.20.189
+
+gatewayClass:
+  enabled: true
+  name: traefik
+
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: false
+  kubernetesGateway:
+    enabled: true
+    experimentalChannel: true
+
+logs:
+  general:
+    noColor: true
+
+metrics:
+  prometheus:
+    serviceMonitor:
+      enabled: false
+    prometheusRule:
+      enabled: false
