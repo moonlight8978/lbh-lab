@@ -28,12 +28,14 @@ spec:
     schedule: "0 19 * * *"
   kopia:
     repository: dex-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
     copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: global_policy.json
     moverSecurityContext:
       fsGroup: 0
       runAsGroup: 0
       runAsUser: 0
-    volumeSnapshotClassName: openebs-mayastor

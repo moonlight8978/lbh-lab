@@ -15,3 +15,6 @@ helmCharts:
 resources:
   - manifests/externalsecret.yaml
   - manifests/generate-kopia-cloudflare-policy.yaml
+  - manifests/configmap.yaml
+  - manifests/generate-kopia-policy.yaml
+  - manifests/prometheusrule.yaml

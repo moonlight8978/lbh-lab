@@ -59,6 +59,10 @@ locals {
         path_in_datastore = "00:14.0-usb-0:4:1.0-scsi-0:0:0:0",
         iothread = null,
         size = 465
+      },
+      {
+        size = 30,
+        datastore_id = "local-lvm"
       }
     ]
   }
@@ -84,6 +88,14 @@ locals {
       {
         size = 100,
         datastore_id = "slow"
+      },
+      {
+        size = 30,
+        datastore_id = "local-lvm"
+      },
+      {
+        size = 30,
+        datastore_id = "local-lvm"
       }
     ]
   }

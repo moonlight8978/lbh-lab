@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/monitoring.coreos.com/prometheusrule-v1.json
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: volsync
+  namespace: volsync-system
+spec:
+  groups:
+    - name: volsync
+      rules:
+        - alert: VolSyncVolumeOutOfSync
+          expr: volsync_volume_out_of_sync > 0
+          labels:
+            severity: critical
+          for: 30m
+          annotations:
+            summary: "{{ $labels.obj_namespace }}/{{ $labels.obj_name }} volume backup is out of sync"

@@ -28,10 +28,13 @@ spec:
     schedule: "0 19 * * *"
   kopia:
     repository: atuin-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
-    copyMethod: Direct
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: global_policy.json
     moverSecurityContext:
       fsGroup: 0
       runAsGroup: 0

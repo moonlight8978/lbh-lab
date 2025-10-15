@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/openebs.io/diskpool-v1beta3.json
+
+apiVersion: openebs.io/v1beta3
+kind: DiskPool
+metadata:
+  name: single-1-1
+  namespace: openebs
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  node: worker-1
+  disks: ["aio:///dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi4"]
+  topology:
+    labelled:
+      tier: single
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/openebs.io/diskpool-v1beta3.json
+
+apiVersion: openebs.io/v1beta3
+kind: DiskPool
+metadata:
+  name: single-2-1
+  namespace: openebs
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  node: worker-2
+  disks: ["aio:///dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi4"]
+  topology:
+    labelled:
+      tier: single
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/storage.k8s.io/storageclass-v1.json
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: openebs-mayastor-single
+allowVolumeExpansion: true
+provisioner: io.openebs.csi-mayastor
+parameters:
+  protocol: nvmf
+  repl: "1"
+  poolAffinityTopologyLabel: |
+    tier: single

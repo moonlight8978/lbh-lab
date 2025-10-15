@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/kyverno.io/clusterpolicy-v1.json
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-kopia-policy
+  annotations:
+    policies.kyverno.io/title: Generate kopia Policy
+    policies.kyverno.io/category: Configuration
+    policies.kyverno.io/subject: ConfigMap
+    policies.kyverno.io/description: >-
+      Generate kopia Policy
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  rules:
+    - name: generate-kopia-policy
+      match:
+        any:
+          - resources:
+              kinds:
+                - v1/ConfigMap
+              selector:
+                matchExpressions:
+                  - key: volsync/replicate
+                    operator: Exists
+      generate:
+        synchronize: true
+        generateExisting: true
+        foreach:
+          - list: 'request.object.metadata.annotations."volsync/replicate-to" | split(@, '','')'
+            apiVersion: v1
+            kind: ConfigMap
+            context:
+              - name: ns
+                variable:
+                  value: "{{trim(element, ' ')}}"
+            name: "{{request.object.metadata.name}}"
+            namespace: "{{ns}}"
+            clone:
+              name: kopia-policy
+              namespace: volsync-system

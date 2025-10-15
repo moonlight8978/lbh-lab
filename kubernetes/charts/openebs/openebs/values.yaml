@@ -23,8 +23,11 @@ mayastor:
   io_engine:
     resources:
       requests:
-        cpu: 50m
-        memory: 128Mi
+        cpu: 1000m
+        memory: 64Mi
+      limits:
+        cpu: 3000m
+        memory: 512Mi
   etcd:
     replicaCount: 1
     # replicaCount: 3

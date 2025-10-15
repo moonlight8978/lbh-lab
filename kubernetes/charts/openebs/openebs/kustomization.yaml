@@ -16,4 +16,6 @@ helmCharts:
 resources:
   - manifests/slow.yaml
   - manifests/fast.yaml
+  - manifests/single.yaml
+  - manifests/backup.yaml
   - manifests/volumesnapshotclass.yaml

@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://s3.miraistudio.games/schemastore/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kopia-policy
+  namespace: volsync-system
+  labels:
+    volsync/replicate: "true"
+  annotations:
+    volsync/replicate-to: application
+data:
+  global_policy.json: &policy |
+    {
+      "retention": {
+        "keepDaily": 3,
+        "keepWeekly": 2,
+        "keepMonthly": 2
+      },
+      "compression": {
+        "compressor": "zstd"
+      },
+      "errorHandling": {
+        "ignoreFileErrors": false,
+        "ignoreDirectoryErrors": false
+      },
+      "files": {
+        "ignore": [
+          "lost+found/"
+        ],
+        "dotFiles": "include",
+        "oneFileSystem": true
+      }
+    }
+  pg_policy.json: *policy

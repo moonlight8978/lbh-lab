@@ -8,14 +8,14 @@ data "bitwarden_project" "main" {
 
 variable "secrets" {
   type = map(object({
-    data = optional(map(string))
+    data     = optional(map(string))
     children = optional(map(map(string)))
   }))
 }
 
 locals {
-  secrets = flatten([for app, secret in var.secrets : [for key, value in secret.data : { key = "${app}/${key}", value = value }] if secret.data != null ])
-  childrens = flatten([for app, secret in var.secrets : [for child, value in secret.children : { key = "${app}/${child}", value = value }] if secret.children != null ])
+  secrets   = flatten([for app, secret in var.secrets : [for key, value in secret.data : { key = "${app}/${key}", value = value }] if secret.data != null])
+  childrens = flatten([for app, secret in var.secrets : [for child, value in secret.children : { key = "${app}/${child}", value = value }] if secret.children != null])
 }
 
 resource "bitwarden_secret" "main" {

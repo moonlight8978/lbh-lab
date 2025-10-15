@@ -28,14 +28,17 @@ spec:
     schedule: "0 19 * * *"
   kopia:
     repository: filebrowser-db-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
-    copyMethod: Direct
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: global_policy.json
     moverSecurityContext:
-      fsGroup: 1000
-      runAsGroup: 1000
-      runAsUser: 1000
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationdestination-v1alpha1.json
 
@@ -76,14 +79,17 @@ spec:
     schedule: "0 19 * * *"
   kopia:
     repository: filebrowser-config-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
-    copyMethod: Direct
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: global_policy.json
     moverSecurityContext:
-      fsGroup: 1000
-      runAsGroup: 1000
-      runAsUser: 1000
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationdestination-v1alpha1.json
 

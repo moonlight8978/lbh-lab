@@ -28,12 +28,15 @@ spec:
     schedule: "0 19 * * *"
   kopia:
     repository: kaneo-kopia-cloudflare
-    compression: zstd
-    retain:
-      daily: 3
-    copyMethod: Direct
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: pg_policy.json
     moverSecurityContext:
-      fsGroup: 26
+      fsGroup: 0
       runAsGroup: 0
       runAsUser: 0
 # ---
