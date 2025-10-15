@@ -7,7 +7,7 @@ kind: Kustomization
 helmCharts:
   - releaseName: whoami
     namespace: application
-    repo: oci://ghcr.io/bjw-s-labs/helm/
+    repo: oci://ghcr.io/bjw-s-labs/helm
     name: app-template
     version: 4.3.0
     valuesFile: values.yaml
