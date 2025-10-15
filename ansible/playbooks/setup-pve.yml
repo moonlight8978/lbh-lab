@@ -1,11 +1,6 @@
 ---
 - name: PVE nodes
   hosts: pve
-  pre_tasks:
-    - include_tasks: ../tasks/load-secrets.yaml
-    - set_fact:
-        pve_prometheus_user: "{{ secrets.ansible_facts.proxmox_username }}"
-        pve_prometheus_password: "{{ secrets.ansible_facts.proxmox_password_alt }}"
   roles:
     - ../roles/pkg-latest
     - ../roles/proxmox-host
