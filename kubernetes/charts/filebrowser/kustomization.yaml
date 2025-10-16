@@ -15,4 +15,4 @@ helmCharts:
 resources:
   - manifests/namespace.yaml
   - manifests/replicationsource.yaml
-  - manifests/securitypolicy.yaml
+  - manifests/middleware.yaml

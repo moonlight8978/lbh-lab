@@ -92,7 +92,9 @@ route:
       - backendRefs:
           - identifier: main
             port: *port
-        matches:
-          - path:
-              type: PathPrefix
-              value: /
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: filebrowser

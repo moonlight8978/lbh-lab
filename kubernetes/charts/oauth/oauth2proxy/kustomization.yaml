@@ -14,7 +14,6 @@ helmCharts:
 
 resources:
   - manifests/externalsecret.yaml
-  - manifests/referencegrant.yaml
   - manifests/middleware.yaml
 
 configMapGenerator:
