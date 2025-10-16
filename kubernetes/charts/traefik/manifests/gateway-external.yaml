@@ -29,6 +29,7 @@ metadata:
   namespace: traefik-system
   annotations:
     argocd.argoproj.io/sync-wave: "100"
+    external-dns.alpha.kubernetes.io/hostname: lab-gateway.bichls.dev
 spec:
   gatewayClassName: traefik-external
   listeners:

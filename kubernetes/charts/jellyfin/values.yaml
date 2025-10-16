@@ -93,8 +93,8 @@ service:
 route:
   main:
     parentRefs:
-      - name: envoy
-        namespace: envoy-gateway-system
+      - name: traefik-internal
+        namespace: traefik-system
         sectionName: https
     hostnames:
       - *hostname

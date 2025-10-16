@@ -34,11 +34,11 @@ managedRecordTypes:
 extraArgs:
   - --cloudflare-proxied
   - --zone-id-filter=$(CF_ZONE_ID)
-  - --gateway-name=envoy-external
+  - --gateway-name=traefik-external
 
 triggerLoopOnEvent: true
 
-gatewayNamespace: envoy-gateway-system
+gatewayNamespace: traefik-system
 
 txtSuffix: .k8s
 

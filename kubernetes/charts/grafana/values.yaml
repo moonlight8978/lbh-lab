@@ -20,8 +20,8 @@ route:
   main:
     enabled: true
     parentRefs:
-      - name: envoy
-        namespace: envoy-gateway-system
+      - name: traefik-internal
+        namespace: traefik-system
         sectionName: https
     hostnames:
       - grafana-10-242-20-170.lab-local.bichls.dev

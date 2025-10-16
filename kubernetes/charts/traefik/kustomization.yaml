@@ -19,4 +19,3 @@ resources:
   - manifests/gateway-external.yaml
   - manifests/certificate.yaml
   - manifests/httproute.yaml
-  - manifests/middleware-crowdsec.yaml

@@ -64,8 +64,8 @@ route:
     hostnames:
       - "whoami.{{.Values.domain}}"
     parentRefs:
-      - name: envoy-external
-        namespace: envoy-gateway-system
+      - name: traefik-external
+        namespace: traefik-system
         sectionName: https
     rules:
       - backendRefs:

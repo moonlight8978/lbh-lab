@@ -7,7 +7,7 @@ cloudflare:
   tunnelName: lbhlab
   ingress:
     - hostname: "*.bichls.dev"
-      service: https://envoy-external.envoy-gateway-system.svc.cluster.local
+      service: https://traefik-external.traefik-system.svc.cluster.local
       originRequest:
         noTLSVerify: true
 

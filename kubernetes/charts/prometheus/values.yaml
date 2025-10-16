@@ -13,8 +13,8 @@ alertmanager:
     main:
       enabled: true
       parentRefs:
-        - name: envoy
-          namespace: envoy-gateway-system
+        - name: traefik-internal
+          namespace: traefik-system
       hostnames:
         - alert-10-242-20-170.lab-local.bichls.dev
   alertmanagerSpec:
@@ -79,8 +79,8 @@ prometheus:
     main:
       enabled: true
       parentRefs:
-        - name: envoy
-          namespace: envoy-gateway-system
+        - name: traefik-internal
+          namespace: traefik-system
       hostnames:
         - prometheus-10-242-20-170.lab-local.bichls.dev
   prometheusSpec:
