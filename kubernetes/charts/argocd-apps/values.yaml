@@ -184,7 +184,7 @@ applicationsets:
         {{- end }}
 
 projects:
-  system: &system
+  system:
     namespace: argocd
     description: System Components
     finalizers: []
@@ -207,6 +207,10 @@ projects:
         namespace: kyverno
       - name: *cluster
         namespace: tunnel-system
+      - name: *cluster
+        namespace: crowdsec-system
+      - name: *cluster
+        namespace: traefik-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
