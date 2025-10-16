@@ -14,7 +14,9 @@ helmCharts:
     valuesFile: values.yaml
 
 resources:
+  - manifests/externalsecret.yaml
   - manifests/gateway-internal.yaml
   - manifests/gateway-external.yaml
   - manifests/certificate.yaml
   - manifests/httproute.yaml
+  - manifests/middleware-crowdsec.yaml

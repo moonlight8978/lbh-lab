@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/middleware-v1alpha1.json
+
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: crowdsec
+  namespace: traefik-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
+spec:
+  plugin:
+    csbouncer:
+      enabled: true
+      logLevel: INFO
+      crowdsecMode: stream
+      crowdsecAppsecEnabled: true
+      crowdsecAppsecHost: crowdsec-appsec-service.crowdsec-system.svc:7422
+      crowdsecAppsecPath: "/"
+      crowdsecAppsecFailureBlock: true
+      crowdsecAppsecUnreachableBlock: true
+      crowdsecAppsecBodyLimit: 10485760
+      crowdsecLapiHost: crowdsec-service.crowdsec-system.svc:8080
+      crowdsecLapiPath: "/"
+      crowdsecLapiKeyFile: /var/secrets/crowdsec/lapi-key

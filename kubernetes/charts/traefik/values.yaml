@@ -37,6 +37,11 @@ ingressClass:
 experimental:
   kubernetesGateway:
     enabled: true
+  plugins:
+    csbouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      # renovate: datasource=github-releases depName=maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.4.5
 
 gateway:
   enabled: false
@@ -52,6 +57,11 @@ providers:
   kubernetesGateway:
     enabled: true
     experimentalChannel: true
+
+volumes:
+  - name: traefik-crowdsec
+    type: secret
+    mountPath: /var/secrets/crowdsec
 
 logs:
   general:
