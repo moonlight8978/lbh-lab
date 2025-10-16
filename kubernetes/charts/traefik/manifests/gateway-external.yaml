@@ -13,10 +13,10 @@ spec:
   selector:
     app.kubernetes.io/name: traefik
   ports:
-    - name: web
+    - name: http
       port: 80
       targetPort: 9080
-    - name: websecure
+    - name: https
       port: 443
       targetPort: 9443
 
@@ -32,13 +32,13 @@ metadata:
 spec:
   gatewayClassName: traefik-external
   listeners:
-    - name: web
+    - name: http
       protocol: HTTP
       port: 9080
       allowedRoutes:
         namespaces:
           from: All
-    - name: websecure
+    - name: https
       protocol: HTTPS
       port: 9443
       allowedRoutes:

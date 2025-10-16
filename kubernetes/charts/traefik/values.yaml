@@ -39,24 +39,10 @@ experimental:
     enabled: true
 
 gateway:
-  enabled: true
-  name: traefik
-  namespace: traefik-system
-  infrastructure:
-    annotations:
-      lbipam.cilium.io/ips: 10.242.20.189
-  listeners:
-    websecure:
-      port: 8443
-      protocol: HTTPS
-      certificateRefs:
-        - group: ""
-          kind: Secret
-          name: bichls.dev
+  enabled: false
 
 gatewayClass:
-  enabled: true
-  name: traefik
+  enabled: false
 
 providers:
   kubernetesCRD:

@@ -7,8 +7,8 @@ metadata:
   namespace: argocd
 spec:
   parentRefs:
-    - name: envoy
-      namespace: envoy-gateway-system
+    - name: traefik-internal
+      namespace: traefik-system
       sectionName: https
   hostnames:
     - argocd-10-242-20-170.lab-local.bichls.dev

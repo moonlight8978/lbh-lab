@@ -11,10 +11,10 @@ spec:
   parentRefs:
     - name: traefik-external
       namespace: *ns
-      sectionName: web
-    - name: traefik
+      sectionName: http
+    - name: traefik-internal
       namespace: *ns
-      sectionName: web
+      sectionName: http
   rules:
     - filters:
         - type: RequestRedirect
