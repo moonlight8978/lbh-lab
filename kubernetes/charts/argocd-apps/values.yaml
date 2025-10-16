@@ -56,6 +56,9 @@ applicationsets:
             - name: envoy-gateway
               namespace: envoy-gateway-system
               project: system
+            - name: traefik
+              namespace: traefik-system
+              project: system
             - name: external-dns
               namespace: external-dns
               project: system
@@ -76,6 +79,9 @@ applicationsets:
               project: system
             - name: cloudflare-tunnel
               namespace: tunnel-system
+              project: system
+            - name: crowdsec
+              namespace: crowdsec-system
               project: system
 
             # Monitoring

@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: crowdsec
+    namespace: crowdsec-system
+    repo: https://crowdsecurity.github.io/helm-charts
+    name: crowdsec
+    valuesFile: values.yaml
+    version: 0.20.1
+
+resources:
+  - manifests/externalsecret.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: crowdsec-lapi
+    patch: |
+      - op: replace
+        path: /spec/template/spec/hostname
+        value: crowdsec-lapi
+  - target:
+      kind: Deployment
+      name: crowdsec-appsec
+    patch: |
+      - op: replace
+        path: /spec/template/spec/hostname
+        value: crowdsec-appsec

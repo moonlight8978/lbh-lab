@@ -11,3 +11,6 @@ helmCharts:
     version: 78.3.0
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - manifests/externalsecret.yaml

@@ -1,4 +1,70 @@
+---
 # # yaml-language-server: $schema=https://raw.githubusercontent.com/crowdsecurity/helm-charts/refs/heads/main/charts/crowdsec/values.schema.json
 # https://github.com/crowdsecurity/helm-charts/blob/main/charts/crowdsec/values.yaml
 
 container_runtime: containerd
+
+secrets:
+  externalSecret:
+    name: crowdsec-lapi-creds
+    csLapiSecretKey: csLapiSecret
+    registrationTokenKey: registrationToken
+
+lapi:
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+  persistentVolume:
+    data:
+      enabled: true
+      storageClassName: openebs-mayastor
+    config:
+      enabled: true
+      storageClassName: openebs-mayastor
+  envFrom:
+    - secretRef:
+        name: crowdsec-enroll-creds
+  env:
+    - name: ENROLL_INSTANCE_NAME
+      value: lbh-lab
+    - name: ENROLL_TAGS
+      value: "k8s linux homelab"
+
+  metrics:
+    serviceMonitor:
+      enabled: true
+
+agent:
+  enabled: false
+
+appsec:
+  enabled: true
+  acquisitions:
+    - source: appsec
+      listen_addr: "0.0.0.0:7422"
+      path: /
+      appsec_configs:
+        - crowdsecurity/appsec-default
+        - crowdsecurity/crs
+      labels:
+        type: appsec
+  env:
+    - name: COLLECTIONS
+      value: >-
+        crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs
+  resources:
+    limits:
+      memory: 250Mi
+      cpu: 500m
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  metrics:
+    serviceMonitor:
+      enabled: true
