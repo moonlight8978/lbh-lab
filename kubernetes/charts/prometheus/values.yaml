@@ -17,6 +17,12 @@ alertmanager:
           namespace: traefik-system
       hostnames:
         - alert-10-242-20-170.lab-local.bichls.dev
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: prometheus
   alertmanagerSpec:
     externalUrl: https://alert-10-242-20-170.lab-local.bichls.dev
     resources:
@@ -83,6 +89,12 @@ prometheus:
           namespace: traefik-system
       hostnames:
         - prometheus-10-242-20-170.lab-local.bichls.dev
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: prometheus
   prometheusSpec:
     externalUrl: https://prometheus-10-242-20-170.lab-local.bichls.dev
     podMonitorSelectorNilUsesHelmValues: false

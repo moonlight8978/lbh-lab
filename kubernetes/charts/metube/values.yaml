@@ -90,3 +90,9 @@ route:
       - backendRefs:
           - identifier: main
             port: *http
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: metube

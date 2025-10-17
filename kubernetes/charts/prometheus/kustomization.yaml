@@ -14,3 +14,4 @@ helmCharts:
 
 resources:
   - manifests/externalsecret.yaml
+  - manifests/middleware.yaml

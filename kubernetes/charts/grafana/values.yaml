@@ -25,6 +25,12 @@ route:
         sectionName: https
     hostnames:
       - grafana-10-242-20-170.lab-local.bichls.dev
+    filters:
+      - type: ExtensionRef
+        extensionRef:
+          group: traefik.io
+          kind: Middleware
+          name: grafana
 
 persistence:
   enabled: false
