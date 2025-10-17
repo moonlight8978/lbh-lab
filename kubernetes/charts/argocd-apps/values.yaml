@@ -53,9 +53,6 @@ applicationsets:
             - name: descheduler
               namespace: kube-system
               project: system
-            - name: envoy-gateway
-              namespace: envoy-gateway-system
-              project: system
             - name: traefik
               namespace: traefik-system
               project: system
@@ -193,8 +190,6 @@ projects:
     destinations:
       - name: *cluster
         namespace: kube-system
-      - name: *cluster
-        namespace: envoy-gateway-system
       - name: *cluster
         namespace: external-dns
       - name: *cluster
