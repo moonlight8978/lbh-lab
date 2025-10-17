@@ -62,6 +62,10 @@ experimental:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       # renovate: datasource=github-releases depName=maxlerebourg/crowdsec-bouncer-traefik-plugin
       version: v1.4.5
+    cfgeoblock:
+      moduleName: github.com/moonlight8978/traefik-cloudflare-geoblock
+      # renovate: datasource=github-releases depName=moonlight8978/traefik-cloudflare-geoblock
+      version: v1.0.1
 
 gateway:
   enabled: false
