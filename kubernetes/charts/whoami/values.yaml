@@ -8,22 +8,24 @@ controllers:
     containers:
       main:
         image:
-          repository: traefik/whoami
-          tag: v1.11.0
+          repository: mendhak/http-https-echo
+          tag: 37
         env:
-          WHOAMI_PORT_NUMBER: &port "8080"
+          HTTP_PORT: &port "8080"
+          LOG_IGNORE_PATH: /ping
+          DISABLE_REQUEST_LOGS: "false"
         probes:
           liveness:
             enabled: true
             spec:
               httpGet:
-                path: /health
+                path: /ping
                 port: *port
           readiness:
             enabled: true
             spec:
               httpGet:
-                path: /health
+                path: /ping
                 port: *port
         resources:
           requests:
@@ -60,7 +62,7 @@ service:
         port: *port
 
 route:
-  main:
+  external:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     hostnames:
@@ -83,3 +85,16 @@ route:
               group: traefik.io
               kind: Middleware
               name: whoami
+  internal:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - whoami-10-242-20-170.lab-local.bichls.dev
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
