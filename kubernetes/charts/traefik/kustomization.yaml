@@ -18,4 +18,5 @@ resources:
   - manifests/gateway-internal.yaml
   - manifests/gateway-external.yaml
   - manifests/certificate.yaml
-  - manifests/httproute.yaml
+  - manifests/httproute-filters.yaml
+  - manifests/httproute-pve.yaml

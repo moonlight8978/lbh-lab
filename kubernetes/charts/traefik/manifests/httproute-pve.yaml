@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/serverstransport-v1alpha1.json
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: pve
+  namespace: traefik-system
+spec:
+  insecureSkipVerify: true
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: pve
+  namespace: traefik-system
+spec:
+  type: ClusterIP
+  ports:
+    - name: https
+      port: 8006
+      protocol: TCP
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/discovery.k8s.io/endpointslice-v1.json
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: pve
+  namespace: traefik-system
+  labels:
+    kubernetes.io/service-name: pve
+addressType: IPv4
+endpoints:
+  - addresses:
+      - 10.242.20.77
+    conditions:
+      ready: true
+ports:
+  - name: https
+    port: 8006
+    protocol: TCP
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/traefikservice-v1alpha1.json
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: pve
+  namespace: traefik-system
+spec:
+  weighted:
+    services:
+      - name: pve
+        port: https
+        kind: Service
+        serversTransport: pve
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/discovery.k8s.io/endpointslice-v1.json
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: pve
+  namespace: traefik-system
+  labels:
+    kubernetes.io/service-name: pve
+addressType: IPv4
+ports:
+  - name: https
+    port: 8006
+    protocol: TCP
+endpoints:
+  - addresses:
+      - 10.242.20.77
+    conditions:
+      ready: true
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/gateway.networking.k8s.io/httproute-v1.json
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: pve
+  namespace: traefik-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  parentRefs:
+    - name: traefik-internal
+      sectionName: https
+  hostnames:
+    - pve-10-242-20-170.lab-local.bichls.dev
+  rules:
+    - backendRefs:
+        - group: traefik.io
+          kind: TraefikService
+          name: pve
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
