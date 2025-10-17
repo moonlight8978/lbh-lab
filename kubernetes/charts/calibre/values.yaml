@@ -64,6 +64,8 @@ service:
 
 route:
   main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
       - name: traefik-internal
         namespace: traefik-system

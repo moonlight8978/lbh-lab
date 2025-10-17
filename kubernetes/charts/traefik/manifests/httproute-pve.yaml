@@ -84,6 +84,7 @@ metadata:
   namespace: traefik-system
   annotations:
     argocd.argoproj.io/sync-wave: "200"
+    argocd.argoproj.io/sync-options: Replace=true
 spec:
   parentRefs:
     - name: traefik-internal

@@ -70,6 +70,8 @@ service:
 
 route:
   main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
     hostnames:
       - "passkey.{{.Values.domain}}"
     parentRefs:

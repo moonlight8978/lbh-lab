@@ -69,6 +69,8 @@ service:
 
 route:
   main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
     hostnames:
       - "id.{{.Values.domain}}"
     parentRefs:

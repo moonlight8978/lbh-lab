@@ -7,6 +7,7 @@ metadata:
   name: generate-kopia-cloudflare
   annotations:
     argocd.argoproj.io/sync-wave: "200"
+    argocd.argoproj.io/sync-options: Replace=true
     policies.kyverno.io/title: Generate kopia Cloudflare Secret
     policies.kyverno.io/category: Configuration
     policies.kyverno.io/subject: Secret,

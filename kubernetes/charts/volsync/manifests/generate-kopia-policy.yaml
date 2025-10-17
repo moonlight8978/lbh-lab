@@ -6,6 +6,7 @@ kind: ClusterPolicy
 metadata:
   name: generate-kopia-policy
   annotations:
+    argocd.argoproj.io/sync-options: Replace=true
     policies.kyverno.io/title: Generate kopia Policy
     policies.kyverno.io/category: Configuration
     policies.kyverno.io/subject: ConfigMap

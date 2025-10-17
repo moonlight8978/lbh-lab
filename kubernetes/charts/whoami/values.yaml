@@ -61,6 +61,8 @@ service:
 
 route:
   main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
     hostnames:
       - "whoami.{{.Values.domain}}"
     parentRefs:
