@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/middleware-v1alpha1.json
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: dashboard
+  namespace: traefik-system
+spec:
+  chain:
+    middlewares:
+      - name: crowdsec
+        namespace: crowdsec-system
+      - name: oauth2
+        namespace: application
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/ingressroute-v1alpha1.json
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  namespace: traefik-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: "Host(`traefik-10-242-20-170.lab-local.bichls.dev`)"
+      kind: Rule
+      services:
+        - kind: TraefikService
+          name: api@internal
+      middlewares:
+        - name: dashboard
+  tls:
+    secretName: bichls.dev

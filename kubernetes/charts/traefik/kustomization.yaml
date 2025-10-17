@@ -20,3 +20,4 @@ resources:
   - manifests/certificate.yaml
   - manifests/httproute-pve.yaml
   - manifests/httproute-filters.yaml
+  - manifests/ingressroute-dashboard.yaml
