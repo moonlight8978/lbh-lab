@@ -2,8 +2,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
 scheme: https
-hostname: &hostname n8n-10-242-20-170.lab-local.bichls.dev
-tz: &tz Asia/Bangkok
+hostname: &hostname n8n.bichls.dev
+tz: Asia/Bangkok
 
 controllers:
   main:
@@ -80,7 +80,7 @@ route:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
-      - name: traefik-internal
+      - name: traefik-external
         namespace: traefik-system
         sectionName: https
     hostnames:
@@ -89,4 +89,29 @@ route:
       - backendRefs:
           - identifier: main
             port: *port
-            weight: 1
+        matches:
+          - path:
+              type: PathPrefix
+              value: /webhook/
+          - path:
+              type: PathPrefix
+              value: /webhook-test/
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: n8n-api
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: n8n

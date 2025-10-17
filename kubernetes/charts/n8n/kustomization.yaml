@@ -16,3 +16,4 @@ resources:
   - manifests/postgresql.yaml
   - manifests/externalsecret.yaml
   - manifests/replicationsource.yaml
+  - manifests/middleware.yaml
