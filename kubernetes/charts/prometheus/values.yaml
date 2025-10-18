@@ -15,6 +15,7 @@ alertmanager:
       parentRefs:
         - name: traefik-internal
           namespace: traefik-system
+          sectionName: https
       hostnames:
         - alert-10-242-20-170.lab-local.bichls.dev
       filters:
@@ -87,6 +88,7 @@ prometheus:
       parentRefs:
         - name: traefik-internal
           namespace: traefik-system
+          sectionName: https
       hostnames:
         - prometheus-10-242-20-170.lab-local.bichls.dev
       filters:
