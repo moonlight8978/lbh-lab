@@ -8,30 +8,31 @@ global:
 
 deployment:
   kind: DaemonSet
-  initContainers:
-    - name: download-plugins
-      image: alpine:3.22.2
-      command:
-        - /bin/sh
-        - -c
-        - |
-          mkdir -p /plugins-local/src/github.com/moonlight8978/traefik-cloudflare-geoblock
-          wget -O - https://github.com/moonlight8978/traefik-cloudflare-geoblock/archive/refs/tags/v1.0.3.tar.gz | tar -xz -C /plugins-local/src/github.com/moonlight8978/traefik-cloudflare-geoblock --strip-components=1
-      volumeMounts:
-        - name: plugins-local
-          mountPath: /plugins-local
-  additionalVolumes:
-    - name: plugins-local
-      emptyDir: {}
+  # Local pluginns download
+  # initContainers:
+  #   - name: download-plugins
+  #     image: alpine:3.22.2
+  #     command:
+  #       - /bin/sh
+  #       - -c
+  #       - |
+  #         mkdir -p /plugins-local/src/github.com/moonlight8978/traefik-cloudflare-geoblock
+  #         wget -O - https://github.com/moonlight8978/traefik-cloudflare-geoblock/archive/refs/tags/v1.0.3.tar.gz | tar -xz -C /plugins-local/src/github.com/moonlight8978/traefik-cloudflare-geoblock --strip-components=1
+  #     volumeMounts:
+  #       - name: plugins-local
+  #         mountPath: /plugins-local
+  # additionalVolumes:
+  #   - name: plugins-local
+  #     emptyDir: {}
 
-additionalVolumeMounts:
-  - name: plugins-local
-    mountPath: /plugins-local
-    readOnly: true
+# additionalVolumeMounts:
+#   - name: plugins-local
+#     mountPath: /plugins-local
+#     readOnly: true
 
-additionalArguments:
-  - --experimental.localPlugins.cfgeoblock.moduleName=github.com/moonlight8978/traefik-cloudflare-geoblock
-  - --experimental.localPlugins.cfgeoblock.settings.useUnsafe=true
+# additionalArguments:
+#   - --experimental.localPlugins.cfgeoblock.moduleName=github.com/moonlight8978/traefik-cloudflare-geoblock
+#   - --experimental.localPlugins.cfgeoblock.settings.useUnsafe=true
 
 ports:
   web-ext:
@@ -86,6 +87,10 @@ experimental:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       # renovate: datasource=github-releases depName=maxlerebourg/crowdsec-bouncer-traefik-plugin
       version: v1.4.5
+    cfgeoblock:
+      moduleName: github.com/moonlight8978/traefik-cloudflare-geoblock
+      # renovate: datasource=github-releases depName=moonlight8978/traefik-cloudflare-geoblock
+      version: v1.0.3
 
 gateway:
   enabled: false
