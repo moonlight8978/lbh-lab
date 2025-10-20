@@ -109,7 +109,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
-    version: 9.0.1
+    version: 9.0.3
     values:
       - ./argocd/values.yaml
     needs:
