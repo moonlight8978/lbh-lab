@@ -20,11 +20,11 @@ route:
   main:
     enabled: true
     parentRefs:
-      - name: traefik-internal
+      - name: traefik-external
         namespace: traefik-system
         sectionName: https
     hostnames:
-      - grafana-10-242-20-170.lab-local.bichls.dev
+      - grafana.bichls.dev
     filters:
       - type: ExtensionRef
         extensionRef:

@@ -45,6 +45,7 @@ ports:
       enabled: true
     middlewares:
       - traefik-system-geoblock@kubernetescrd
+      - traefik-system-crowdsec@kubernetescrd
     forwardedHeaders:
       trustedIPs:
         # Cloudflare IPs https://www.cloudflare.com/ips-v4/

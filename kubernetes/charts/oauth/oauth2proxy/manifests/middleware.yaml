@@ -10,7 +10,7 @@ spec:
   chain:
     middlewares:
       - name: crowdsec
-        namespace: crowdsec-system
+        namespace: traefik-system
 
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/middleware-v1alpha1.json

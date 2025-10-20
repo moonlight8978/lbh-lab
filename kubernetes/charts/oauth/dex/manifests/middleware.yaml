@@ -10,4 +10,4 @@ spec:
   chain:
     middlewares:
       - name: crowdsec
-        namespace: crowdsec-system
+        namespace: traefik-system

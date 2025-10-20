@@ -22,3 +22,4 @@ resources:
   - manifests/httproute-filters.yaml
   - manifests/ingressroute-dashboard.yaml
   - manifests/middleware-geoblock.yaml
+  - manifests/middleware-crowdsec.yaml

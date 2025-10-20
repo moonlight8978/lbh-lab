@@ -9,7 +9,7 @@ spec:
   chain:
     middlewares:
       - name: crowdsec
-        namespace: crowdsec-system
+        namespace: traefik-system
       - name: oauth2
         namespace: application
 ---
@@ -23,4 +23,4 @@ spec:
   chain:
     middlewares:
       - name: crowdsec
-        namespace: crowdsec-system
+        namespace: traefik-system
