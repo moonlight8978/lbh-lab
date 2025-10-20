@@ -7,18 +7,17 @@
     "github>moonlight8978/renovate-config",
     "local>moonlight8978/lbh-lab//.renovate/grafana-charts.json5",
   ],
+  ignorePaths: ["kubernetes/.unused/**"],
   customManagers: [
     {
       customType: "regex",
-      managerFilePatterns: [
-        "/^.*\\.ya?ml$/"
-      ],
+      managerFilePatterns: ["/^.*\\.ya?ml$/"],
       matchStrings: [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s*image\\:\\s?.*:(?<currentValue>.*?)\\s",
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s*version\\:\\s*(?<currentValue>.*?)\\s"
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s*version\\:\\s*(?<currentValue>.*?)\\s",
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    }
+      datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+    },
   ],
 }

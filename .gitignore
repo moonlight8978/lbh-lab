@@ -58,4 +58,8 @@ tmp/*
 
 kubernetes/charts/**/charts/
 kubernetes/charts/**/build.yaml
+kubernetes/.unused/**/charts/
+kubernetes/.unused/**/build.yaml
+
+# schema
 dist/
