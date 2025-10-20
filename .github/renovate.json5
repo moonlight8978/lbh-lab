@@ -6,6 +6,7 @@
     ":automergePatch",
     "github>moonlight8978/renovate-config",
     "local>moonlight8978/lbh-lab//.renovate/grafana-charts.json5",
+    "local>moonlight8978/lbh-lab//.renovate/helmfile.json5",
   ],
   ignorePaths: ["kubernetes/.unused/**"],
   customManagers: [
