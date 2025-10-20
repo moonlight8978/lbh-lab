@@ -9,7 +9,5 @@ metadata:
 spec:
   chain:
     middlewares:
-      - name: crowdsec
-        namespace: traefik-system
       - name: oauth2
         namespace: application

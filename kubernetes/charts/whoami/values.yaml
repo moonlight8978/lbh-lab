@@ -84,7 +84,7 @@ route:
             extensionRef:
               group: traefik.io
               kind: Middleware
-              name: whoami
+              name: oauth2
   internal:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
