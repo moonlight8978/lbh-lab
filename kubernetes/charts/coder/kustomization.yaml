@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: coder
+    namespace: application
+    repo: oci://ghcr.io/coder/chart
+    name: coder
+    valuesFile: values.yaml
+    version: 2.27.1
+
+resources:
+  - manifests/externalsecret.yaml
+  - manifests/postgresql.yaml

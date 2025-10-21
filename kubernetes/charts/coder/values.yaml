@@ -1,0 +1,61 @@
+---
+# https://github.com/coder/coder/blob/main/helm/coder/values.yaml
+
+coder:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  commandArgs:
+    - server
+    - --update-check=false
+  envFrom:
+    - secretRef:
+        name: coder-env
+  env:
+    - name: CODER_ACCESS_URL
+      value: https://coder-10-242-20-170.lab-local.bichls.dev
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 1Gi
+  volumes:
+    - name: cache
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: cache
+      mountPath: /home/coder/.cache
+    - name: tmp
+      mountPath: /tmp
+
+extraTemplates:
+  - |
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: {{.Release.Name}}
+      namespace: {{.Release.Namespace}}
+      annotations:
+        argocd.argoproj.io/sync-options: Replace=true
+    spec:
+      parentRefs:
+        - name: traefik-internal
+          namespace: traefik-system
+          sectionName: https
+      rules:
+        - backendRefs:
+            - name: coder
+              kind: Service
+              port: 80
+          matches:
+            - path:
+                type: PathPrefix
+                value: /
