@@ -95,4 +95,4 @@ route:
             extensionRef:
               group: traefik.io
               kind: Middleware
-              name: metube
+              name: oauth2

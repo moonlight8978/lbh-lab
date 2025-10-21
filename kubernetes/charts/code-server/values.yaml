@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+defaultPodOptions:
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+    runAsNonRoot: true
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: codercom/code-server
+          tag: 4.104.2
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8080
+        probes:
+          liveness:
+            path: /
+            port: http
+          readiness:
+            path: /
+            port: http
+        envFrom:
+          - secret: code-server-env
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 2Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor-single
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    globalMounts:
+      - path: /home/coder
+
+service:
+  main:
+    type: ClusterIP
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  internal:
+    hostnames:
+      - code-10-242-20-170.lab-local.bichls.dev
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    rules:
+      - backendRefs:
+          - identifier: main
+            kind: Service
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
