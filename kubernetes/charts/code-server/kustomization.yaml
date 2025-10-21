@@ -11,3 +11,6 @@ helmCharts:
     name: app-template
     version: 4.4.0
     valuesFile: values.yaml
+
+resources:
+  - manifests/externalsecret.yaml
