@@ -12,6 +12,10 @@ helmCharts:
     valuesFile: values.yaml
     version: 4.4.0
 
+resources:
+  - manifests/replicationsource.yaml
+  - manifests/middleware.yaml
+
 configMapGenerator:
   - files:
       - files/app.conf
