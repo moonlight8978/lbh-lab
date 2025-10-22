@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: casdoor
+    namespace: application
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    name: app-template
+    valuesFile: values.yaml
+    version: 4.4.0
+
+configMapGenerator:
+  - files:
+      - files/app.conf
+    name: casdoor-config
+    namespace: application
+    options:
+      disableNameSuffixHash: true

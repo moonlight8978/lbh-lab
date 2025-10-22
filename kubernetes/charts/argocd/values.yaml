@@ -2,7 +2,7 @@
 # https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
 
 global:
-  hostname: argocd-10-242-20-170.lab-local.bichls.dev
+  domain: argocd-10-242-20-170.lab-local.bichls.dev
 
 redis-ha:
   enabled: true
@@ -94,13 +94,21 @@ configs:
     application.instanceLabelKey: argocd.argoproj.io/instance
     kustomize.enabled: true
     kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
-    resource.customizations.ignoreDifferences.monitoring.coreos.com_ServiceMonitor:
-      |
+    resource.customizations.ignoreDifferences.monitoring.coreos.com_ServiceMonitor: |
       jqPathExpressions:
       - '.spec.endpoints[].relabelings[].action'
     resource.customizations.ignoreDifferences.v1_Secret: |
       jqPathExpressions:
       - '.metadata.annotations."argocd.argoproj.io/tracking-id"'
+    dex.config: |
+      connectors:
+        - type: oidc
+          id: oidc
+          name: OIDC
+          config:
+            issuer: $argocd-config:dex.oidc.issuer
+            clientID: $argocd-config:dex.oidc.clientID
+            clientSecret: $argocd-config:dex.oidc.clientSecret
 
   params:
     create: true
