@@ -14,3 +14,4 @@ helmCharts:
 
 resources:
   - manifests/default-unreachable-toleration.yaml
+  - manifests/external-config-map.yaml

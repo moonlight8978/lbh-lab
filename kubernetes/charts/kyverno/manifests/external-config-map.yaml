@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/kyverno.io/clusterpolicy-v1.json
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: external-config-map
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
+    argocd.argoproj.io/sync-options: Replace=true
+    policies.kyverno.io/title: External Config Map
+    policies.kyverno.io/category: System
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: ConfigMap
+    policies.kyverno.io/description: >-
+      Mirror external secrets to config maps
+spec:
+  rules:
+    - name: generate-external-config-map
+      match:
+        any:
+          - resources:
+              kinds:
+                - Secret
+              selector:
+                matchLabels:
+                  reconcile.external-secrets.io/managed: "true"
+                  reconcile.external-secrets.io/configmap: "true"
+      generate:
+        synchronize: true
+        generateExisting: true
+        apiVersion: v1
+        kind: ConfigMap
+        name: "{{request.object.metadata.name}}"
+        namespace: "{{request.object.metadata.namespace}}"
+        data:
+          data: "{{ request.object.data | items(@, 'key', 'value') | object_from_lists([].key, map(&base64_decode(@), [].value)) }}"

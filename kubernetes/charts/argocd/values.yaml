@@ -115,9 +115,8 @@ configs:
     controller.diff.server.side: true
     server.insecure: true
 
-  # rbac:
-  #   policy.csv: |
-  #     g, Admin, role:admin
+  rbac:
+    create: false
 
 notifications:
   enabled: true
