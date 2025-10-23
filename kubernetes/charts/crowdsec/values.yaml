@@ -51,7 +51,7 @@ appsec:
       path: /
       appsec_configs:
         - crowdsecurity/appsec-default
-        - crowdsecurity/crs
+        # - crowdsecurity/crs
       labels:
         type: appsec
   env:
