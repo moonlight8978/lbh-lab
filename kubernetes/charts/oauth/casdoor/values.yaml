@@ -33,7 +33,7 @@ controllers:
             cpu: 50m
             memory: 64Mi
           limits:
-            memory: 512Mi
+            memory: 256Mi
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
@@ -89,6 +89,13 @@ route:
       - backendRefs:
           - identifier: main
             port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /.well-known/
+          - path:
+              type: PathPrefix
+              value: /api/
         filters:
           - type: ExtensionRef
             extensionRef:

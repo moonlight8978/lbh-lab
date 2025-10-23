@@ -58,6 +58,9 @@ appsec:
     - name: COLLECTIONS
       value: >-
         crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs
+    - name: POSTOVERFLOWS
+      value: >-
+        crowdsecurity/cdn-whitelist
   resources:
     limits:
       memory: 250Mi
