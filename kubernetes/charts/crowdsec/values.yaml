@@ -51,13 +51,13 @@ appsec:
       path: /
       appsec_configs:
         - crowdsecurity/appsec-default
-        # - crowdsecurity/crs
+        - crowdsecurity/crs-inband
       labels:
         type: appsec
   env:
     - name: COLLECTIONS
       value: >-
-        crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs
+        crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs-inband
     - name: POSTOVERFLOWS
       value: >-
         crowdsecurity/cdn-whitelist
