@@ -9,7 +9,7 @@ helmCharts:
     namespace: kube-system
     repo: oci://ghcr.io/home-operations/charts-mirror
     name: cilium
-    version: 1.18.2
+    version: 1.18.3
     includeCRDs: true
     valuesFile: values.yaml
 
