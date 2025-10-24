@@ -76,7 +76,7 @@ service:
         targetPort: *http
 
 route:
-  main:
+  external:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     hostnames:
@@ -102,3 +102,20 @@ route:
               group: traefik.io
               kind: Middleware
               name: casdoor
+  internal:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    hostnames:
+      - casdoor-10-242-20-170.lab-local.bichls.dev
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
