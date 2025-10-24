@@ -13,7 +13,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/usekaneo/api
-          tag: 1.2.4
+          tag: 2.0.1
           pullPolicy: IfNotPresent
         ports:
           - name: http
@@ -49,7 +49,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/usekaneo/web
-          tag: 1.2.4
+          tag: 2.0.1
           pullPolicy: IfNotPresent
         ports:
           - name: http
@@ -85,6 +85,8 @@ configMaps:
     includeInChecksum: true
     data:
       KANEO_API_URL: "{{.Values.scheme}}://{{.Values.hostname}}/api"
+      KANEO_CLIENT_URL: "{{.Values.scheme}}://{{.Values.hostname}}"
+      CORS_ORIGINS: "{{.Values.scheme}}://{{.Values.hostname}}"
 
 service:
   api:
