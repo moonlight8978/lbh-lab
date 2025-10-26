@@ -14,18 +14,9 @@ helmCharts:
 resources:
   - manifests/externalsecret.yaml
 
-patches:
-  - target:
-      kind: Deployment
-      name: crowdsec-lapi
-    patch: |
-      - op: replace
-        path: /spec/template/spec/hostname
-        value: crowdsec-lapi
-  - target:
-      kind: Deployment
-      name: crowdsec-appsec
-    patch: |
-      - op: replace
-        path: /spec/template/spec/hostname
-        value: crowdsec-appsec
+configMapGenerator:
+  - name: crowdsec-modsec-rules
+    options:
+      disableNameSuffixHash: true
+    files:
+      - configmaps/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
