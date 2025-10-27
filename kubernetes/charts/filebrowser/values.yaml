@@ -101,4 +101,4 @@ route:
             extensionRef:
               group: traefik.io
               kind: Middleware
-              name: filebrowser
+              name: oauth2

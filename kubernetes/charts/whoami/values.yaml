@@ -54,6 +54,7 @@ controllers:
           limits:
             memory: 64Mi
         securityContext: *securityContext
+
 service:
   main:
     controller: main

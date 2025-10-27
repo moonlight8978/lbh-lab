@@ -10,6 +10,7 @@ helmCharts:
     name: crowdsec
     valuesFile: values.yaml
     version: 0.20.1
+    skipTests: true
 
 resources:
   - manifests/externalsecret.yaml
@@ -19,4 +20,6 @@ configMapGenerator:
     options:
       disableNameSuffixHash: true
     files:
-      - configmaps/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+      - modsecurity/crs.conf
+      - modsecurity/sqli-except.data
+      - modsecurity/sso.data

@@ -4,6 +4,10 @@
 
 container_runtime: containerd
 
+image:
+  repository: crowdsecurity/crowdsec
+  tag: v1.7.3
+
 secrets:
   externalSecret:
     name: crowdsec-lapi-creds
@@ -45,15 +49,29 @@ agent:
 
 appsec:
   enabled: true
+  deployAnnotations:
+    reloader.stakater.com/auto: "true"
   acquisitions:
     - source: appsec
       listen_addr: "0.0.0.0:7422"
       path: /
       appsec_configs:
         - crowdsecurity/appsec-default
+        - lbhlab
         - crowdsecurity/crs-inband
       labels:
         type: appsec
+  configs:
+    lbhlab.yaml: |
+      name: lbhlab
+      default_remediation: ban
+      inband_rules:
+        - lbhlab/*
+  rules:
+    lbhlab-crs.yaml: |
+      name: lbhlab/crs
+      seclang_files_rules:
+        - lbhlab/crs.conf
   env:
     - name: COLLECTIONS
       value: >-
@@ -61,10 +79,17 @@ appsec:
     - name: POSTOVERFLOWS
       value: >-
         crowdsecurity/cdn-whitelist
+  extraVolumes:
+    - name: modsec-rules
+      configMap:
+        name: crowdsec-modsec-rules
+  extraVolumeMounts:
+    - name: modsec-rules
+      mountPath: /var/lib/crowdsec/data/lbhlab
   resources:
     limits:
-      memory: 250Mi
-      cpu: 500m
+      memory: 1Gi
+      cpu: "1000m"
     requests:
       cpu: 50m
       memory: 64Mi
