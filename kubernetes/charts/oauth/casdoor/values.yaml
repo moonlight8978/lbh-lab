@@ -16,7 +16,7 @@ controllers:
       main:
         image:
           repository: casbin/casdoor
-          tag: v2.102.0
+          tag: v2.103.0
           pullPolicy: IfNotPresent
         ports:
           - name: http
