@@ -14,8 +14,8 @@ spec:
     fsGroup: 1000
   redisExporter:
     enabled: true
-    # renovate: datasource=docker depName=quay.io/opstree/redis-exporter
-    image: quay.io/opstree/redis-exporter:v1.78.0
+    # renovate: skip datasource=docker depName=quay.io/opstree/redis-exporter
+    image: quay.io/opstree/redis-exporter:v1.77.0
     resources:
       requests:
         cpu: 20m

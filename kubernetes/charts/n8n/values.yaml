@@ -48,6 +48,18 @@ controllers:
             drop:
               - ALL
 
+persistence:
+  config:
+    type: emptyDir
+    globalMounts:
+      - path: /home/node/.n8n
+    sizeLimit: 100Mi
+  cache:
+    type: emptyDir
+    globalMounts:
+      - path: /home/node/.cache
+    sizeLimit: 200Mi
+
 configMaps:
   main:
     includeInChecksum: true
