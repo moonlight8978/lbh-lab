@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/tarampampam/webhook-tester
+          tag: 2.2.3
+          pullPolicy: IfNotPresent
+        args:
+          - start
+          - --storage-driver=memory
+        ports:
+          - name: http
+            containerPort: &http 8080
+        probes:
+          readiness:
+            path: /healthz
+            port: *http
+          liveness:
+            path: /healthz
+            port: *http
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 128Mi
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - webhook-10-242-20-170.lab-local.bichls.dev
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /s/
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
