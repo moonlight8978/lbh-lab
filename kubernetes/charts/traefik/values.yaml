@@ -44,7 +44,7 @@ ports:
     expose:
       enabled: true
     middlewares:
-      - traefik-system-geoblock@kubernetescrd
+      # - traefik-system-geoblock@kubernetescrd
       - traefik-system-crowdsec@kubernetescrd
     forwardedHeaders:
       trustedIPs:
@@ -97,7 +97,7 @@ gateway:
   enabled: false
 
 gatewayClass:
-  enabled: false
+  enabled: true
 
 providers:
   kubernetesCRD:

@@ -11,6 +11,7 @@ helmCharts:
     name: openebs
     version: 4.3.3
     includeCRDs: true
+    skipTests: true
     valuesFile: values.yaml
 
 resources:

@@ -21,5 +21,3 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - modsecurity/crs.conf
-      - modsecurity/sqli-except.data
-      - modsecurity/sso.data

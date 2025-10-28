@@ -1,0 +1,129 @@
+---
+# https://github.com/woodpecker-ci/helm/blob/main/charts/woodpecker/values.yaml
+
+hostname: &hostname woodpecker-10-242-20-170.lab-local.bichls.dev
+
+agent:
+  replicaCount: 1
+
+  env:
+    WOODPECKER_BACKEND_K8S_STORAGE_RWX: "false"
+    WOODPECKER_BACKEND_K8S_STORAGE_CLASS: openebs-mayastor-single
+    WOODPECKER_BACKEND_K8S_VOLUME_SIZE: 2G
+
+  podSecurityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  persistence:
+    storageClass: openebs-mayastor-single
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 1Gi
+
+server:
+  statefulSet:
+    annotations:
+      reloader.stakater.com/auto: "true"
+
+  env:
+    WOODPECKER_GITHUB: "true"
+    WOODPECKER_OPEN: "false"
+    WOODPECKER_HOST: https://woodpecker-10-242-20-170.lab-local.bichls.dev
+    WOODPECKER_EXPERT_WEBHOOK_HOST: https://ci.bichls.dev
+    WOODPECKER_ADMIN: "woodpecker,admin,moonlight8978"
+    WOODPECKER_DISABLE_USER_AGENT_REGISTRATION: "true"
+
+  extraSecretNamesForEnvFrom:
+    - woodpecker-env
+
+  persistentVolume:
+    size: 2Gi
+    storageClass: openebs-mayastor-single
+
+  podSecurityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+  metrics:
+    enabled: true
+
+  grafana:
+    dashboards:
+      enabled: true
+      annotations:
+        grafana_folder: Runner
+
+  prometheus:
+    podmonitor:
+      enabled: true
+
+additionalObjects:
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: woodpecker-internal
+      namespace: woodpecker
+    spec:
+      hostnames:
+        - *hostname
+      parentRefs:
+        - name: traefik-internal
+          namespace: traefik-system
+          sectionName: https
+      rules:
+        - backendRefs:
+            - name: woodpecker-server
+              port: 80
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: woodpecker-external
+      namespace: woodpecker
+    spec:
+      hostnames:
+        - ci.bichls.dev
+      parentRefs:
+        - name: traefik-external
+          namespace: traefik-system
+          sectionName: https
+      rules:
+        - backendRefs:
+            - name: woodpecker-server
+              port: 80
+          matches:
+            - path:
+                type: PathPrefix
+                value: /api/hook
+            - path:
+                type: PathPrefix
+                value: /api/badges

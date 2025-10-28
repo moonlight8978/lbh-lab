@@ -1,0 +1,3 @@
+.masonry[data-max-columns="3"] > *:first-child {
+  flex: 0 0 calc(30% - var(--widget-gap));
+}

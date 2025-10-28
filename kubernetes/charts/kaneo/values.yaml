@@ -2,6 +2,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
 hostname: &hostname kaneo-10-242-20-170.lab-local.bichls.dev
+apiHostname: &api_hostname kaneo-api-10-242-20-170.lab-local.bichls.dev
 scheme: https
 registrationDisabled: "true"
 
@@ -84,7 +85,7 @@ configMaps:
   main:
     includeInChecksum: true
     data:
-      KANEO_API_URL: "{{.Values.scheme}}://{{.Values.hostname}}/api"
+      KANEO_API_URL: "{{.Values.scheme}}://{{.Values.apiHostname}}"
       KANEO_CLIENT_URL: "{{.Values.scheme}}://{{.Values.hostname}}"
       CORS_ORIGINS: "{{.Values.scheme}}://{{.Values.hostname}}"
 
@@ -111,25 +112,35 @@ route:
         namespace: traefik-system
         sectionName: https
     hostnames:
-      - *hostname
+      - *api_hostname
     rules:
       - backendRefs:
           - identifier: api
             port: *api_port
-        matches:
-          - path:
-              type: PathPrefix
-              value: /api
-        filters:
-          - type: URLRewrite
-            urlRewrite:
-              path:
-                type: ReplacePrefixMatch
-                replacePrefixMatch: /
+            # matches:
+            #   - path:
+            #       type: PathPrefix
+            #       value: /api
+            # filters:
+            #   - type: URLRewrite
+            #     urlRewrite:
+            #       path:
+            #         type: ReplacePrefixMatch
+            #         replacePrefixMatch: /
+  web:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    hostnames:
+      - *hostname
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    rules:
       - backendRefs:
           - identifier: web
             port: *web_port
-        matches:
-          - path:
-              type: PathPrefix
-              value: /
+        # matches:
+        #   - path:
+        #       type: PathPrefix
+        #       value: /

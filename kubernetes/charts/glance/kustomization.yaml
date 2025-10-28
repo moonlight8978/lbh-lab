@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: glance
+    namespace: application
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    name: app-template
+    version: 4.4.0
+    valuesFile: values.yaml
+
+resources:
+  - manifests/externalsecret.yaml
+
+configMapGenerator:
+  - name: glance-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - config/glance.yml
+      - config/proxmox.yml
+      - config/news.yml
+  - name: glance-assets
+    options:
+      disableNameSuffixHash: true
+    files:
+      - assets/user.css
+
+patchesStrategicMerge:
+  - patches/deployment.yaml

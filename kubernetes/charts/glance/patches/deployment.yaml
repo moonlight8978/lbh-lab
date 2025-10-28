@@ -1,0 +1,20 @@
+---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/apps/deployment-v1.json
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glance
+  namespace: application
+spec:
+  template:
+    spec:
+      volumes:
+        - name: config
+          configMap: null
+          projected:
+            sources:
+              - configMap:
+                  name: glance-config
+              - secret:
+                  name: glance-personal-config

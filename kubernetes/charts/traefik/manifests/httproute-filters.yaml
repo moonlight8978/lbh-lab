@@ -16,6 +16,9 @@ spec:
     - name: traefik-internal
       namespace: *ns
       sectionName: http
+    - name: traefik-global
+      namespace: *ns
+      sectionName: http
   rules:
     - filters:
         - type: RequestRedirect

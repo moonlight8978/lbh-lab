@@ -5,6 +5,13 @@ scheme: https
 hostname: &hostname n8n.bichls.dev
 tz: Asia/Bangkok
 
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+
 controllers:
   main:
     annotations:
@@ -34,6 +41,12 @@ controllers:
             memory: 128Mi
           limits:
             memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
 
 configMaps:
   main:
@@ -46,6 +59,7 @@ configMaps:
       TZ: "{{.Values.tz}}"
       GENERIC_TIMEZONE: "{{.Values.tz}}"
       N8N_HIRING_BANNER_ENABLED: "false"
+      N8N_DIAGNOSTICS_ENABLED: "false"
       N8N_PROXY_HOPS: "1"
       # Security
       N8N_PUBLIC_API_SWAGGERUI_DISABLED: "true"
@@ -76,7 +90,7 @@ service:
         targetPort: *port
 
 route:
-  main:
+  external:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
@@ -96,12 +110,6 @@ route:
           - path:
               type: PathPrefix
               value: /webhook-test/
-        filters:
-          - type: ExtensionRef
-            extensionRef:
-              group: traefik.io
-              kind: Middleware
-              name: n8n-api
       - backendRefs:
           - identifier: main
             port: *port
@@ -114,4 +122,17 @@ route:
             extensionRef:
               group: traefik.io
               kind: Middleware
-              name: n8n
+              name: oauth2
+  internal:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - n8n-10-242-20-170.lab-local.bichls.dev
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
