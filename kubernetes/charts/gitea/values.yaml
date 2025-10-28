@@ -1,0 +1,87 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+defaultPodOptions:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    runAsNonRoot: true
+  annotations:
+    reloader.stakater.com/auto: "true"
+
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: docker.gitea.com/gitea
+          tag: 1.24.7-rootless
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 3000
+          - name: ssh
+            containerPort: &ssh 22
+        probes:
+          liveness:
+            path: /api/healthz
+            port: *http
+          readiness:
+            path: /api/healthz
+            port: *http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+          - secret: gitea-env
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    size: 2Gi
+    accessMode: ReadWriteOnce
+    storageClass: openebs-mayastor
+    globalMounts:
+      - path: /var/lib/gitea
+  config:
+    type: emptyDir
+    globalMounts:
+      - path: /etc/gitea
+  tmp:
+    type: emptyDir
+    globalMounts:
+      - path: /tmp/gitea
+
+service:
+  main:
+    type: ClusterIP
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+      ssh:
+        port: *ssh
+        targetPort: *ssh
+
+route:
+  main:
+    hostnames:
+      - gitea-10-242-20-170.lab-local.bichls.dev
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
