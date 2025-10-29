@@ -11,13 +11,4 @@ windows:
         commands:
           - command: $EDITOR
         focus: true
-      - flex: 30
-
-  - name: k9s
-    panes:
-      - name: k9s
-        flex: 100
-        commands:
-          - command: k9s
-        focus: true
-      - flex: 30
+      - flex: 37
