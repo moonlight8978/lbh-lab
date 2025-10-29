@@ -1,4 +1,3 @@
----
 - name: News
   width: wide
   columns:
