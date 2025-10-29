@@ -35,6 +35,10 @@ deployment:
 #   - --experimental.localPlugins.cfgeoblock.settings.useUnsafe=true
 
 ports:
+  ssh:
+    port: 8022
+    expose:
+      enabled: true
   web-ext:
     port: 9080
     expose:

@@ -1,6 +1,8 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
+hostname: &hostname gitea-10-242-20-170.lab-local.bichls.dev
+
 defaultPodOptions:
   securityContext:
     runAsUser: 1000
@@ -12,6 +14,40 @@ defaultPodOptions:
 
 controllers:
   main:
+    initContainers:
+      install-custom:
+        image:
+          repository: alpine
+          tag: 3.22.2
+          pullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mkdir -p $GITEA_CUSTOM/public/assets/css
+            wget -qO- https://github.com/catppuccin/gitea/releases/download/$CATPPUCCIN_THEME_VERSION/catppuccin-gitea.tar.gz | tar -xz -C $GITEA_CUSTOM/public/assets/css
+        env:
+          - name: CATPPUCCIN_THEME_VERSION
+            # renovate: datasource=github-releases depName=catppuccin/gitea
+            value: v1.0.2
+          - name: GITEA_CUSTOM
+            value: &custom /custom
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+        securityContext: &securityContext
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom: &envFrom
+          - secret: gitea-env
+          - configMap: main
+
     containers:
       main:
         image:
@@ -36,28 +72,49 @@ controllers:
             memory: 64Mi
           limits:
             memory: 512Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
-        envFrom:
-          - secret: gitea-env
-          - configMap: main
+        securityContext: *securityContext
+        envFrom: *envFrom
 
 configMaps:
   main:
     includeInChecksum: true
     data:
-      GITEA_CUSTOM: /custom
+      GITEA_CUSTOM: *custom
       # https://docs.gitea.com/administration/config-cheat-sheet#use-environment-variables-to-setup-gitea
-      GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_USER: X-Auth-Request-User
-      GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_EMAIL: X-Auth-Request-Email
-      GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_FULL_NAME: X-Auth-Request-User
+      GITEA__SECURITY__INSTALL_LOCK: "true"
+      GITEA__SERVER__DOMAIN: *hostname
+      GITEA__SERVER__ROOT_URL: https://gitea-10-242-20-170.lab-local.bichls.dev
+      GITEA__SERVER__SSH_DOMAIN: *hostname
+      GITEA__SERVER__SSH_PORT: "22"
+
+      # GITEA__SERVICE__ENABLE_REVERSE_PROXY_AUTHENTICATION: "true"
+      # GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_USER: X-Auth-Request-Preferred-Username
+      # GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_EMAIL: X-Auth-Request-Email
+      # GITEA__SECURITY__REVERSE_PROXY_AUTHENTICATION_FULL_NAME: X-Auth-Request-Preferred-Username
       GITEA__SECURITY__REVERSE_PROXY_TRUSTED_PROXIES: 10.42.0.0/16
-      GITEA__SECURITY__INSTALL_LOCK: "false"
+
       GITEA__SERVICE__DISABLE_REGISTRATION: "true"
+      GITEA__SERVICE__REQUIRE_SIGNIN_VIEW: "true"
+      GITEA__SERVICE__ALLOW_ONLY_EXTERNAL_REGISTRATION: "true"
+      GITEA__SERVICE__ENABLE_PASSWORD_SIGNIN_FORM: "false"
+      GITEA__SERVICE__ENABLE_BASIC_AUTHENTICATION: "false"
+      GITEA__SERVICE__ENABLE_PASSKEY_AUTHENTICATION: "false"
+      GITEA__OPENID__ENABLE_OPENID_SIGNIN: "false"
+      GITEA__OPENID__ENABLE_OPENID_SIGNUP: "false"
+
+      GITEA__OAUTH2_CLIENT__REGISTER_EMAIL_CONFIRM: "false"
+      GITEA__OAUTH2_CLIENT__ENABLE_AUTO_REGISTRATION: "true"
+      GITEA__OAUTH2_CLIENT__USERNAME: preferred_username
+      GITEA__OAUTH2_CLIENT__ACCOUNT_LINKING: auto
+      GITEA__OAUTH2_CLIENT__UPDATE_AVATAR: "false"
+
+      GITEA__MAILER__ENABLED: "true"
+      GITEA__MAILER__PROTOCOL: "smtp+starttls"
+
+      GITEA__CRON.UPDATE_CHECKER__ENABLED: "false"
+
+      GITEA__UI__THEMES: catppuccin-rosewater-auto,catppuccin-flamingo-auto,catppuccin-pink-auto,catppuccin-mauve-auto,catppuccin-red-auto,catppuccin-maroon-auto,catppuccin-peach-auto,catppuccin-yellow-auto,catppuccin-green-auto,catppuccin-teal-auto,catppuccin-sky-auto,catppuccin-sapphire-auto,catppuccin-blue-auto,catppuccin-lavender-auto
+      GITEA__UI__DEFAULT_THEME: catppuccin-maroon-auto
 
 persistence:
   data:
@@ -69,11 +126,15 @@ persistence:
       - path: /var/lib/gitea
   tmp:
     type: emptyDir
-    sizeLimit: 100Mi
+    sizeLimit: 50Mi
   config:
     type: emptyDir
+    sizeLimit: 10Mi
     globalMounts:
       - path: /etc/gitea
+  custom:
+    type: emptyDir
+    sizeLimit: 50Mi
 
 service:
   main:
@@ -89,7 +150,7 @@ service:
 route:
   main:
     hostnames:
-      - gitea-10-242-20-170.lab-local.bichls.dev
+      - *hostname
     parentRefs:
       - name: traefik-internal
         namespace: traefik-system
@@ -104,3 +165,13 @@ route:
               group: traefik.io
               kind: Middleware
               name: oauth2
+  ssh:
+    kind: TCPRoute
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: ssh
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *ssh
