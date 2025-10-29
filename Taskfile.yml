@@ -123,6 +123,9 @@ tasks:
         PASSWORD=$(sops decrypt {{.ROOT_DIR}}/secrets.yml | yq -r '.argocd_password')
         argocd login 10.242.20.181 --username admin --password $PASSWORD --insecure
 
+  argocd:login:sso:
+    cmd: argocd login argocd-10-242-20-170.lab-local.bichls.dev --sso --grpc-web
+
   argocd:bootstrap:
     cmds:
       - task: argocd:login
