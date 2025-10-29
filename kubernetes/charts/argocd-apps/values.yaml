@@ -138,6 +138,18 @@ applicationsets:
             - name: atuin
               namespace: application
               project: application
+            - name: gitea
+              namespace: application
+              project: application
+            - name: webhook-tester
+              namespace: application
+              project: application
+            - name: glance
+              namespace: application
+              project: application
+            - name: woodpecker
+              namespace: woodpecker
+              project: application
 
     template:
       metadata:
@@ -286,6 +298,8 @@ projects:
     destinations:
       - name: *cluster
         namespace: application
+      - name: *cluster
+        namespace: woodpecker
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows:
