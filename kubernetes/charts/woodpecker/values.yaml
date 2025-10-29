@@ -40,8 +40,8 @@ server:
       reloader.stakater.com/auto: "true"
 
   env:
-    WOODPECKER_GITHUB: "true"
     WOODPECKER_OPEN: "false"
+    WOODPECKER_GITHUB: "true"
     WOODPECKER_HOST: https://woodpecker-10-242-20-170.lab-local.bichls.dev
     WOODPECKER_EXPERT_WEBHOOK_HOST: https://ci.bichls.dev
     WOODPECKER_ADMIN: "woodpecker,admin,moonlight8978"
