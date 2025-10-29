@@ -21,9 +21,6 @@ controllers:
         ports:
           - name: http
             containerPort: &http 8080
-        command:
-          - sleep
-          - infinity
         envFrom:
           - secret: glance-env
         probes:
