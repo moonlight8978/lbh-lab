@@ -109,6 +109,7 @@ configs:
             issuer: $argocd-config:dex.oidc.issuer
             clientID: $argocd-config:dex.oidc.clientID
             clientSecret: $argocd-config:dex.oidc.clientSecret
+            insecureSkipEmailVerified: true
 
   params:
     create: true
