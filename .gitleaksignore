@@ -1,2 +1,2 @@
-d0cd9b12104f99886edb74ce7b407043dd031161:kubernetes/charts/crowdsec/manifests/externalsecret.yaml:generic-api-key:22
-d0cd9b12104f99886edb74ce7b407043dd031161:kubernetes/charts/traefik/manifests/externalsecret.yaml:generic-api-key:21
+9b876b8f111b6b59e54b6dba4a6e94b20cff96e7:kubernetes/charts/crowdsec/manifests/externalsecret.yaml:generic-api-key:22
+1b56d7a64e53395eb8bdf90f773d1c3aa12f9178:kubernetes/charts/traefik/manifests/externalsecret.yaml:generic-api-key:21
