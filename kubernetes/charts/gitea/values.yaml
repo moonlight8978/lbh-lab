@@ -52,7 +52,7 @@ controllers:
       main:
         image:
           repository: docker.gitea.com/gitea
-          tag: 1.24.7-rootless
+          tag: 1.25.0-rootless
           pullPolicy: IfNotPresent
         ports:
           - name: http
