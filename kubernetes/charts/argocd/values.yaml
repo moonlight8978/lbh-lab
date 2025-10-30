@@ -3,6 +3,10 @@
 
 global:
   domain: argocd-10-242-20-170.lab-local.bichls.dev
+  # Remove when v3.2.0 becomes stable
+  image:
+    repository: quay.io/argoproj/argocd
+    tag: v3.2.0-rc4
 
 redis-ha:
   enabled: true

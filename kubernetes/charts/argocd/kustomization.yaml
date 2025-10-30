@@ -11,6 +11,7 @@ helmCharts:
     name: argo-cd
     version: 9.0.5
     includeCRDs: true
+    skipTests: true
     valuesFile: values.yaml
 
 resources:
