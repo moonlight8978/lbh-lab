@@ -163,6 +163,7 @@ route:
           - group: traefik.io
             kind: TraefikService
             name: noop@internal
+            port: 80
         matches:
           - path:
               value: /metrics
