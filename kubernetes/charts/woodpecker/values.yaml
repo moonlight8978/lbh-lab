@@ -11,7 +11,7 @@ agent:
     WOODPECKER_BACKEND_K8S_STORAGE_CLASS: openebs-mayastor-single
     WOODPECKER_BACKEND_K8S_VOLUME_SIZE: 2G
 
-  createAgentSecret: false
+  mapAgentSecret: false
 
   extraSecretNamesForEnvFrom:
     - woodpecker-env
@@ -51,6 +51,8 @@ server:
     WOODPECKER_EXPERT_WEBHOOK_HOST: https://ci.bichls.dev
     WOODPECKER_ADMIN: "woodpecker,admin,moonlight8978"
     WOODPECKER_DISABLE_USER_AGENT_REGISTRATION: "true"
+
+  createAgentSecret: false
 
   extraSecretNamesForEnvFrom:
     - woodpecker-env
