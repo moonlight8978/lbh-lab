@@ -8,11 +8,11 @@ defaultPodOptions:
     fsGroup: 1000
     runAsGroup: 1000
     runAsUser: 1000
-  annotations:
-    reloader.stakater.com/auto: "true"
 
 controllers:
   main:
+    annotations:
+      reloader.stakater.com/auto: "true"
     containers:
       main:
         image:

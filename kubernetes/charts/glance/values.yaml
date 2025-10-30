@@ -7,11 +7,11 @@ defaultPodOptions:
     runAsGroup: 1000
     fsGroup: 1000
     runAsNonRoot: true
-  annotations:
-    reloader.stakater.com/auto: "true"
 
 controllers:
   main:
+    annotations:
+      reloader.stakater.com/auto: "true"
     containers:
       main:
         image:
