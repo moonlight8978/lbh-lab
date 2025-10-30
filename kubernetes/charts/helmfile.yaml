@@ -7,11 +7,6 @@ helmDefaults:
   waitForJobs: true
 
 releases:
-  - name: prometheus-operator-crds
-    namespace: monitoring
-    chart: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
-    version: 24.0.1
-
   - name: cilium
     namespace: kube-system
     chart: oci://ghcr.io/home-operations/charts-mirror/cilium
@@ -20,8 +15,16 @@ releases:
       - ./cilium/values.yaml
     needs:
       - monitoring/prometheus-operator-crds
+      - traefik-system/traefik-crds
     hooks:
-      - events: ["postsync"]
+      - events: [presync]
+        command: bash
+        args:
+          - -c
+          - |
+            kustomize build crds --enable-helm | kubectl apply -f -
+            until kubectl get crd servicemonitors.monitoring.coreos.com podmonitors.monitoring.coreos.com prometheusrules.monitoring.coreos.com httproutes.gateway.networking.k8s.io &>/dev/null; do sleep 5; done
+      - events: [postsync]
         command: bash
         args:
           - -c

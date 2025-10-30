@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: traefik-crds
+    namespace: traefik-system
+    repo: oci://ghcr.io/traefik/helm
+    name: traefik-crds
+    version: 1.11.1
+    includeCRDs: true
+    skipTests: true
+    valuesFile: values.yaml

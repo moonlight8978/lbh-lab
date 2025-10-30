@@ -44,9 +44,6 @@ controllers:
           capabilities:
             drop:
               - ALL
-        envFrom: &envFrom
-          - secret: gitea-env
-          - configMap: main
 
     containers:
       main:
@@ -73,7 +70,9 @@ controllers:
           limits:
             memory: 512Mi
         securityContext: *securityContext
-        envFrom: *envFrom
+        envFrom:
+          - secret: gitea-env
+          - configMap: main
 
 configMaps:
   main:
@@ -116,6 +115,10 @@ configMaps:
       GITEA__UI__THEMES: catppuccin-rosewater-auto,catppuccin-flamingo-auto,catppuccin-pink-auto,catppuccin-mauve-auto,catppuccin-red-auto,catppuccin-maroon-auto,catppuccin-peach-auto,catppuccin-yellow-auto,catppuccin-green-auto,catppuccin-teal-auto,catppuccin-sky-auto,catppuccin-sapphire-auto,catppuccin-blue-auto,catppuccin-lavender-auto
       GITEA__UI__DEFAULT_THEME: catppuccin-maroon-auto
 
+      GITEA__METRICS__ENABLED: "true"
+      GITEA__METRICS__ENABLED_ISSUE_BY_REPOSITORY: "true"
+      GITEA__METRICS__ENABLED_ISSUE_BY_LABEL: "true"
+
 persistence:
   data:
     type: persistentVolumeClaim
@@ -157,6 +160,14 @@ route:
         sectionName: https
     rules:
       - backendRefs:
+          - group: traefik.io
+            kind: TraefikService
+            name: noop@internal
+        matches:
+          - path:
+              value: /metrics
+              type: PathPrefix
+      - backendRefs:
           - identifier: main
             port: *http
   ssh:
@@ -169,3 +180,35 @@ route:
       - backendRefs:
           - identifier: main
             port: *ssh
+
+networkpolicies:
+  main:
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: gitea
+    policyTypes:
+      - Ingress
+      - Egress
+    rules:
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: traefik-system
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik
+          ports:
+            - port: *http
+            - port: *ssh
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: prometheus-stack-kube-prom
+          ports:
+            - port: *http
+      egress:
+        - {}

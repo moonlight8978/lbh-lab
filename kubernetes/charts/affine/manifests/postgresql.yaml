@@ -6,6 +6,8 @@ kind: Cluster
 metadata:
   name: affine-postgresql
   namespace: application
+  labels:
+    app.kubernetes.io/name: affine-postgresql
   annotations:
     argocd.argoproj.io/sync-wave: "-100"
 spec:

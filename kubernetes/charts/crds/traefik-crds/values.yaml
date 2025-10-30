@@ -1,0 +1,7 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik-crds/values.schema.json
+# https://github.com/traefik/traefik-helm-chart/blob/master/traefik-crds/values.yaml
+
+gatewayAPIExperimental: true
+hub: false
+deleteOnUninstall: false

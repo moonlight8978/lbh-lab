@@ -1,5 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/install/kubernetes/cilium/values.schema.json
+# https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
 
 kubeProxyReplacement: true
 k8sServiceHost: 127.0.0.1
@@ -42,7 +43,7 @@ securityContext:
       - SYS_RESOURCE
 
 hubble:
-  enabled: false
+  enabled: true
   metrics:
     enabled:
       - dns:query
@@ -59,8 +60,7 @@ hubble:
       annotations:
         grafana_folder: Cilium
   relay:
-    enabled: false
-    rollOutPods: true
+    enabled: true
     resources:
       requests:
         cpu: 50m
@@ -69,8 +69,7 @@ hubble:
       serviceMonitor:
         enabled: true
   ui:
-    enabled: false
-    rollOutPods: true
+    enabled: true
     backend:
       resources:
         requests:

@@ -10,6 +10,7 @@ helmCharts:
     repo: oci://ghcr.io/grafana/helm-charts
     name: grafana
     valuesFile: values.yaml
+    skipTests: true
     version: 10.1.4
 
 resources:

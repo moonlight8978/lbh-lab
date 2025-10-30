@@ -121,7 +121,7 @@ dashboards:
       # renovate: depName="kubernetes-persistent-volumes"
       gnetId: 13646
       revision: 2
-      datasource:
+      datasource: &ds_prom
         - name: DS_PROMETHEUS
           value: Prometheus
 
