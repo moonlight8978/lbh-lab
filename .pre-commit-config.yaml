@@ -9,7 +9,7 @@ repos:
     rev: v0.17.0
     hooks:
       - id: yamlfmt
-        exclude: ^(.woodpecker/|kubernetes/charts/glance/config/)
+        exclude: ^(.woodpecker/|kubernetes/charts/glance/config/|kubernetes/charts/.*/templates/)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:

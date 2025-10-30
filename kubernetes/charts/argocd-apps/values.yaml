@@ -173,6 +173,9 @@ applicationsets:
             - name: woodpecker
               namespace: woodpecker
               project: application
+            - name: adguardhome
+              namespace: application
+              project: application
 
     template:
       metadata:

@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: adguardhome
+    namespace: application
+    repo: oci://ghcr.io/bjw-s-labs/helm
+    name: app-template
+    valuesFile: values.yaml
+    version: 4.4.0
+
+configMapGenerator:
+  - name: adguardhome-config
+    namespace: application
+    options:
+      disableNameSuffixHash: true
+    files:
+      - templates/AdGuardHome.yaml
+
+resources:
+  - manifests/externalsecret.yaml
