@@ -10,11 +10,3 @@ theme:
 pages:
   - $include: home.yml
   - $include: news.yml
-
-auth:
-  secret-key: ${SECRET_KEY}
-  users:
-    assmin:
-      password-hash: ${ASSMIN_PASSWORD_HASH}
-    bichle:
-      password-hash: ${BICHLE_PASSWORD_HASH}

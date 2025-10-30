@@ -66,12 +66,18 @@ service:
 route:
   main:
     hostnames:
-      - glance-10-242-20-170.lab-local.bichls.dev
+      - hub.bichls.dev
     parentRefs:
-      - name: traefik-internal
+      - name: traefik-external
         namespace: traefik-system
         sectionName: https
     rules:
       - backendRefs:
           - identifier: main
             port: *http
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2

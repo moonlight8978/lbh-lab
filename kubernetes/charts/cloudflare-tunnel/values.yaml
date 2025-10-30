@@ -9,7 +9,7 @@ cloudflare:
     - hostname: "*.bichls.dev"
       service: https://traefik-external.traefik-system.svc.cluster.local
       originRequest:
-        originServerName: gateway.bichls.dev
+        originServerName: lab-gateway.bichls.dev
 
 image:
   repository: cloudflare/cloudflared
