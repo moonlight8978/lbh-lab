@@ -22,6 +22,11 @@ applicationsets:
             - name: argocd
               namespace: argocd
               project: cicd
+              ignoreDifferences:
+                - kind: Secret
+                  name: argocd-secret
+                  jsonPointers:
+                    - /metadata/annotations/argocd.argoproj.io~1tracking-id
 
             # Core apps, must be bootstrapped first
             - name: cilium
