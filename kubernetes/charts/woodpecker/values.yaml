@@ -11,6 +11,11 @@ agent:
     WOODPECKER_BACKEND_K8S_STORAGE_CLASS: openebs-mayastor-single
     WOODPECKER_BACKEND_K8S_VOLUME_SIZE: 2G
 
+  createAgentSecret: false
+
+  extraSecretNamesForEnvFrom:
+    - woodpecker-env
+
   podSecurityContext:
     fsGroup: 1000
     runAsGroup: 1000
