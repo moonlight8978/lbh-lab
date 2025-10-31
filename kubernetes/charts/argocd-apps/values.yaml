@@ -18,17 +18,16 @@ applicationsets:
           elements:
             - name: argocd-apps
               namespace: argocd
-              project: cicd
+              project: argocd
             - name: argocd
               namespace: argocd
-              project: cicd
+              project: argocd
               ignoreDifferences:
                 - kind: Secret
                   name: argocd-secret
                   jsonPointers:
                     - /metadata/annotations/argocd.argoproj.io~1tracking-id
 
-            # Core apps, must be bootstrapped first
             - name: cilium
               namespace: kube-system
               project: core
@@ -71,31 +70,39 @@ applicationsets:
                   name: openebs-etcd-jwt-token
                   jsonPointers:
                     - /data
-
-            # System apps
-            - name: descheduler
-              namespace: kube-system
-              project: system
+                - kind: StatefulSet
+                  name: openebs-etcd
+                  jsonPointers:
+                    - /spec/template/metadata/annotations/checksum~1token-secret
             - name: traefik
               namespace: traefik-system
+              project: core
+
+            - name: cnpg
+              namespace: cnpg-system
+              project: system
+              tier: system-operator
+            - name: redis-operator
+              namespace: redis-system
+              project: system
+              tier: system-operator
+            - name: volsync
+              namespace: volsync-system
+              project: system
+              tier: system-operator
+            - name: kyverno
+              namespace: kyverno
+              project: system
+              tier: system-operator
+
+            - name: descheduler
+              namespace: kube-system
               project: system
             - name: external-dns
               namespace: external-dns
               project: system
             - name: reloader
               namespace: kube-system
-              project: system
-            - name: kyverno
-              namespace: kyverno
-              project: system
-            - name: cnpg
-              namespace: cnpg-system
-              project: system
-            - name: redis-operator
-              namespace: redis-system
-              project: system
-            - name: volsync
-              namespace: volsync-system
               project: system
             - name: cloudflare-tunnel
               namespace: tunnel-system
@@ -116,6 +123,15 @@ applicationsets:
               project: monitoring
 
             # Applications
+            - name: oauth
+              namespace: application
+              project: application
+              tier: system
+            - name: adguardhome
+              namespace: application
+              project: application
+              tier: system
+
             - name: kaneo
               namespace: application
               project: application
@@ -152,9 +168,6 @@ applicationsets:
             - name: calibre
               namespace: application
               project: application
-            - name: oauth
-              namespace: application
-              project: application
             - name: whoami
               namespace: application
               project: application
@@ -173,14 +186,48 @@ applicationsets:
             - name: woodpecker
               namespace: woodpecker
               project: application
-            - name: adguardhome
-              namespace: application
-              project: application
+
+    strategy:
+      type: RollingSync
+      rollingSync:
+        steps:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [core]
+            maxUpdate: 1 # can be 0
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [system-operator]
+            maxUpdate: 1 # can be 0
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [argocd]
+            maxUpdate: 1 # can be 0
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [system]
+            maxUpdate: 1 # can be 0
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [monitoring]
+            maxUpdate: 1 # can be 0
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values: [application]
+            maxUpdate: 1 # can be 0
 
     template:
       metadata:
         name: "{{.name}}"
         finalizers: []
+        labels:
+          tier: "{{.tier | default .project}}"
       spec:
         project: "{{.project}}"
         syncPolicy:
@@ -302,7 +349,7 @@ projects:
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows: *syncWindows
 
-  cicd:
+  cicd: &cicd
     namespace: argocd
     description: CICD
     finalizers: []
@@ -314,6 +361,8 @@ projects:
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows: *syncWindows
+
+  argocd: *cicd
 
   application:
     namespace: argocd
