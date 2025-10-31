@@ -289,8 +289,6 @@ projects:
         namespace: tunnel-system
       - name: *cluster
         namespace: crowdsec-system
-      - name: *cluster
-        namespace: traefik-system
     clusterResourceWhitelist: &clusterResourceWhitelist
       - group: "*"
         kind: "*"
@@ -332,6 +330,8 @@ projects:
         namespace: external-secrets
       - name: *cluster
         namespace: cert-manager
+      - name: *cluster
+        namespace: traefik-system
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
     syncWindows: *syncWindows
