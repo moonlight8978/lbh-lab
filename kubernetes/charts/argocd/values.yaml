@@ -127,6 +127,7 @@ configs:
     create: true
     controller.diff.server.side: true
     server.insecure: true
+    applicationsetcontroller.enable.progressive.syncs: true
 
   rbac:
     create: false
