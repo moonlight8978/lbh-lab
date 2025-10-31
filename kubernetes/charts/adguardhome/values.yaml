@@ -142,5 +142,6 @@ networkpolicies:
           ports:
             - port: *http
             - port: *dns
+              protocol: UDP
       egress:
         - {}
