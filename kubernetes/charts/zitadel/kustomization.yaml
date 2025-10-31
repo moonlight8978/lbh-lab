@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: zitaldel
+    namespace: application
+    repo: https://charts.zitadel.com
+    name: zitadel
+    version: 9.12.3
+    skipTests: true
+    valuesFile: values.yaml
+
+resources:
+  - manifests/externalsecret.yaml
+  - manifests/postgresql.yaml
+  # - manifests/replicationsource.yaml
