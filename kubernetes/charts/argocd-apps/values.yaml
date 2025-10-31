@@ -188,7 +188,7 @@ applicationsets:
               project: application
 
     strategy:
-      type: RollingSync
+      type: AllAtOnce
       rollingSync:
         steps:
           - matchExpressions:
@@ -231,6 +231,9 @@ applicationsets:
       spec:
         project: "{{.project}}"
         syncPolicy:
+          # Proposal https://argo-cd.readthedocs.io/en/stable/proposals/sync-timeout/#proposal
+          # terminate:
+          #   timeout: 10m
           automated:
             selfHeal: true
             prune: true
