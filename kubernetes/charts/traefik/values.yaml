@@ -39,6 +39,11 @@ ports:
     port: 8022
     expose:
       enabled: true
+  dns:
+    port: 8053
+    protocol: UDP
+    expose:
+      enabled: true
   web-ext:
     port: 9080
     expose:

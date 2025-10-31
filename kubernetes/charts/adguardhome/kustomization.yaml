@@ -22,3 +22,4 @@ configMapGenerator:
 
 resources:
   - manifests/externalsecret.yaml
+  - manifests/ingressrouteudp.yaml

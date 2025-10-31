@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/traefik.io/ingressrouteudp-v1alpha1.json
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: adguardhome-dns
+  namespace: application
+spec:
+  entryPoints:
+    - dns
+  routes:
+    - services:
+        - name: adguardhome-dns
+          port: 8053

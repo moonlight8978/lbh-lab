@@ -96,12 +96,10 @@ service:
         targetPort: *http
         protocol: TCP
   dns:
-    type: LoadBalancer
-    annotations:
-      lbipam.cilium.io/ips: 10.242.20.185
+    type: ClusterIP
     ports:
       dns-udp:
-        port: 53
+        port: *dns
         targetPort: *dns
         protocol: UDP
 
@@ -143,9 +141,6 @@ networkpolicies:
                   app.kubernetes.io/name: traefik
           ports:
             - port: *http
-        - from: []
-          ports:
             - port: *dns
-              protocol: UDP
       egress:
         - {}
