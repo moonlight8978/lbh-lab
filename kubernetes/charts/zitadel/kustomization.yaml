@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - releaseName: zitadel
+    namespace: application
+    repo: https://charts.zitadel.com
+    name: zitadel
+    skipTests: true
+    valuesFile: values.yaml
+    version: 9.12.3
+
+resources:
+  - manifests/externalsecret.yaml
+  - manifests/postgresql.yaml
+  # - manifests/replicationsource.yaml
+  #
+patches:
+  - target:
+      kind: Service
+      name: zitadel-login
+    patch: |-
+      - op: replace
+        path: /spec/ports/0/appProtocol
+        value: null

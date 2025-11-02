@@ -121,7 +121,11 @@ configs:
             issuer: $argocd-config:dex.oidc.issuer
             clientID: $argocd-config:dex.oidc.clientID
             clientSecret: $argocd-config:dex.oidc.clientSecret
-            insecureSkipEmailVerified: true
+            scopes:
+              - openid
+              - profile
+              - email
+              - urn:zitadel:iam:org:id:344665963473404386
 
   params:
     create: true
