@@ -34,4 +34,12 @@ spec:
         name: "{{request.object.metadata.name}}"
         namespace: "{{request.object.metadata.namespace}}"
         data:
+          metadata:
+            annotations: "{{ request.object.metadata.annotations }}"
+            labels: "{{ request.object.metadata.labels }}"
+            ownerReferences:
+              - apiVersion: v1
+                kind: Secret
+                name: "{{request.object.metadata.name}}"
+                uid: "{{request.object.metadata.uid}}"
           data: "{{ request.object.data | items(@, 'key', 'value') | object_from_lists([].key, map(&base64_decode(@), [].value)) }}"
