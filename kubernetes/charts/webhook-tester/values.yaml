@@ -16,7 +16,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/tarampampam/webhook-tester
-          tag: 2.2.3
+          tag: 2.2.4
           pullPolicy: IfNotPresent
         args:
           - start
