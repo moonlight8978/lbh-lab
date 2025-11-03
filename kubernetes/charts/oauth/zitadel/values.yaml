@@ -26,7 +26,7 @@ zitadel:
       Features:
         LoginDefaultOrg: false
         LoginV2:
-          BaseURI: https://id.bichls.dev
+          BaseURI: https://id.bichls.dev/
       LockoutPolicy:
         MaxPasswordAttempts: 3
         MaxOTPAttempts: 3
@@ -84,11 +84,11 @@ extraManifests:
         argocd.argoproj.io/sync-options: Replace=true
     spec:
       parentRefs:
-        - name: traefik-internal
+        - name: traefik-external
           namespace: traefik-system
           sectionName: https
       hostnames:
-        - zitadel-10-242-20-170.lab-local.bichls.dev
+        - id.bichls.dev
       rules:
         - backendRefs:
             - name: zitadel-login
