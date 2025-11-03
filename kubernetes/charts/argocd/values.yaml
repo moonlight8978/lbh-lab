@@ -126,6 +126,8 @@ configs:
               - profile
               - email
               - urn:zitadel:iam:org:id:345021634345697678
+            claimMapping:
+              name: preferred_username
 
   params:
     create: true
