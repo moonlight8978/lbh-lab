@@ -95,6 +95,7 @@ dex:
 configs:
   cm:
     admin.enabled: true
+    users.anonymous.enabled: false
     application.instanceLabelKey: argocd.argoproj.io/instance
     kustomize.enabled: true
     kustomize.buildOptions: --enable-helm --load-restrictor LoadRestrictionsNone
@@ -126,8 +127,7 @@ configs:
               - profile
               - email
               - urn:zitadel:iam:org:id:345021634345697678
-            claimMapping:
-              name: preferred_username
+            getUserInfo: true
 
   params:
     create: true
