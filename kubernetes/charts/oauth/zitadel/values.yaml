@@ -26,7 +26,7 @@ zitadel:
       Features:
         LoginDefaultOrg: false
         LoginV2:
-          BaseURI: https://id.bichls.dev/
+          BaseURI: https://id.bichls.dev/ui/v2/login
       LockoutPolicy:
         MaxPasswordAttempts: 3
         MaxOTPAttempts: 3
@@ -34,7 +34,7 @@ zitadel:
         AllowUsernamePassword: true
         AllowRegister: false
         AllowExternalIDP: false
-        ForceMFA: false
+        ForceMFA: true
         HidePasswordReset: true
         IgnoreUnknownUsernames: true
         AllowDomainDiscovery: false
@@ -63,8 +63,11 @@ envVarsSecret: zitadel-env
 
 initJob:
   # Should be true initially
-  enabled: false
+  enabled: true
   command: zitadel
+
+cleanupJob:
+  enabled: false
 
 metrics:
   enabled: true
@@ -86,6 +89,31 @@ extraManifests:
           sectionName: https
       hostnames:
         - id.bichls.dev
+      rules:
+        - backendRefs:
+            - name: zitadel-login
+              port: 3000
+          matches:
+            - path:
+                type: PathPrefix
+                value: /ui/v2/login
+        - backendRefs:
+            - name: zitadel
+              port: 8080
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: zitadel-internal
+      namespace: application
+      annotations:
+        argocd.argoproj.io/sync-options: Replace=true
+    spec:
+      parentRefs:
+        - name: traefik-internal
+          namespace: traefik-system
+          sectionName: https
+      hostnames:
+        - zitadel-10-242-20-170.lab-local.bichls.dev
       rules:
         - backendRefs:
             - name: zitadel-login

@@ -125,7 +125,7 @@ configs:
               - openid
               - profile
               - email
-              - urn:zitadel:iam:org:id:344665963473404386
+              - urn:zitadel:iam:org:id:345021634345697678
 
   params:
     create: true
