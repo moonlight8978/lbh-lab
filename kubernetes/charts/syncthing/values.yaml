@@ -9,7 +9,6 @@ controllers:
   main:
     annotations:
       reloader.stakater.com/auto: "true"
-    type: statefulset
     pod:
       securityContext:
         fsGroup: 1000
@@ -23,9 +22,10 @@ controllers:
         ports:
           - name: http
             containerPort: &http 8384
-          - containerPort: &sync 22000
-            protocol: TCP
-          - containerPort: 21027
+          - name: sync
+            containerPort: &sync 22000
+          - name: discovery
+            containerPort: 21027
             protocol: UDP
         envFrom:
           - configMap: main
@@ -94,13 +94,13 @@ route:
           - identifier: main
             port: *http
   sync:
+    kind: TCPRoute
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
       - name: traefik-internal
         namespace: traefik-system
         sectionName: syncthing
-    kind: TCPRoute
     rules:
       - backendRefs:
           - identifier: sync

@@ -130,7 +130,7 @@ logs:
   general:
     noColor: true
 
-# metrics:
-#   prometheus:
-#     serviceMonitor:
-#       enabled: true
+metrics:
+  prometheus:
+    serviceMonitor:
+      enabled: true
