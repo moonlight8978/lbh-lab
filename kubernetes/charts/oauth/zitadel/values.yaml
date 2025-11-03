@@ -26,7 +26,7 @@ zitadel:
       Features:
         LoginDefaultOrg: false
         LoginV2:
-          BaseURI: https://id.bichls.dev/ui/v2/login
+          BaseURI: https://id.bichls.dev/
       LockoutPolicy:
         MaxPasswordAttempts: 3
         MaxOTPAttempts: 3
