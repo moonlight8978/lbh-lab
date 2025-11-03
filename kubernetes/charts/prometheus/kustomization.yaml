@@ -8,7 +8,7 @@ helmCharts:
     namespace: monitoring
     repo: oci://ghcr.io/prometheus-community/charts
     name: kube-prometheus-stack
-    version: 79.0.1
+    version: 79.1.1
     includeCRDs: true
     valuesFile: values.yaml
 
