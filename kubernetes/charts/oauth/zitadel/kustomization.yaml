@@ -16,8 +16,8 @@ helmCharts:
 resources:
   - manifests/externalsecret.yaml
   - manifests/postgresql.yaml
-  # - manifests/replicationsource.yaml
-  #
+  - manifests/replicationsource.yaml
+
 patches:
   - target:
       kind: Service

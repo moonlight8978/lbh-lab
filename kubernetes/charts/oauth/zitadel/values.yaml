@@ -6,7 +6,7 @@ fullnameOverride: zitadel
 zitadel:
   configmapConfig:
     # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
-    ExternalDomain: zitadel-10-242-20-170.lab-local.bichls.dev
+    ExternalDomain: id.bichls.dev
     ExternalSecure: true
     ExternalPort: 443
     Database:
@@ -22,6 +22,29 @@ zitadel:
           Username: zitadel
           SSL:
             Mode: disable
+    DefaultInstance:
+      Features:
+        LoginDefaultOrg: false
+        LoginV2:
+          BaseURI: https://id.bichls.dev
+      LockoutPolicy:
+        MaxPasswordAttempts: 3
+        MaxOTPAttempts: 3
+      LoginPolicy:
+        AllowUsernamePassword: true
+        AllowRegister: false
+        AllowExternalIDP: false
+        ForceMFA: false
+        HidePasswordReset: true
+        IgnoreUnknownUsernames: true
+        AllowDomainDiscovery: false
+      Restrictions:
+        DisallowPublicOrgRegistration: true
+        AllowedLanguages:
+          - en
+      SMTPConfiguration:
+        FromName: Sweet Home
+        From: no-reply@bichls.dev
     FirstInstance:
       Org:
         Machine:
@@ -30,6 +53,7 @@ zitadel:
         LoginClient:
           Machine:
             Username: zitadel-login-client
+
   masterkeySecretName: zitadel-env
 
 login:
