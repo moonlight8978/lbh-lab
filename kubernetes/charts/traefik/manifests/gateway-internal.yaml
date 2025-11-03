@@ -20,6 +20,9 @@ spec:
     - name: ssh
       port: 22
       targetPort: 8022
+    - name: syncthing
+      port: 22000
+      targetPort: 8200
     - name: http
       port: 80
       targetPort: 8000
@@ -41,6 +44,12 @@ spec:
     - name: ssh
       protocol: TCP
       port: 8022
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: syncthing
+      protocol: TCP
+      port: 8200
       allowedRoutes:
         namespaces:
           from: All

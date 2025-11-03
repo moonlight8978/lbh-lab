@@ -44,6 +44,10 @@ ports:
     protocol: UDP
     expose:
       enabled: true
+  syncthing:
+    port: 8200
+    expose:
+      enabled: true
   web-ext:
     port: 9080
     expose:
@@ -126,7 +130,7 @@ logs:
   general:
     noColor: true
 
-metrics:
-  prometheus:
-    serviceMonitor:
-      enabled: true
+# metrics:
+#   prometheus:
+#     serviceMonitor:
+#       enabled: true

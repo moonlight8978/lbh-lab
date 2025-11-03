@@ -23,8 +23,6 @@ controllers:
         ports:
           - name: http
             containerPort: &http 8384
-          - containerPort: 22000
-            protocol: UDP
           - containerPort: &sync 22000
             protocol: TCP
           - containerPort: 21027
@@ -75,9 +73,7 @@ service:
         targetPort: *http
   sync:
     controller: main
-    type: LoadBalancer
-    annotations:
-      lbipam.cilium.io/ips: 10.242.20.182
+    type: ClusterIP
     ports:
       sync:
         port: *sync
@@ -97,4 +93,15 @@ route:
       - backendRefs:
           - identifier: main
             port: *http
-            weight: 1
+  sync:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: syncthing
+    kind: TCPRoute
+    rules:
+      - backendRefs:
+          - identifier: sync
+            port: *sync
