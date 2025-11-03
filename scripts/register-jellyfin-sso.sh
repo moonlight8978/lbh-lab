@@ -9,4 +9,4 @@ CLIENT_ISSUER="https://id.bichls.dev"
 PROVIDER_NAME=oidc
 JELLYFIN_URL="https://jellyfin-10-242-20-170.lab-local.bichls.dev"
 
-curl -v -X POST -H "Content-Type: application/json" -d "{\"oidEndpoint\": \"$CLIENT_ISSUER\", \"oidClientId\": \"$CLIENT_ID\", \"oidSecret\": \"$CLIENT_SECRET\", \"enabled\": true, \"enableAuthorization\": false, \"enableAllFolders\": false, \"roleClaim\": \"realm_access\", \"oidScopes\" : [\"\"], \"schemeOverride\": \"https\"}" "$JELLYFIN_URL/sso/OID/Add/$PROVIDER_NAME?api_key=$API_KEY"
+curl -v -X POST -H "Content-Type: application/json" -d "{\"oidEndpoint\": \"$CLIENT_ISSUER\", \"oidClientId\": \"$CLIENT_ID\", \"oidSecret\": \"$CLIENT_SECRET\", \"enabled\": true, \"enableAuthorization\": false, \"enableAllFolders\": false, \"roleClaim\": \"realm_access\", \"oidScopes\" : [\"email\", \"profile\", \"openid\", \"urn:zitadel:iam:org:id:345021634345697678\"], \"schemeOverride\": \"https\"}" "$JELLYFIN_URL/sso/OID/Add/$PROVIDER_NAME?api_key=$API_KEY"
