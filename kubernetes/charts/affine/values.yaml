@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
-hostname: &hostname affine-10-242-20-170.lab-local.bichls.dev
+hostname: &hostname note.bichls.dev
 
 controllers:
   main:
@@ -92,12 +92,25 @@ route:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
-      - name: traefik-internal
+      - name: traefik-external
         namespace: traefik-system
         sectionName: https
     hostnames:
       - *hostname
     rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+        matches:
+          - path:
+              type: PathPrefix
+              value: /admin
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2
       - backendRefs:
           - identifier: main
             port: *http
