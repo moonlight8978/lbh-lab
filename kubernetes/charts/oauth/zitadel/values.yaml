@@ -63,11 +63,8 @@ envVarsSecret: zitadel-env
 
 initJob:
   # Should be true initially
-  enabled: true
-  command: zitadel
-
-cleanupJob:
   enabled: false
+  command: zitadel
 
 metrics:
   enabled: true
