@@ -67,7 +67,7 @@ initJob:
   command: zitadel
 
 cleanupJob:
-  enabled: true
+  enabled: false
 
 metrics:
   enabled: true

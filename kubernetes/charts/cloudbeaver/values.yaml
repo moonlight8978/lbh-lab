@@ -4,9 +4,16 @@
 hostname: &hostname cloudbeaver-10-242-20-170.lab-local.bichls.dev
 scheme: https
 
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+
 controllers:
   main:
-    type: statefulset
+    annotations:
+      reloader.stakater.com/auto: "true"
     pod:
       securityContext:
         runAsUser: 1000
@@ -34,6 +41,32 @@ controllers:
           readiness:
             path: /status
             port: *http
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+      config:
+        image:
+          repository: alpine
+          tag: 3.22.2
+          pullPolicy: IfNotPresent
+        command:
+          - sleep
+          - infinity
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+          limits:
+            memory: 50Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
 
 persistence:
   data:
@@ -43,6 +76,12 @@ persistence:
     size: 500Mi
     globalMounts:
       - path: /opt/cloudbeaver/workspace
+  tmp:
+    type: emptyDir
+    sizeLimit: 50Mi
+    globalMounts:
+      - path: /home/ubuntu/.local/share/DBeaverData
+      - path: /tmp/dbeaver
   api-token:
     type: persistentVolumeClaim
     storageClass: openebs-mayastor
@@ -61,6 +100,8 @@ configMaps:
       CLOUDBEAVER_QM_DB_DRIVER: *db_driver
       CLOUDBEAVER_QM_DB_URL: *db_url
       CLOUDBEAVER_QM_DB_SCHEMA: qm
+      CLOUDBEAVER_APP_ANONYMOUS_ACCESS_ENABLED: "false"
+      CB_SERVER_URL: "{{ .Values.scheme }}://{{ .Values.hostname }}"
 
 service:
   main:
@@ -84,3 +125,9 @@ route:
       - backendRefs:
           - identifier: main
             port: *http
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2

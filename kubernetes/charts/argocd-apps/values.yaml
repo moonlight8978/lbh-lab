@@ -312,14 +312,14 @@ projects:
         kind: "*"
     syncWindows: &syncWindows
       - kind: allow
-        schedule: "0 3-7 * * *"
+        schedule: "0 20 * * *"
         timeZone: "Asia/Bangkok"
         applications:
           - "*"
         duration: 1h
         manualSync: false
       - kind: deny
-        schedule: "0 0-3,8-23 * * *"
+        schedule: "0 0-20,21-23 * * *"
         timeZone: "Asia/Bangkok"
         applications:
           - "*"
@@ -392,11 +392,4 @@ projects:
         namespace: woodpecker
     clusterResourceWhitelist: *clusterResourceWhitelist
     namespaceResourceWhitelist: *namespaceResourceWhitelist
-    syncWindows:
-      - kind: deny
-        schedule: "0 * * * *"
-        timeZone: "Asia/Bangkok"
-        applications:
-          - "*"
-        duration: 1h
-        manualSync: true
+    syncWindows: *syncWindows

@@ -40,15 +40,13 @@
 # So we need to clamp the mss to prevent it exceed the cloudflare mtu, which is 1280
 - name: Check mss clamp rule
   ansible.builtin.shell: >-
-    iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN
-    -j TCPMSS --set-mss 1240
+    iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240
   register: check_clamp_rule
   ignore_errors: true
 
 - name: Insert TCPMSS clamp rule if not present
   ansible.builtin.shell: >
-    iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN
-    -j TCPMSS --set-mss 1240
+    iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1240
   when: check_clamp_rule.rc != 0
 
 - name: Install nginx
@@ -88,6 +86,8 @@
       ansible.builtin.shell: |
         mkdir -p {{ certs_dir }}
         openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/cloudflare-warp/certs/tls.key -out /etc/cloudflare-warp/certs/tls.pem -subj "/CN=warp-connector" -addext "subjectAltName=DNS:warp-connector"
+      args:
+        creates: "{{ certs_dir }}/tls.pem"
 
     - name: Create nginx config
       ansible.builtin.copy:
