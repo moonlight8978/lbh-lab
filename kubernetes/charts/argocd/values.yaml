@@ -144,15 +144,13 @@ notifications:
     create: false
   notifiers:
     service.github: |
-      appID: $githubAppId
-      installationID: $githubInstallationId
-      privateKey: $githubPrivateKey
-    service.telegram: |
-      token: $telegramToken
+      appID: $github-appID
+      installationID: $github-installationID
+      privateKey: $github-privateKey
   triggers:
     trigger.on-deployed: |
       - description: Application is synced and healthy. Triggered once per commit.
-        oncePer: app.status.sync.revision
+        oncePer: app.status.operationState.syncResult.revision
         send:
         - app-deployed
         when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
@@ -161,16 +159,10 @@ notifications:
       message: |
         Application {{.app.metadata.name}} is now running new version of deployments manifests.
       github:
-        repoURLPath: "{{(index .app.spec.sources 0).repoURL}}"
-        revisionPath: "{{index .app.status.sync.revisions 0}}"
+        repoURLPath: "{{.app.spec.source.repoURL}}"
+        revisionPath: "{{.app.status.operationState.syncResult.revision}}"
         status:
           state: success
           label: "continuous-delivery/{{.app.metadata.name}}"
+          description: ArgoCD
           targetURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-        deployment:
-          state: success
-          environment: production
-          logURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-          requiredContexts: []
-          autoMerge: true
-          transientEnvironment: false

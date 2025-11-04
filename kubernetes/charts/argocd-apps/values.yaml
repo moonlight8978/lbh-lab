@@ -52,6 +52,8 @@ applicationsets:
             - name: coredns
               namespace: kube-system
               project: core
+              subscriptions:
+                on-deployed.github: ""
             - name: cert-manager
               namespace: cert-manager
               project: core
@@ -61,6 +63,8 @@ applicationsets:
             - name: addons
               namespace: kube-system
               project: core
+              subscriptions:
+                on-deployed.github: ""
             - name: openebs
               namespace: openebs
               project: core
@@ -98,6 +102,8 @@ applicationsets:
             - name: descheduler
               namespace: kube-system
               project: system
+              subscriptions:
+                on-deployed.github: ""
             - name: external-dns
               namespace: external-dns
               project: system
@@ -252,11 +258,17 @@ applicationsets:
           name: *cluster
           namespace: "{{.namespace}}"
     templatePatch: |
-      {{- with .noServerSideDiff }}
       metadata:
         annotations:
+          {{- with .noServerSideDiff }}
           argocd.argoproj.io/compare-options: ServerSideDiff=false
-      {{- end }}
+          {{- end }}
+          {{- with .subscriptions }}
+          {{- range $key, $value := . }}
+          notifications.argoproj.io/subscribe.{{ $key }}: {{ $value | default "" | quote }}
+          {{- end }}
+          {{- end }}
+          lbhlab/keep: "1"
 
       spec:
         project: "{{.project}}"
