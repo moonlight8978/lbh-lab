@@ -47,26 +47,26 @@ controllers:
           capabilities:
             drop:
               - ALL
-      config:
-        image:
-          repository: alpine
-          tag: 3.22.2
-          pullPolicy: IfNotPresent
-        command:
-          - sleep
-          - infinity
-        resources:
-          requests:
-            cpu: 10m
-            memory: 20Mi
-          limits:
-            memory: 50Mi
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
+              # config:
+              #   image:
+              #     repository: alpine
+              #     tag: 3.22.2
+              #     pullPolicy: IfNotPresent
+              #   command:
+              #     - sleep
+              #     - infinity
+              #   resources:
+              #     requests:
+              #       cpu: 10m
+              #       memory: 20Mi
+              #     limits:
+              #       memory: 50Mi
+              #   securityContext:
+              #     readOnlyRootFilesystem: true
+              #     allowPrivilegeEscalation: false
+              #     capabilities:
+              #       drop:
+              #         - ALL
 
 persistence:
   data:
