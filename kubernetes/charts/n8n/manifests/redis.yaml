@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/redis.redis.opstreelabs.in/redis-v1beta2.json
+
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: Redis
+metadata:
+  name: n8n-redis
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "-100"
+spec:
+  podSecurityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+  redisExporter:
+    enabled: true
+    # renovate: skip datasource=docker depName=quay.io/opstree/redis-exporter
+    image: quay.io/opstree/redis-exporter:v1.77.0
+    resources:
+      requests:
+        cpu: 20m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
+  kubernetesConfig:
+    # renovate: datasource=docker depName=quay.io/opstree/redis
+    image: quay.io/opstree/redis:v8.2.2
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      name: n8n-redis-creds
+      key: password
+    resources:
+      requests:
+        cpu: 10m
+        memory: 50Mi
+      limits:
+        memory: 200Mi
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: openebs-mayastor
+        resources:
+          requests:
+            storage: 500Mi

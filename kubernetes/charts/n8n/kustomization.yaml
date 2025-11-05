@@ -13,6 +13,7 @@ helmCharts:
     version: 4.4.0
 
 resources:
-  - manifests/postgresql.yaml
   - manifests/externalsecret.yaml
+  - manifests/postgresql.yaml
+  # - manifests/redis.yaml
   - manifests/replicationsource.yaml
