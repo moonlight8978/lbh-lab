@@ -126,15 +126,23 @@ gateway:
     ssh:
       port: 8022
       protocol: TCP
+      namespacePolicy:
+        from: All
     syncthing:
       port: 8200
       protocol: TCP
+      namespacePolicy:
+        from: All
     http:
       port: 8000
       protocol: HTTP
+      namespacePolicy:
+        from: All
     https:
       port: 8443
       protocol: HTTPS
+      namespacePolicy:
+        from: All
       mode: Terminate
       certificateRefs:
         - kind: Secret
@@ -163,7 +171,6 @@ volumes:
 logs:
   general:
     noColor: true
-
 # metrics:
 #   prometheus:
 #     serviceMonitor:
