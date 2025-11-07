@@ -18,7 +18,7 @@ controllers:
         image:
           repository: ghcr.io/pocket-id/pocket-id
           pullPolicy: IfNotPresent
-          tag: v1.14.2
+          tag: v1.15.0
         ports:
           - name: http
             containerPort: &http 1411
