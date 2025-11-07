@@ -37,25 +37,30 @@ deployment:
 ports:
   ssh:
     port: 8022
+    exposedPort: 22
     expose:
-      enabled: true
+      default: true
   dns:
     port: 8053
+    exposedPort: 53
     protocol: UDP
     expose:
-      enabled: true
+      default: true
   syncthing:
     port: 8200
+    exposedPort: 22000
     expose:
-      enabled: true
+      default: true
   web-ext:
     port: 9080
+    exposedPort: 80
     expose:
-      enabled: true
+      external: true
   websecure-ext:
     port: 9443
+    exposedPort: 443
     expose:
-      enabled: true
+      external: true
     middlewares:
       # - traefik-system-geoblock@kubernetescrd
       - traefik-system-crowdsec@kubernetescrd
@@ -81,7 +86,14 @@ ports:
         - 10.42.0.0/16
 
 service:
-  enabled: false
+  type: LoadBalancer
+  annotations:
+    lbipam.cilium.io/ips: 10.242.20.170
+  additionalServices:
+    external:
+      type: LoadBalancer
+      annotations:
+        lbipam.cilium.io/ips: 10.242.20.189
 
 resources:
   requests:
@@ -107,7 +119,26 @@ experimental:
       version: v1.0.3
 
 gateway:
-  enabled: false
+  enabled: true
+  name: traefik-internal
+  listeners:
+    web: null
+    ssh:
+      port: 8022
+      protocol: TCP
+    syncthing:
+      port: 8200
+      protocol: TCP
+    http:
+      port: 8000
+      protocol: HTTP
+    https:
+      port: 8443
+      protocol: HTTPS
+      mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: bichls.dev
 
 gatewayClass:
   enabled: true
@@ -120,6 +151,9 @@ providers:
   kubernetesGateway:
     enabled: true
     experimentalChannel: true
+    statusAddress:
+      service:
+        enabled: false
 
 volumes:
   - name: traefik-crowdsec
@@ -130,7 +164,7 @@ logs:
   general:
     noColor: true
 
-metrics:
-  prometheus:
-    serviceMonitor:
-      enabled: true
+# metrics:
+#   prometheus:
+#     serviceMonitor:
+#       enabled: true
