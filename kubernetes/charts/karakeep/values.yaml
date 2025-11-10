@@ -54,13 +54,19 @@ secrets:
 configMaps:
   main:
     data:
-      DISABLE_SIGNUPS: "true"
       NODE_ENV: production
+      DISABLE_SIGNUPS: "true"
+      DISABLE_PASSWORD_AUTH: "true"
+
       OPENAI_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
       INFERENCE_TEXT_MODEL: gemini-2.0-flash
       INFERENCE_IMAGE_MODEL: gemini-2.0-flash
       EMBEDDING_TEXT_MODEL: text-embedding-3-small
       INFERENCE_LANG: english
+
+      OAUTH_PROVIDER_NAME: Sweet Home
+      OAUTH_SCOPE: openid email profile urn:zitadel:iam:org:id:345021634345697678
+      OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
 
 ingress:
   karakeep:
