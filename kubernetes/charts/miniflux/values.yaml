@@ -5,6 +5,12 @@ scheme: https
 hostname: &hostname rss.bichls.dev
 tz: &tz Asia/Bangkok
 
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+
 controllers:
   main:
     annotations:
@@ -47,6 +53,12 @@ controllers:
             memory: 128Mi
           limits:
             memory: 1Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
 
 configMaps:
   main:
