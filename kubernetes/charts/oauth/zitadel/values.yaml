@@ -3,6 +3,10 @@
 
 fullnameOverride: zitadel
 
+image:
+  repository: ghcr.io/zitadel/zitadel
+  tag: v4.6.4
+
 zitadel:
   configmapConfig:
     # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
@@ -57,6 +61,9 @@ zitadel:
   masterkeySecretName: zitadel-env
 
 login:
+  image:
+    repository: ghcr.io/zitadel/zitadel-login
+    tag: v4.6.4
   loginClientSecretPrefix: zitadel-
 
 envVarsSecret: zitadel-env
