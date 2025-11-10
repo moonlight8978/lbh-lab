@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
 
 scheme: https
-hostname: &hostname miniflux-10-242-20-170.lab-local.bichls.dev
+hostname: &hostname rss.bichls.dev
 tz: &tz Asia/Bangkok
 
 controllers:
@@ -76,7 +76,7 @@ route:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
-      - name: traefik-internal
+      - name: traefik-external
         namespace: traefik-system
         sectionName: https
     hostnames:
