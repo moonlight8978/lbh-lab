@@ -1,0 +1,68 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/core/configmap-v1.json
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: solidtime-kopia
+  namespace: application
+  labels:
+    volsync/kopia: cloudflare
+  annotations:
+    volsync/kopia-repository: solidtime-postgresql,solidtime-data
+    argocd.argoproj.io/sync-wave: "100"
+data: {}
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: solidtime-postgresql
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: solidtime-postgresql-1
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: solidtime-postgresql-kopia-cloudflare
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: pg_policy.json
+    moverSecurityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/moonlight8978/lbh-lab/refs/heads/jsonschema/volsync.backube/replicationsource-v1alpha1.json
+
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: solidtime-data
+  namespace: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  sourcePVC: solidtime
+  trigger:
+    schedule: "0 19 * * *"
+  kopia:
+    repository: solidtime-data-kopia-cloudflare
+    copyMethod: Snapshot
+    volumeSnapshotClassName: openebs-mayastor
+    cacheStorageClassName: openebs-mayastor-single
+    storageClassName: openebs-mayastor-backup
+    policyConfig:
+      configMapName: kopia-policy
+      globalPolicyFilename: global_policy.json
+    moverSecurityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsUser: 0

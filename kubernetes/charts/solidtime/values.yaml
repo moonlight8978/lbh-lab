@@ -1,0 +1,198 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname solidtime-10-242-20-170.lab-local.bichls.dev
+scheme: https
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    initContainers:
+      00-create-cache-dirs:
+        image:
+          repository: &repository solidtime/solidtime
+          tag: &tag 0.10.0
+          pullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mkdir -p /var/www/html/storage/framework/cache
+            mkdir -p /var/www/html/storage/framework/views
+            mkdir -p /var/www/html/storage/framework/sessions
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+      01-create-admin-users:
+        image:
+          repository: *repository
+          tag: *tag
+          pullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            php artisan migrate --force
+            echo "$(INIT_ADMIN_PASSWORD)" | php artisan admin:user:create Admin "$(INIT_ADMIN_EMAIL)" --verify-email --ask-for-password; exit 0; // skip user exist error
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+        envFrom:
+          - configMap: main
+          - secret: solidtime-env
+    containers:
+      main:
+        image:
+          repository: *repository
+          tag: *tag
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &port 8000
+        probes:
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /health-check/up
+                port: *port
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /health-check/up
+                port: *port
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+        envFrom:
+          - configMap: main
+          - secret: solidtime-env
+        securityContext:
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "{{ .Values.scheme }}://{{ .Values.hostname }}"
+      APP_ENABLE_REGISTRATION: "false"
+      TZ: Asia/Bangkok
+
+      CONTAINER_MODE: http
+
+      DB_CONNECTION: pgsql
+      DB_DATABASE: solidtime_production
+      DB_HOST: solidtime-postgresql-rw
+      DB_PORT: "5432"
+      DB_SSLMODE: "false"
+      AUTO_DB_MIGRATE: "false"
+
+      MAIL_MAILER: smtp
+      MAIL_PORT: "587"
+      MAIL_ENCRYPTION: tls
+      MAIL_FROM_ADDRESS: no-reply@bichls.dev
+      MAIL_FROM_NAME: Sweet Home
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    storageClass: openebs-mayastor
+    size: 500Mi
+    globalMounts:
+      - path: /var/www/html/storage
+  log:
+    type: emptyDir
+    sizeLimit: 20Mi
+    globalMounts:
+      - path: /var/www/html/storage/logs
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  external:
+    enabled: false
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2
+  internal:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+
+networkpolicies:
+  main:
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: solidtime
+    policyTypes:
+      - Ingress
+      - Egress
+    rules:
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: traefik-system
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik
+          ports:
+            - port: *port
+      egress:
+        - {}

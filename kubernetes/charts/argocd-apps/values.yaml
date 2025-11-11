@@ -197,6 +197,11 @@ applicationsets:
               project: application
               subscriptions:
                 on-deployed.github: ""
+            - name: solidtime
+              namespace: application
+              project: application
+              subscriptions:
+                on-deployed.github: ""
 
     strategy:
       type: AllAtOnce
