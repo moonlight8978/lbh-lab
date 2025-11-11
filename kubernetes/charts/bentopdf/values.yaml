@@ -68,7 +68,7 @@ service:
         targetPort: *port
 
 route:
-  main:
+  external:
     annotations:
       argocd.argoproj.io/sync-options: Replace=true
     parentRefs:
@@ -91,6 +91,23 @@ route:
               group: traefik.io
               kind: Middleware
               name: oauth2
+  internal:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - bentopdf-10-242-20-170.lab-local.bichls.dev
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
 
 networkpolicies:
   main:
