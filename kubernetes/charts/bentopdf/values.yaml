@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname pdf.bichls.dev
+scheme: https
+
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    runAsGroup: 1000
+    runAsUser: 1000
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: bentopdf/bentopdf-simple
+          tag: 1.5.1
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &port 8080
+        probes:
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /
+                port: *port
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /
+                port: *port
+        resources:
+          requests:
+            cpu: 10m
+            memory: 10Mi
+          limits:
+            memory: 50Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+
+persistence:
+  tmp:
+    type: emptyDir
+    sizeLimit: 50Mi
+    globalMounts:
+      - path: /var/cache/nginx
+      - path: /var/cache/nginx
+      - path: /etc/nginx/tmp
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *port
+        targetPort: *port
+
+route:
+  main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-external
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *port
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
+        filters:
+          - type: ExtensionRef
+            extensionRef:
+              group: traefik.io
+              kind: Middleware
+              name: oauth2
+
+networkpolicies:
+  main:
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: bentopdf
+    policyTypes:
+      - Ingress
+      - Egress
+    rules:
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: traefik-system
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik
+          ports:
+            - port: *port

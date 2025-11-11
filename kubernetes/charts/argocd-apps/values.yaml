@@ -192,6 +192,11 @@ applicationsets:
             - name: woodpecker
               namespace: woodpecker
               project: application
+            - name: bentopdf
+              namespace: application
+              project: application
+              subscriptions:
+                on-deployed.github: ""
 
     strategy:
       type: AllAtOnce
