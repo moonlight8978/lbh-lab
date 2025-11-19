@@ -97,6 +97,13 @@ persistence:
   tmp:
     type: emptyDir
     sizeLimit: 20Mi
+  translations:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 100Mi
+    globalMounts:
+      - path: /app/translations
 
 service:
   main:
