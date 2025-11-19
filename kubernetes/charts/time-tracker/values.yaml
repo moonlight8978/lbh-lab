@@ -59,6 +59,7 @@ configMaps:
   main:
     includeInChecksum: true
     data:
+      # https://github.com/DRYTRIX/TimeTracker/blob/main/app/config.py
       TZ: Asia/Bangkok
       DATABASE_URL: sqlite:////data/timetracker.db
       ALLOW_SELF_REGISTER: "false"
