@@ -19,7 +19,7 @@ controllers:
       main:
         image:
           repository: jellyfin/jellyfin
-          tag: "2025111005"
+          tag: "2025111705"
           pullPolicy: IfNotPresent
         ports:
           - name: http
