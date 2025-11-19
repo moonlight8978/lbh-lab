@@ -79,7 +79,7 @@ configMaps:
       OIDC_REDIRECT_URI: "{{ .Values.scheme }}://{{ .Values.hostname }}/auth/oidc/callback"
       OIDC_SCOPES: openid email profile urn:zitadel:iam:org:id:345021634345697678
       OIDC_ADMIN_GROUP: admin
-      OIDC_POST_LOGOUT_REDIRECT_URI: "{{ .Values.scheme }}://{{ .Values.hostname }}/"
+      OIDC_POST_LOGOUT_REDIRECT_URI: "{{ .Values.scheme }}://{{ .Values.hostname }}/logout"
 
       ENABLE_TELEMETRY: "false"
 
@@ -99,6 +99,11 @@ persistence:
   tmp:
     type: emptyDir
     sizeLimit: 20Mi
+  logs:
+    type: emptyDir
+    sizeLimit: 20Mi
+    globalMounts:
+      - path: /app/logs
   translations:
     type: persistentVolumeClaim
     storageClass: openebs-mayastor
