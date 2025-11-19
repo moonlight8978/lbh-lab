@@ -6,10 +6,10 @@ scheme: https
 
 defaultPodOptions:
   securityContext:
-    runAsNonRoot: true
-    runAsGroup: 1000
-    runAsUser: 1000
-    fsGroup: 1000
+    runAsNonRoot: false
+    runAsGroup: 0
+    runAsUser: 0
+    fsGroup: 0
 
 controllers:
   main:
@@ -49,11 +49,26 @@ controllers:
           limits:
             memory: 512Mi
         securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
+          allowPrivilegeEscalation: true
+          readOnlyRootFilesystem: false
+    initContainers:
+      i18n:
+        image:
+          repository: ghcr.io/drytrix/timetracker
+          tag: 3.10.2
+          pullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - |
+            cp -r /app/translations/* /translations/
+            pybabel compile -d /translations
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
 
 configMaps:
   main:
@@ -96,6 +111,15 @@ persistence:
     size: 500Mi
     globalMounts:
       - path: /app/app/static/uploads
+  translations:
+    type: emptyDir
+    sizeLimit: 20Mi
+    advancedMounts:
+      main:
+        main:
+          - path: /app/translations
+        i18n:
+          - path: /translations
   tmp:
     type: emptyDir
     sizeLimit: 20Mi
@@ -104,13 +128,6 @@ persistence:
     sizeLimit: 20Mi
     globalMounts:
       - path: /app/logs
-  translations:
-    type: persistentVolumeClaim
-    storageClass: openebs-mayastor
-    accessMode: ReadWriteOnce
-    size: 100Mi
-    globalMounts:
-      - path: /app/translations
 
 service:
   main:

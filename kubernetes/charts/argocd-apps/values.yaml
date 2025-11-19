@@ -202,11 +202,6 @@ applicationsets:
               project: application
               subscriptions:
                 on-deployed.github: ""
-            - name: time-tracker
-              namespace: application
-              project: application
-              subscriptions:
-                on-deployed.github: ""
 
     strategy:
       type: AllAtOnce
