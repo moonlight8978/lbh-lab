@@ -62,6 +62,7 @@ configMaps:
       TZ: Asia/Bangkok
       DATABASE_URL: sqlite:////data/timetracker.db
       ALLOW_SELF_REGISTER: "false"
+      AUTH_METHOD: oidc
 
       ROUNDING_MINUTES: "1"
       SINGLE_ACTIVE_TIMER: "true"
