@@ -1,0 +1,137 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/values.schema.json
+
+hostname: &hostname timetracker-10-242-20-170.lab-local.bichls.dev
+scheme: https
+
+defaultPodOptions:
+  securityContext:
+    runAsNonRoot: true
+    runAsGroup: 1000
+    runAsUser: 1000
+    fsGroup: 1000
+
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/drytrix/timetracker
+          tag: 3.10.2
+          pullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: &http 8080
+        probes:
+          liveness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /_health
+                port: *http
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /_health
+                port: *http
+        envFrom:
+          - configMap: main
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+configMaps:
+  main:
+    includeInChecksum: true
+    data:
+      TZ: Asia/Bangkok
+      DATABASE_URL: sqlite:////data/timetracker.db
+      ALLOW_SELF_REGISTER: "false"
+
+      ROUNDING_MINUTES: "1"
+      SINGLE_ACTIVE_TIMER: "true"
+
+      WTF_CSRF_ENABLED: "true"
+      WTF_CSRF_SSL_STRICT: "true"
+      SESSION_COOKIE_SECURE: "true"
+      REMEMBER_COOKIE_SECURE: "true"
+      CSRF_COOKIE_SECURE: "true"
+      CSRF_COOKIE_HTTPONLY: "true"
+      PREFERRED_URL_SCHEME: "{{ .Values.scheme }}"
+
+      OIDC_REDIRECT_URI: "{{ .Values.scheme }}://{{ .Values.hostname }}/auth/oidc/callback"
+      OIDC_SCOPES: openid email profile urn:zitadel:iam:org:id:345021634345697678
+      OIDC_ADMIN_GROUP: admin
+      OIDC_POST_LOGOUT_REDIRECT_URI: "{{ .Values.scheme }}://{{ .Values.hostname }}/"
+
+      ENABLE_TELEMETRY: "false"
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+  upload:
+    type: persistentVolumeClaim
+    storageClass: openebs-mayastor
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /app/app/static/uploads
+
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: *http
+        targetPort: *http
+
+route:
+  main:
+    annotations:
+      argocd.argoproj.io/sync-options: Replace=true
+    parentRefs:
+      - name: traefik-internal
+        namespace: traefik-system
+        sectionName: https
+    hostnames:
+      - *hostname
+    rules:
+      - backendRefs:
+          - identifier: main
+            port: *http
+
+networkpolicies:
+  main:
+    policyTypes:
+      - Ingress
+      - Egress
+    rules:
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: traefik-system
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik
+          ports:
+            - port: *http
+      egress:
+        - {}
