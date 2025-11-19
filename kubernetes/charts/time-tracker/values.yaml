@@ -94,6 +94,9 @@ persistence:
     size: 500Mi
     globalMounts:
       - path: /app/app/static/uploads
+  tmp:
+    type: emptyDir
+    sizeLimit: 20Mi
 
 service:
   main:
