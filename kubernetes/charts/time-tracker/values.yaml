@@ -119,6 +119,9 @@ route:
 
 networkpolicies:
   main:
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: time-tracker
     policyTypes:
       - Ingress
       - Egress
