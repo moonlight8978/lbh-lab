@@ -41,6 +41,7 @@ controllers:
                 port: *http
         envFrom:
           - configMap: main
+          - secret: time-tracker-env
         resources:
           requests:
             cpu: 10m
