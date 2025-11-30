@@ -10,4 +10,4 @@ helmCharts:
     repo: oci://ghcr.io/prometheus-community/charts
     name: prometheus-operator-crds
     includeCRDs: true
-    version: 24.0.2
+    version: 25.0.0
