@@ -85,7 +85,7 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: oci://ghcr.io/external-secrets/charts/external-secrets
-    version: 1.1.0
+    version: 1.1.1
     values:
       - ./external-secrets/values.yaml
     needs:
@@ -112,7 +112,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
-    version: 9.1.5
+    version: 9.1.6
     values:
       - ./argocd/values.yaml
     needs:
