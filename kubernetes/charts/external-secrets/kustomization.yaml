@@ -9,7 +9,7 @@ helmCharts:
     namespace: external-secrets
     repo: oci://ghcr.io/external-secrets/charts
     name: external-secrets
-    version: 1.1.0
+    version: 1.1.1
     includeCRDs: true
     valuesFile: values.yaml
 
