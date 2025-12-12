@@ -53,7 +53,7 @@ releases:
   - name: cert-manager
     namespace: cert-manager
     chart: oci://quay.io/jetstack/charts/cert-manager
-    version: v1.19.1
+    version: v1.19.2
     values:
       - ./cert-manager/values.yaml
     needs:
@@ -112,7 +112,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
-    version: 9.1.6
+    version: 9.1.7
     values:
       - ./argocd/values.yaml
     needs:
