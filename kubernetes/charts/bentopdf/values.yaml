@@ -18,7 +18,7 @@ controllers:
       main:
         image:
           repository: bentopdf/bentopdf-simple
-          tag: v1.9.0
+          tag: v1.11.2
           pullPolicy: IfNotPresent
         ports:
           - name: http
