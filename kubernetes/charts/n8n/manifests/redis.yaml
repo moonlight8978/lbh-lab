@@ -24,7 +24,7 @@ spec:
         memory: 128Mi
   kubernetesConfig:
     # renovate: datasource=docker depName=quay.io/opstree/redis
-    image: quay.io/opstree/redis:v8.2.3
+    image: quay.io/opstree/redis:v8.4.0
     imagePullPolicy: IfNotPresent
     redisSecret:
       name: n8n-redis-creds
