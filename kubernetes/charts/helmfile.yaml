@@ -128,7 +128,7 @@ releases:
   - name: argocd-apps
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argocd-apps
-    version: 2.0.2
+    version: 2.0.3
     values:
       - ./argocd-apps/values.yaml
     needs:
