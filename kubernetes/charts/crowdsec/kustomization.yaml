@@ -9,7 +9,7 @@ helmCharts:
     repo: https://crowdsecurity.github.io/helm-charts
     name: crowdsec
     valuesFile: values.yaml
-    version: 0.21.0
+    version: 0.21.1
     skipTests: true
 
 resources:
