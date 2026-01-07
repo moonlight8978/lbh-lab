@@ -17,7 +17,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/syncthing/syncthing
-          tag: 2.0.12
+          tag: 2.0.13
           pullPolicy: IfNotPresent
         ports:
           - name: http
