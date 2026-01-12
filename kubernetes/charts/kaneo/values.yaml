@@ -14,7 +14,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/usekaneo/api
-          tag: 2.1.11
+          tag: 2.1.20
           pullPolicy: IfNotPresent
         ports:
           - name: http
