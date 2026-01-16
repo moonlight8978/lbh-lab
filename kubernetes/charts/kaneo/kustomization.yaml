@@ -10,7 +10,7 @@ helmCharts:
     repo: oci://ghcr.io/bjw-s-labs/helm
     name: app-template
     valuesFile: values.yaml
-    version: 4.6.1
+    version: 4.6.2
 
 resources:
   - manifests/postgresql.yaml
