@@ -44,7 +44,7 @@ releases:
   - name: coredns
     namespace: kube-system
     chart: oci://ghcr.io/coredns/charts/coredns
-    version: 1.45.0
+    version: 1.45.2
     values:
       - ./coredns/values.yaml
     needs:
@@ -112,7 +112,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: oci://ghcr.io/argoproj/argo-helm/argo-cd
-    version: 9.3.4
+    version: 9.3.5
     values:
       - ./argocd/values.yaml
     needs:
