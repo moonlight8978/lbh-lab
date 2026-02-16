@@ -11,7 +11,7 @@ helmCharts:
     name: grafana
     valuesFile: values.yaml
     skipTests: true
-    version: 10.5.8
+    version: 10.5.15
 
 resources:
   - manifests/externalsecret.yaml
