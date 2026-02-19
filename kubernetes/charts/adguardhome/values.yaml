@@ -40,7 +40,7 @@ controllers:
       main:
         image:
           repository: adguard/adguardhome
-          tag: v0.107.71
+          tag: v0.107.72
           pullPolicy: IfNotPresent
         ports:
           - name: dns
