@@ -34,7 +34,7 @@ spec:
         keyPath: /Users/moonlight/.ssh/moonlight
   k0s:
     # renovate: datasource=github-releases depName=k0sproject/k0s
-    version: v1.34.3+k0s.0
+    version: v1.34.4+k0s.0
     config:
       apiVersion: k0s.k0sproject.io/v1beta1
       kind: Cluster
