@@ -8,7 +8,7 @@ helmCharts:
     repo: oci://ghcr.io/piraeusdatastore/helm-charts
     name: snapshot-controller
     includeCRDs: true
-    version: 4.2.0
+    version: 5.0.3
 
 resources:
   # TODO: Helm chart?
