@@ -9,7 +9,7 @@ helmCharts:
     namespace: argocd
     repo: oci://ghcr.io/argoproj/argo-helm
     name: argo-cd
-    version: 9.4.3
+    version: 9.4.4
     includeCRDs: true
     skipTests: true
     valuesFile: values.yaml
