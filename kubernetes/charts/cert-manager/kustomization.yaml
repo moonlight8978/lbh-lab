@@ -11,7 +11,7 @@ helmCharts:
     repo: oci://quay.io/jetstack/charts
     valuesFile: values.yaml
     includeCRDs: true
-    version: v1.19.3
+    version: v1.19.4
 
 resources:
   - manifests/selfsigned.yaml
