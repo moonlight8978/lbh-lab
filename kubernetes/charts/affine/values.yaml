@@ -11,7 +11,7 @@ controllers:
       main:
         image:
           repository: &image ghcr.io/toeverything/affine
-          tag: &tag 0.25.7
+          tag: &tag 0.26.3
           pullPolicy: IfNotPresent
         ports:
           - name: http
