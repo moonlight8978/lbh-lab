@@ -9,7 +9,7 @@ helmCharts:
     namespace: volsync-system
     repo: oci://ghcr.io/home-operations/charts-mirror
     name: volsync-perfectra1n
-    version: 0.18.2
+    version: 0.18.3
     valuesFile: values.yaml
 
 resources:
