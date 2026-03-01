@@ -6,7 +6,7 @@ global:
   # Remove when v3.2.0 becomes stable
   image:
     repository: quay.io/argoproj/argocd
-    tag: v3.2.0-rc4
+    tag: v3.3.0-rc4
 
 redis-ha:
   enabled: true
