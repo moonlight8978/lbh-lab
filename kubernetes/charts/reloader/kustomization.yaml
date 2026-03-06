@@ -9,5 +9,5 @@ helmCharts:
     namespace: kube-system
     repo: oci://ghcr.io/stakater/charts
     name: reloader
-    version: 2.2.8
+    version: 2.2.9
     valuesFile: values.yaml
