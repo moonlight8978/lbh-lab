@@ -23,7 +23,7 @@ controllers:
       main:
         image:
           repository: dbeaver/cloudbeaver
-          tag: 25.3.5
+          tag: 26.0.0
           pullPolicy: IfNotPresent
         ports:
           - name: http
