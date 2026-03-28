@@ -18,7 +18,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/atuinsh/atuin
-          tag: 18.13.5
+          tag: 18.13.6
           pullPolicy: IfNotPresent
         args:
           - server
