@@ -9,7 +9,7 @@ helmCharts:
     namespace: traefik-system
     repo: oci://ghcr.io/traefik/helm
     name: traefik
-    version: 39.0.6
+    version: 39.0.7
     includeCRDs: true
     valuesFile: values.yaml
 
