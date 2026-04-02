@@ -18,7 +18,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/alexta69/metube
-          tag: "2026.03.21"
+          tag: "2026.04.02"
           pullPolicy: IfNotPresent
         ports:
           - name: http
