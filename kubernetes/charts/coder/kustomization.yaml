@@ -10,7 +10,7 @@ helmCharts:
     repo: oci://ghcr.io/coder/chart
     name: coder
     valuesFile: values.yaml
-    version: 2.31.9
+    version: 2.32.0
 
 resources:
   - manifests/externalsecret.yaml
