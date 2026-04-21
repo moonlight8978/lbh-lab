@@ -20,7 +20,7 @@ controllers:
       main:
         image:
           repository: &image docker.n8n.io/n8nio/n8n
-          tag: &tag 2.17.3
+          tag: &tag 2.18.0
           pullPolicy: IfNotPresent
         ports:
           - name: http
