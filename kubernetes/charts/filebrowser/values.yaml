@@ -21,7 +21,7 @@ controllers:
       main:
         image:
           repository: filebrowser/filebrowser
-          tag: v2.63.2
+          tag: v2.63.3
           pullPolicy: IfNotPresent
         ports:
           - name: http
