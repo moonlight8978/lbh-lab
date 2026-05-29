@@ -9,7 +9,7 @@ helmCharts:
     namespace: woodpecker
     repo: oci://ghcr.io/woodpecker-ci/helm
     name: woodpecker
-    version: 3.6.3
+    version: 3.6.4
     valuesFile: values.yaml
 
 resources:
