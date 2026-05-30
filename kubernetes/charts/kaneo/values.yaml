@@ -50,7 +50,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/usekaneo/web
-          tag: 2.7.5
+          tag: 2.7.7
           pullPolicy: IfNotPresent
         ports:
           - name: http
