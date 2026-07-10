@@ -18,7 +18,7 @@ controllers:
       00-create-cache-dirs:
         image:
           repository: &repository solidtime/solidtime
-          tag: &tag 0.15.1
+          tag: &tag 0.16.0
           pullPolicy: IfNotPresent
         command:
           - /bin/sh
