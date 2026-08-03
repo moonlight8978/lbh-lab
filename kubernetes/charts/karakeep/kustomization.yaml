@@ -10,7 +10,7 @@ helmCharts:
     repo: https://karakeep-app.github.io/helm-charts
     name: karakeep
     valuesFile: values.yaml
-    version: 0.32.0
+    version: 0.33.1
 
 resources:
   - manifests/externalsecret.yaml
