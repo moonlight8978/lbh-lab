@@ -10,4 +10,4 @@ helmCharts:
     repo: oci://ghcr.io/bjw-s-labs/helm
     name: app-template
     valuesFile: values.yaml
-    version: 5.0.1
+    version: 5.1.0
