@@ -9,7 +9,7 @@ helmCharts:
     namespace: openebs
     repo: https://openebs.github.io/openebs
     name: openebs
-    version: 4.5.1
+    version: 4.6.0
     includeCRDs: true
     skipTests: true
     valuesFile: values.yaml
