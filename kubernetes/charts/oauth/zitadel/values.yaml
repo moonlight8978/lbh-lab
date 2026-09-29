@@ -5,7 +5,7 @@ fullnameOverride: zitadel
 
 image:
   repository: ghcr.io/zitadel/zitadel
-  tag: v4.19.1
+  tag: v4.19.2
 
 zitadel:
   configmapConfig:
