@@ -44,7 +44,7 @@ releases:
   - name: coredns
     namespace: kube-system
     chart: oci://ghcr.io/coredns/charts/coredns
-    version: 1.47.1
+    version: 1.48.2
     values:
       - ./coredns/values.yaml
     needs:
@@ -85,7 +85,7 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: oci://ghcr.io/external-secrets/charts/external-secrets
-    version: 2.11.0
+    version: 2.12.0
     values:
       - ./external-secrets/values.yaml
     needs:
