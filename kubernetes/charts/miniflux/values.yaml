@@ -24,7 +24,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/miniflux/miniflux
-          tag: 2.3.3
+          tag: 2.3.4
           pullPolicy: IfNotPresent
         ports:
           - name: http
