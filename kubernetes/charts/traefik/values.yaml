@@ -116,7 +116,7 @@ experimental:
     cfgeoblock:
       moduleName: github.com/moonlight8978/traefik-cloudflare-geoblock
       # renovate: datasource=github-releases depName=moonlight8978/traefik-cloudflare-geoblock
-      version: v1.0.3
+      version: v1.0.4
 
 gateway:
   enabled: true
